@@ -1,12 +1,13 @@
-import React from 'react';
-import { Button, Form, Image, Input, message } from 'antd';
-import LoginForm from '../auth/LoginForm';
-import { ParamLogin } from '../../types/auth';
+import { message } from 'antd';
 import axios from 'axios';
-import { API_PATHS } from '../../configs/api';
 import Cookies from 'js-cookie';
+import { API_PATHS } from '../../configs/api';
+import { ParamLogin } from '../../types/auth';
 import { ACCESS_TOKEN_KEY } from '../../utils/constant';
+import LoginForm from '../auth/LoginForm';
+import { useNavigate } from 'react-router-dom';
 const LoginPage = () => {
+    const navigate = useNavigate();
     const [messageApi, contextHolder] = message.useMessage();
     const onLogin = async (value: ParamLogin) => {
         try {
@@ -23,6 +24,10 @@ const LoginPage = () => {
                 },
             });
             Cookies.set(ACCESS_TOKEN_KEY, res.data.token);
+
+            // setTimeout(() => {
+            //     window.location.href = 'http://pinnacle-portal.server2div3.pgtest.co/home';
+            // }, 250);
         } catch (error) {
             console.log(error);
             messageApi.open({
