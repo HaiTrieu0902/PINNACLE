@@ -1,0 +1,63 @@
+.login-form-content {
+    -webkit-filter: drop-shadow(0 5px 20px rgba(0, 0, 0, 0.1));
+    filter: drop-shadow(0 5px 20px rgba(0, 0, 0, 0.1));
+
+    .col_imgHeader {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .text-title {
+        display: flex;
+        font-size: 38px;
+        font-weight: 600;
+        justify-content: center;
+        margin-bottom: 0;
+    }
+
+    .ant-form-container {
+        font-feature-settings: 'tnum', 'tnum';
+        box-sizing: border-box;
+        color: rgba(0, 0, 0, 0.85);
+        font-size: 14px;
+        font-variant: tabular-nums;
+        line-height: 1.5715;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .ant-input_login {
+        width: 100%;
+        height: 50px;
+        border-radius: 12px;
+        background-color: #f9f9f9;
+        font-family: 'Poppins', sans-serif;
+        font-size: 16px;
+    }
+
+    .label-input label {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 400;
+        font-size: 16px;
+        color: #868b90;
+    }
+    .label-input .ant-form-item-explain {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+    }
+
+    .card_footer {
+        display: flex;
+        justify-content: flex-start;
+    }
+}
+
+:where(.css-dev-only-do-not-override-12jzuas).ant-btn-primary:not(:disabled):hover {
+    background-color: #002060;
+}
+
+:where(.css-dev-only-do-not-override-12jzuas).ant-btn-link:not(:disabled):hover {
+    color: #000000d9;
+}
