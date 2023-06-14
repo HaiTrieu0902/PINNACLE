@@ -1,12 +1,14 @@
 import Cookies from 'js-cookie';
 import Header from '../components/Header/Header';
-import ContainerPage from '../pages/Container/ContainerPage';
+import Sidebar from '../components/Sidebar/Sidebar';
 import { ACCESS_TOKEN_KEY } from '../utils/constant';
 import { RoutesConfig } from './Routes';
-import Sidebar from '../components/Sidebar/Sidebar';
+import { useAppSelector } from '../store';
 const Layout = () => {
+    const { token } = useAppSelector((state) => state.auth);
     const valueToken = Cookies.get(ACCESS_TOKEN_KEY);
-    console.log('value token: ', valueToken);
+    // console.log('value token: ', valueToken);
+    // console.log('token: ', token);
     return (
         <section className="">
             {valueToken && (

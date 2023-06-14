@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { links } from '../../context/dataMenu';
 import './Sidebar.scss';
 const Sidebar = () => {
-    const [isACitve, setisACitve] = useState('employee');
+    const [isACitve, setisACitve] = useState('home');
     return (
         <div className="fixer-pt sidebar-layout fixed">
             <div className="fixer-pt">

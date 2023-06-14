@@ -1,5 +1,27 @@
 import home from '../assets/icon/home.svg';
+import release from '../assets/icon/release.svg';
+import user from '../assets/icon/use.svg';
+import workben from '../assets/icon/workben.svg';
+import testlab from '../assets/icon/testlab.svg';
+import excute from '../assets/icon/excute.svg';
+import bug from '../assets/icon/bug.svg';
+import report from '../assets/icon/report.svg';
+import enginuty from '../assets/icon/enginuty.svg';
+import batch from '../assets/icon/batch.svg';
+import virtual from '../assets/icon/virtual.svg';
+
 import homeActive from '../assets/icon/homeAcitve.svg';
+import releaseActive from '../assets/icon/releaseActive.svg';
+import userAcive from '../assets/icon/useActive.svg';
+import workbenActive from '../assets/icon/workbenActive.svg';
+import testlabActive from '../assets/icon/testlabActive.svg';
+import excuteActive from '../assets/icon/excuteActive.svg';
+import bugActive from '../assets/icon/bugActive.svg';
+import reportActive from '../assets/icon/reportActive.svg';
+import enginutyActive from '../assets/icon/enginutyActive.svg';
+import batchActive from '../assets/icon/batchActive.svg';
+import virtualActive from '../assets/icon/virtualActive.svg';
+
 export const links = [
     {
         title: 'MAIN MENU',
@@ -12,80 +34,80 @@ export const links = [
             },
             {
                 name: 'Dashboard',
-                icon: home,
-                iconActive: homeActive,
+                icon: release,
+                iconActive: releaseActive,
                 nameLink: 'dashboard',
             },
             {
                 name: 'Release',
-                icon: home,
-                iconActive: homeActive,
+                icon: release,
+                iconActive: releaseActive,
                 nameLink: 'release',
             },
             {
                 name: 'User Stories',
-                icon: home,
-                iconActive: homeActive,
+                icon: user,
+                iconActive: userAcive,
                 nameLink: 'requirement',
             },
             {
                 name: 'Workbench',
-                icon: home,
-                iconActive: homeActive,
+                icon: workben,
+                iconActive: workbenActive,
                 nameLink: 'test-case',
             },
             {
                 name: 'Testlab',
-                icon: home,
-                iconActive: homeActive,
+                icon: testlab,
+                iconActive: testlabActive,
                 nameLink: 'testlab',
             },
             {
                 name: 'Execute',
-                icon: home,
-                iconActive: homeActive,
+                icon: excute,
+                iconActive: excuteActive,
                 nameLink: 'execute',
             },
             {
                 name: 'Bugs',
-                icon: home,
-                iconActive: homeActive,
+                icon: bug,
+                iconActive: bugActive,
                 nameLink: 'defect',
             },
             {
                 name: 'Reports',
-                icon: home,
-                iconActive: homeActive,
+                icon: report,
+                iconActive: reportActive,
                 nameLink: 'reports',
             },
             {
                 name: 'Enginuity Workbench',
-                icon: home,
-                iconActive: homeActive,
+                icon: enginuty,
+                iconActive: enginutyActive,
                 nameLink: 'enginuity-workbench',
             },
             {
                 name: 'Batch Register',
-                icon: home,
-                iconActive: homeActive,
+                icon: batch,
+                iconActive: batchActive,
                 nameLink: 'batch',
             },
             {
                 name: 'Virtual Tester Monitor',
-                icon: home,
-                iconActive: homeActive,
+                icon: virtual,
+                iconActive: virtualActive,
                 nameLink: 'virtual-tester-monitor',
             },
             {
                 name: 'Batch Register',
-                icon: home,
-                iconActive: homeActive,
+                icon: batch,
+                iconActive: batchActive,
                 nameLink: 'batch',
             },
             {
                 name: 'Virtual Tester Monitor',
-                icon: home,
-                iconActive: homeActive,
+                icon: virtual,
+                iconActive: virtualActive,
                 nameLink: 'virtual-tester-monitor',
             },
         ],
