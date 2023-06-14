@@ -9,7 +9,7 @@ export const RoutesConfig = () => {
         <>
             <Suspense fallback={<div>Loading.....</div>}>
                 <Routes>
-                    <Route path={ROUTES.login} Component={LoginPage} />
+                    <Route path={ROUTES.mainpage} Component={LoginPage} />
                     <Route path={ROUTES.login} Component={LoginPage} />
                     <Route path={ROUTES.home} Component={HomePage} />
                     <Route path={ROUTES.dashbroad} Component={DashBroadPage} />

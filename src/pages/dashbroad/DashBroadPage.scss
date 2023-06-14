@@ -7,4 +7,20 @@
         letter-spacing: -0.01em;
         color: #002060;
     }
+
+    .tab-container {
+        .ant-tabs-tabpane {
+            &.ant-tabs-tabpane-active {
+                color: #002060;
+            }
+        }
+
+        .ant-tabs-tab {
+            color: #888888;
+        }
+
+        .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+            color: #002060 !important;
+        }
+    }
 }
