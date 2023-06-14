@@ -2,20 +2,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 :root {
-    --color-bg: #212f3f;
-
-    --color-white: #fff;
-    --color-black: #000;
-    --color-light: rgba(255, 255, 255, 0.8);
-
-    --color-footer-bt: #e5e5e5;
-    --color-boder: #f1f2f2;
-    --color-bg-primary: #c19a83;
     --transition: all 400ms ease;
 }
-
 * {
     box-sizing: border-box;
     margin: 0;

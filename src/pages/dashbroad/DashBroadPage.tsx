@@ -1,17 +1,49 @@
+import type { TabsProps } from 'antd';
 import { Tabs } from 'antd';
+import TabPane from 'antd/es/tabs/TabPane';
 import { useState } from 'react';
 import { ContainerLayout } from '../../components/container/ContainerLayout';
 import DashBroadBatches from '../../components/dasbroadItem/DashBroadBatches';
+import DashBroadDefect from '../../components/dasbroadItem/DashBroadDefect';
 import DashBroadRelease from '../../components/dasbroadItem/DashBroadRelease';
 import DashBroadRequiment from '../../components/dasbroadItem/DashBroadRequiment';
 import DashBroadTestcase from '../../components/dasbroadItem/DashBroadTestcase';
 import './DashBroadPage.scss';
-import DashBroadDefect from '../../components/dasbroadItem/DashBroadDefect';
+
 const DashBroadPage = () => {
     const [activeTab, setActiveTab] = useState('1');
     const onChange = (key: string) => {
         setActiveTab(key);
     };
+
+    const items: TabsProps['items'] = [
+        {
+            key: '1',
+            label: `Releases`,
+            children: <DashBroadRelease />,
+        },
+        {
+            key: '2',
+            label: `Requiments`,
+            children: <DashBroadRequiment />,
+        },
+        {
+            key: '3',
+            label: `Test Cases`,
+            children: <DashBroadTestcase />,
+        },
+        {
+            key: '4',
+            label: `Batches`,
+            children: <DashBroadBatches />,
+        },
+        {
+            key: '5',
+            label: `Defects`,
+            children: <DashBroadDefect />,
+        },
+    ];
+
     return (
         <div className="fixer-pt ml-content">
             <ContainerLayout>
@@ -19,27 +51,13 @@ const DashBroadPage = () => {
                     <h4 className="dashbroad-title">Dashbroad</h4>
 
                     <div className="tab-container">
-                        <Tabs activeKey={activeTab} onChange={onChange} size="large">
-                            <Tabs.TabPane tab="Releases" key="1">
-                                <DashBroadRelease />
-                            </Tabs.TabPane>
-
-                            <Tabs.TabPane tab="Requiments" key="2">
-                                <DashBroadRequiment />
-                            </Tabs.TabPane>
-
-                            <Tabs.TabPane tab="Test Cases" key="3">
-                                <DashBroadTestcase />
-                            </Tabs.TabPane>
-
-                            <Tabs.TabPane tab="Batches" key="4">
-                                <DashBroadBatches />
-                            </Tabs.TabPane>
-
-                            <Tabs.TabPane tab="Defects" key="5">
-                                <DashBroadDefect />
-                            </Tabs.TabPane>
-                        </Tabs>
+                        <Tabs
+                            activeKey={activeTab}
+                            defaultActiveKey="1"
+                            items={items}
+                            onChange={onChange}
+                            size="large"
+                        ></Tabs>
                     </div>
                 </div>
             </ContainerLayout>

@@ -17,7 +17,7 @@ const Header = () => {
             <div className="ant-row header">
                 <div className="header_logo">
                     <Link to={ROUTES.home}>
-                        <Image src={logoV1} width={200} alt="Logo"></Image>
+                        <Image preview={false} src={logoV1} width={200} alt="Logo"></Image>
                     </Link>
                 </div>
                 <div className="header_control">
