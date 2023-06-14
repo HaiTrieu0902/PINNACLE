@@ -5,3 +5,7 @@
 .text-family {
     font-family: 'Poppins', sans-serif;
 }
+
+.ml-content {
+    margin-left: 260px;
+}

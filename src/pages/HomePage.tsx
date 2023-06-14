@@ -1,6 +1,6 @@
 const HomePage = () => {
     return (
-        <div className="fixer-pt ml-[260px]">
+        <div className="fixer-pt ml-content">
             <p>huhuuh</p>
         </div>
     );
