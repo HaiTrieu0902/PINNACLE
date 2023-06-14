@@ -49,9 +49,9 @@ a[href] {
 }
 
 html *::-webkit-scrollbar {
-    border-radius: 0;
-    width: 8px;
-    height: 8px !important;
+    background-color: #f5f5f5;
+    height: 6px !important;
+    width: 6px !important;
 }
 html *::-webkit-scrollbar-thumb {
     border-radius: 6px;
@@ -65,22 +65,4 @@ html *::-webkit-scrollbar-track {
 html *::-webkit-scrollbar-track {
     border-radius: 0;
     background-color: rgba(0, 0, 0, 0);
-}
-
-.btn-primary-fixer {
-    background-color: rgb(0, 145, 255) !important;
-    box-shadow: rgba(236, 238, 240, 0.5) 0px 10px 5px;
-    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
-        box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-    box-shadow: none;
-}
-
-.btn-primary-fixer:hover {
-    background-color: rgb(0, 129, 241) !important;
-    border: 1px solid transparent;
-}
-
-.button-loading {
-    background-color: #c1c8cd3d !important;
-    border: 1px solid #c1c8cd3d !important;
 }

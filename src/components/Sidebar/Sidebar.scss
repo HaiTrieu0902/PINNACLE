@@ -1,0 +1,40 @@
+.sidebar-layout {
+    background: rgb(0, 32, 96);
+    max-width: 250px;
+    min-width: 250px;
+    width: 250px;
+    height: 100vh;
+    left: 0;
+    margin: 0;
+    overflow: auto;
+    padding: 10px 20px;
+    width: 250px;
+    z-index: 99;
+}
+
+.nomal-link {
+    width: 100%;
+    border-radius: 8px;
+    color: #ffffff;
+    padding: 10px 0;
+    font-size: 14px;
+    font-weight: 700;
+    background-color: #002060;
+}
+
+.active-link {
+    background-color: #ffffff;
+    color: #002060;
+
+    p {
+        color: #002060;
+        font-weight: 700;
+    }
+}
+
+.text-menu-link {
+    color: white;
+}
+.ml {
+    margin-left: 15px;
+}

@@ -1,0 +1,44 @@
+.container-layout-header {
+    position: fixed;
+    z-index: 1000;
+    width: 100%;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    border-radius: 0;
+    margin: 0;
+    padding: 20px;
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .header_control {
+            align-items: center;
+            display: flex;
+            flex-direction: row-reverse;
+            gap: 5px;
+
+            .header__logout__button {
+                font-family: 'Poppins', sans-serif;
+                border-radius: 14px;
+                border: 1px solid #002060;
+                border-radius: 16px;
+                color: #002060;
+                height: 40px;
+                line-height: 40px;
+                padding: 0 15px;
+                font-weight: 600;
+                &:hover {
+                    border-color: #40a9ff;
+                    color: #40a9ff;
+                }
+            }
+            .title-sign-in {
+                font-size: 14px;
+                color: #8c8c8c;
+                font-weight: 500;
+            }
+        }
+    }
+}
