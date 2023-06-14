@@ -1,9 +1,8 @@
-import './App.css';
 import { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
-const LoginPage = lazy(() => import('./modules/page/LoginPage'));
-const HomePage = lazy(() => import('./pages/HomePage'));
-function App() {
+const LoginPage = lazy(() => import('../modules/page/LoginPage'));
+const HomePage = lazy(() => import('../pages/HomePage'));
+export const RoutesConfig = () => {
     return (
         <>
             <Suspense fallback={<div>Loading.....</div>}>
@@ -16,6 +15,4 @@ function App() {
             </Suspense>
         </>
     );
-}
-
-export default App;
+};

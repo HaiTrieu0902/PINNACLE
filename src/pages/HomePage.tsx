@@ -1,5 +1,12 @@
+import { useAppSelector } from '../store';
 const HomePage = () => {
-    return <div>HomePage</div>;
-};
+    const { token } = useAppSelector((state) => state.auth);
 
+    return (
+        <div>
+            <p>homepage</p>
+            <p>{token}</p>
+        </div>
+    );
+};
 export default HomePage;
