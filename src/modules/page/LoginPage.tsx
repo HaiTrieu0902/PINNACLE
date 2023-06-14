@@ -24,10 +24,6 @@ const LoginPage = () => {
                 },
             });
             Cookies.set(ACCESS_TOKEN_KEY, res.data.token);
-
-            // setTimeout(() => {
-            //     window.location.href = 'http://pinnacle-portal.server2div3.pgtest.co/home';
-            // }, 250);
         } catch (error) {
             console.log(error);
             messageApi.open({
