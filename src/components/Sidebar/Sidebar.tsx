@@ -1,10 +1,15 @@
 import { Image } from 'antd';
-import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 import { links } from '../../context/dataMenu';
 import './Sidebar.scss';
 const Sidebar = () => {
-    const [isACitve, setisACitve] = useState('home');
+    const { pathname } = useLocation();
+    const [isACitve, setisACitve] = useState('');
+    useEffect(() => {
+        setisACitve(pathname.substring(1));
+    }, [setisACitve, pathname]);
+
     return (
         <div className="fixer-pt sidebar-layout fixed">
             <div className="fixer-pt">
