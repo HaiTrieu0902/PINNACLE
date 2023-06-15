@@ -6,3 +6,17 @@
     padding: 15px;
     height: 440px;
 }
+
+.dashborad-customer {
+    .dashborad-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 9999px;
+    }
+    .dashborad-circle-title {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 18px;
+    }
+}
