@@ -48,6 +48,9 @@ const DashBroadBatches = () => {
                 },
             },
         ),
+        scrollbar: {
+            type: 'horizontal' as 'horizontal' | 'vertical' | undefined,
+        },
     };
 
     return (
