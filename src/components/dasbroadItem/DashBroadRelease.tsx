@@ -1,23 +1,18 @@
+import { Pie } from '@ant-design/plots';
 import SubHeader from '../Header/SubHeader';
 import DashBroadItem from './branching/DashBroadItem';
-import { Pie } from '@ant-design/plots';
-import { dataRelease } from '../../context/dataDashbroad';
-import DashBroadCustom from './branching/DashBroadCustom';
 import { releaseWorkflowList } from '../../types/dashbroad';
+import { handleColorWorkflowItems } from '../../utils/dashbroadColor';
+import DashBroadCustom from './branching/DashBroadCustom';
 
 interface DashBroadReleaseProps {
     releaseWorkflow: releaseWorkflowList;
 }
 
 const DashBroadRelease = ({ releaseWorkflow }: DashBroadReleaseProps) => {
-    const handleColorRelease = () => {
-        return releaseWorkflow.releaseWorkflow?.workflowItems?.map((item) => {
-            return item?.backColor ? item.backColor : '';
-        });
-    };
     const configRelease = {
         appendPadding: 30,
-        data: releaseWorkflow.releaseWorkflow.workflowItems,
+        data: releaseWorkflow.releaseWorkflow?.workflowItems,
         angleField: 'value',
         colorField: 'text',
         radius: 1,
@@ -32,7 +27,7 @@ const DashBroadRelease = ({ releaseWorkflow }: DashBroadReleaseProps) => {
                 fontSize: 14,
             },
         },
-        color: handleColorRelease(),
+        color: handleColorWorkflowItems(releaseWorkflow.releaseWorkflow?.workflowItems),
         interactions: [
             {
                 type: 'element-selected',
@@ -42,7 +37,6 @@ const DashBroadRelease = ({ releaseWorkflow }: DashBroadReleaseProps) => {
             },
         ],
     };
-
     return (
         <div className="flex w-full gap-2">
             <DashBroadItem width={'55%'}>

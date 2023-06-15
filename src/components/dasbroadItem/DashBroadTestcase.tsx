@@ -1,23 +1,18 @@
 import { Pie } from '@ant-design/plots';
 import { testCaseWorkflowList } from '../../types/dashbroad';
+import { handleColorWorkflowItems } from '../../utils/dashbroadColor';
 import SubHeader from '../Header/SubHeader';
-import DashBroadItem from './branching/DashBroadItem';
 import DashBroadCustom from './branching/DashBroadCustom';
+import DashBroadItem from './branching/DashBroadItem';
 
 interface DashBroadTestcaseProps {
     testCaseWorkflowList: testCaseWorkflowList;
 }
 
 const DashBroadTestcase = ({ testCaseWorkflowList }: DashBroadTestcaseProps) => {
-    const handleColorTestCase = () => {
-        return testCaseWorkflowList.testCaseWorkflow?.workflowItem?.map((item) => {
-            return item?.backColor ? item.backColor : '';
-        });
-    };
-
     const configTestcase = {
         appendPadding: 30,
-        data: testCaseWorkflowList.testCaseWorkflow.workflowItem,
+        data: testCaseWorkflowList.testCaseWorkflow?.workflowItem,
         angleField: 'value',
         colorField: 'text',
         radius: 1,
@@ -32,7 +27,7 @@ const DashBroadTestcase = ({ testCaseWorkflowList }: DashBroadTestcaseProps) => 
                 fontSize: 14,
             },
         },
-        color: handleColorTestCase(),
+        color: handleColorWorkflowItems(testCaseWorkflowList.testCaseWorkflow?.workflowItem),
         interactions: [
             {
                 type: 'element-selected',

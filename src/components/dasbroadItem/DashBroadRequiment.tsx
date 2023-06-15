@@ -4,22 +4,16 @@ import { Pie } from '@ant-design/plots';
 
 import { requirementWorkflowList } from './../../types/dashbroad';
 import DashBroadCustom from './branching/DashBroadCustom';
+import { handleColorWorkflowItems } from '../../utils/dashbroadColor';
 
 interface DashBroadRequimentProps {
     requirementWorkflowList: requirementWorkflowList;
 }
 
 const DashBroadRequiment = ({ requirementWorkflowList }: DashBroadRequimentProps) => {
-    console.log('requirementWorkflowList', requirementWorkflowList.requirementWorkflow);
-
-    const handleColorRequiment = () => {
-        return requirementWorkflowList.requirementWorkflow.workflowItems?.map((item) => {
-            return item?.backColor ? item.backColor : '';
-        });
-    };
     const configRequiment = {
         appendPadding: 30,
-        data: requirementWorkflowList.requirementWorkflow.workflowItems,
+        data: requirementWorkflowList.requirementWorkflow?.workflowItems,
         angleField: 'value',
         colorField: 'text',
         radius: 1,
@@ -34,7 +28,7 @@ const DashBroadRequiment = ({ requirementWorkflowList }: DashBroadRequimentProps
                 fontSize: 14,
             },
         },
-        color: handleColorRequiment(),
+        color: handleColorWorkflowItems(requirementWorkflowList.requirementWorkflow?.workflowItems),
         interactions: [
             {
                 type: 'element-selected',

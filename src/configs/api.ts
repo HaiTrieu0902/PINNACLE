@@ -4,5 +4,8 @@ export const API_PATHS = {
     requimentDashbroad: 'Dashboard/requirement-dashboard',
     testcasedashboard: 'Dashboard/test-case-dashboard',
     batchDashboard: 'Dashboard/batch-workflow-dashboard',
+
+    defectsDashboard: 'Dashboard/defect-dashboard',
+
     API: 'http://api.pinnacle-qa.server2div3.pgtest.co/api',
 };

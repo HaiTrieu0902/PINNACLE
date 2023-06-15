@@ -37,3 +37,12 @@ export interface batchWorkflowDashboardList {
     };
     batchExceptionDashboard: WorkflowItems[];
 }
+
+export interface defectWorkflowList {
+    defectWorkflow: {
+        workflowItems: WorkflowItems[];
+        total: '';
+    };
+    defectExceptions: WorkflowItems[];
+    defectRisk: WorkflowItems[];
+}

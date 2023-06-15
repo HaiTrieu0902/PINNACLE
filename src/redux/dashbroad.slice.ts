@@ -5,6 +5,7 @@ import { API_PATHS } from '../configs/api';
 import axios from 'axios';
 import {
     batchWorkflowDashboardList,
+    defectWorkflowList,
     releaseWorkflowList,
     requirementWorkflowList,
     testCaseWorkflowList,
@@ -20,6 +21,7 @@ interface Dashbroad {
     requirementWorkflowList: requirementWorkflowList;
     testCaseWorkflowList: testCaseWorkflowList;
     batchWorkflowDashboardList: batchWorkflowDashboardList;
+    defectWorkflowList: defectWorkflowList;
 
     loading: boolean;
 }
@@ -56,6 +58,15 @@ const initialState: Dashbroad = {
             workflowItem: [],
             total: '',
         },
+    },
+
+    defectWorkflowList: {
+        defectWorkflow: {
+            workflowItems: [],
+            total: '',
+        },
+        defectExceptions: [],
+        defectRisk: [],
     },
 
     loading: false,
@@ -100,6 +111,15 @@ export const getbatchWorkflowDashboard = createAsyncThunk(
     },
 );
 
+// get defects
+export const getdefectWorkflow = createAsyncThunk('defectWorkflow/getdefectWorkflow', async () => {
+    const response = await axios.get(`${API_PATHS.API}/${API_PATHS.defectsDashboard}`, {
+        headers: { Auth: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
+    });
+    const data = response.data;
+    return data;
+});
+
 const dashbroadSlice = createSlice({
     name: 'dashbroad',
     initialState,
@@ -117,6 +137,9 @@ const dashbroadSlice = createSlice({
             })
             .addCase(getbatchWorkflowDashboard.fulfilled, (state, action) => {
                 state.batchWorkflowDashboardList = action.payload;
+            })
+            .addCase(getdefectWorkflow.fulfilled, (state, action) => {
+                state.defectWorkflowList = action.payload;
             })
             .addMatcher<PendingAction>(
                 (action) => action.type.endsWith('/pending'),

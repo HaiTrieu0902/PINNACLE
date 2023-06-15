@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import SubHeader from '../Header/SubHeader';
 import DashBroadItem from './branching/DashBroadItem';
 import { batchWorkflowDashboardList } from '../../types/dashbroad';
+import { handleColorWorkflowItems } from '../../utils/dashbroadColor';
 
 interface DashBroadBatchesProps {
     batchWorkflowDashboardList: batchWorkflowDashboardList;
@@ -13,16 +14,9 @@ interface DashBroadBatchesProps {
 
 const DashBroadBatches = ({ batchWorkflowDashboardList }: DashBroadBatchesProps) => {
     const [data, setData] = useState([]);
-
-    const handleColorBatchs = () => {
-        return batchWorkflowDashboardList.batchWorkflowDashboard.workflowItem.map((item) => {
-            return item?.backColor ? item.backColor : '';
-        });
-    };
-
     const configBatchs = {
         appendPadding: 30,
-        data: batchWorkflowDashboardList.batchWorkflowDashboard.workflowItem,
+        data: batchWorkflowDashboardList.batchWorkflowDashboard?.workflowItem,
         angleField: 'value',
         colorField: 'text',
         radius: 1,
@@ -37,7 +31,7 @@ const DashBroadBatches = ({ batchWorkflowDashboardList }: DashBroadBatchesProps)
                 fontSize: 14,
             },
         },
-        color: handleColorBatchs(),
+        color: handleColorWorkflowItems(batchWorkflowDashboardList.batchWorkflowDashboard?.workflowItem),
         interactions: [
             {
                 type: 'element-selected',

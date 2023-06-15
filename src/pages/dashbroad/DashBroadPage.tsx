@@ -12,6 +12,7 @@ import './DashBroadPage.scss';
 import { useAppDispatch, useAppSelector } from '../../store';
 import {
     getbatchWorkflowDashboard,
+    getdefectWorkflow,
     getreleaseWorkflow,
     getrequirementWorkflow,
     gettestCaseWorkflow,
@@ -19,9 +20,14 @@ import {
 
 const DashBroadPage = () => {
     const dispatch = useAppDispatch();
-    const { releaseWorkflow, requirementWorkflowList, testCaseWorkflowList, batchWorkflowDashboardList } =
-        useAppSelector((state) => state.dashbroad);
     const [activeTab, setActiveTab] = useState('1');
+    const {
+        releaseWorkflow,
+        requirementWorkflowList,
+        testCaseWorkflowList,
+        batchWorkflowDashboardList,
+        defectWorkflowList,
+    } = useAppSelector((state) => state.dashbroad);
 
     // API get getreleaseWorkflow
     useEffect(() => {
@@ -29,11 +35,13 @@ const DashBroadPage = () => {
         const requirementWorkflow = dispatch(getrequirementWorkflow());
         const testCaseWorkflow = dispatch(gettestCaseWorkflow());
         const batchWorkflowDashboard = dispatch(getbatchWorkflowDashboard());
+        const defectWorkflowDashboard = dispatch(getdefectWorkflow());
         return () => {
             releaseWorkflow.abort();
             requirementWorkflow.abort();
             testCaseWorkflow.abort();
             batchWorkflowDashboard.abort();
+            defectWorkflowDashboard.abort();
         };
     }, [dispatch]);
 
@@ -65,7 +73,7 @@ const DashBroadPage = () => {
         {
             key: '5',
             label: `Defects`,
-            children: <DashBroadDefect />,
+            children: <DashBroadDefect defectWorkflowList={defectWorkflowList} />,
         },
     ];
 
