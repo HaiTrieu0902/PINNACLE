@@ -18,7 +18,7 @@ const DashBroadRequiment = ({ requirementWorkflowList }: DashBroadRequimentProps
         });
     };
     const configRequiment = {
-        appendPadding: 44,
+        appendPadding: 30,
         data: requirementWorkflowList.requirementWorkflow.workflowItems,
         angleField: 'value',
         colorField: 'text',

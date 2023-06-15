@@ -22,7 +22,7 @@ export const dataRelease = [
 ];
 
 export const configRelease = {
-    appendPadding: 44,
+    appendPadding: 30,
     data: dataRelease,
     angleField: 'value',
     colorField: 'type',
@@ -72,7 +72,7 @@ export const dataRequiment = [
 ];
 
 export const configRequiment = {
-    appendPadding: 44,
+    appendPadding: 30,
     data: dataRequiment,
     angleField: 'value',
     colorField: 'type',
@@ -118,7 +118,7 @@ export const dataTestCase = [
 ];
 
 export const configTestcase = {
-    appendPadding: 44,
+    appendPadding: 30,
     data: dataTestCase,
     angleField: 'value',
     colorField: 'type',
@@ -164,7 +164,7 @@ export const dataBatchs = [
 ];
 
 export const configBatchs = {
-    appendPadding: 44,
+    appendPadding: 30,
     data: dataBatchs,
     angleField: 'value',
     colorField: 'type',
@@ -222,7 +222,7 @@ export const dataDefects = [
 ];
 
 export const configDefects = {
-    appendPadding: 44,
+    appendPadding: 30,
     data: dataDefects,
     angleField: 'value',
     colorField: 'type',

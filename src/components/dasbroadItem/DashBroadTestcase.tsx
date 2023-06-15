@@ -16,7 +16,7 @@ const DashBroadTestcase = ({ testCaseWorkflowList }: DashBroadTestcaseProps) => 
     };
 
     const configTestcase = {
-        appendPadding: 44,
+        appendPadding: 30,
         data: testCaseWorkflowList.testCaseWorkflow.workflowItem,
         angleField: 'value',
         colorField: 'text',

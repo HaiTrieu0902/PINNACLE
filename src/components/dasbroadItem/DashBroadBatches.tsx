@@ -14,11 +14,17 @@ interface DashBroadBatchesProps {
 const DashBroadBatches = ({ batchWorkflowDashboardList }: DashBroadBatchesProps) => {
     const [data, setData] = useState([]);
 
+    const handleColorBatchs = () => {
+        return batchWorkflowDashboardList.batchWorkflowDashboard.workflowItem.map((item) => {
+            return item?.backColor ? item.backColor : '';
+        });
+    };
+
     const configBatchs = {
-        appendPadding: 44,
+        appendPadding: 30,
         data: batchWorkflowDashboardList.batchWorkflowDashboard.workflowItem,
         angleField: 'value',
-        colorField: 'type',
+        colorField: 'text',
         radius: 1,
         innerRadius: 0.6,
         label: {
@@ -31,6 +37,7 @@ const DashBroadBatches = ({ batchWorkflowDashboardList }: DashBroadBatchesProps)
                 fontSize: 14,
             },
         },
+        color: handleColorBatchs(),
         interactions: [
             {
                 type: 'element-selected',
@@ -39,18 +46,6 @@ const DashBroadBatches = ({ batchWorkflowDashboardList }: DashBroadBatchesProps)
                 type: 'element-active',
             },
         ],
-        // statistic: {
-        //     title: false,
-        //     content: {
-        //         style: {
-        //             whiteSpace: 'pre-wrap',
-        //             overflow: 'hidden',
-        //             textOverflow: 'ellipsis',
-        //             fontSize: 14,
-        //         },
-        //         content: 'Total\n100',
-        //     },
-        // },
     };
 
     useEffect(() => {

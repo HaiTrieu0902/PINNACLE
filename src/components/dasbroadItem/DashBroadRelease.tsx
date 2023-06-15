@@ -16,7 +16,7 @@ const DashBroadRelease = ({ releaseWorkflow }: DashBroadReleaseProps) => {
         });
     };
     const configRelease = {
-        appendPadding: 44,
+        appendPadding: 30,
         data: releaseWorkflow.releaseWorkflow.workflowItems,
         angleField: 'value',
         colorField: 'text',
