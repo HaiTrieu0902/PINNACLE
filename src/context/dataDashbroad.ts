@@ -290,3 +290,166 @@ export const configDefects = {
     //     },
     // },
 };
+
+export const columnDefect = [
+    {
+        city: '6/6',
+        type: 'Severity 1',
+        value: 14500,
+    },
+    {
+        city: '6/6',
+        type: 'Severity 2',
+        value: 8500,
+    },
+    {
+        city: '6/6',
+        type: 'Severity 3',
+        value: 10000,
+    },
+    {
+        city: '6/6',
+        type: 'Severity 4',
+        value: 7000,
+    },
+    {
+        city: '7/6',
+        type: 'Severity 1',
+        value: 9000,
+    },
+    {
+        city: '7/6',
+        type: 'Severity 2',
+        value: 8500,
+    },
+    {
+        city: '7/6',
+        type: 'Severity 3',
+        value: 11000,
+    },
+    {
+        city: '7/6',
+        type: 'Severity 4',
+        value: 6000,
+    },
+    {
+        city: '8/6',
+        type: 'Severity 1',
+        value: 16000,
+    },
+    {
+        city: '8/6',
+        type: 'Severity 2',
+        value: 5000,
+    },
+    {
+        city: '8/6',
+        type: 'Severity 3',
+        value: 6000,
+    },
+    {
+        city: '8/6',
+        type: 'Severity 4',
+        value: 10000,
+    },
+    {
+        city: '9/6',
+        type: 'Severity 1',
+        value: 14000,
+    },
+    {
+        city: '9/6',
+        type: 'Severity 2',
+        value: 9000,
+    },
+    {
+        city: '9/6',
+        type: 'Severity 3',
+        value: 10000,
+    },
+    {
+        city: '9/6',
+        type: 'Severity 4',
+        value: 9000,
+    },
+    {
+        city: '10/6',
+        type: 'Severity 1',
+        value: 14000,
+    },
+    {
+        city: '10/6',
+        type: 'Severity 2',
+        value: 9000,
+    },
+    {
+        city: '10/6',
+        type: 'Severity 3',
+        value: 10000,
+    },
+    {
+        city: '10/6',
+        type: 'Severity 4',
+        value: 6000,
+    },
+    {
+        city: '11/6',
+        type: 'Severity 1',
+        value: 9000,
+    },
+    {
+        city: '11/6',
+        type: 'Severity 2',
+        value: 8500,
+    },
+    {
+        city: '11/6',
+        type: 'Severity 3',
+        value: 10000,
+    },
+    {
+        city: '11/6',
+        type: 'Severity 4',
+        value: 6000,
+    },
+    {
+        city: '12/6',
+        type: 'Severity 1',
+        value: 17000,
+    },
+    {
+        city: '12/6',
+        type: 'Severity 2',
+        value: 6000,
+    },
+    {
+        city: '12/6',
+        type: 'Severity 3',
+        value: 7000,
+    },
+    {
+        city: '12/6',
+        type: 'Severity 4',
+        value: 10000,
+    },
+    {
+        city: '13/6',
+        type: 'Severity 1',
+        value: 18000,
+    },
+    {
+        city: '13/6',
+        type: 'Severity 2',
+        value: 11000,
+    },
+    {
+        city: '13/6',
+        type: 'Severity 3',
+        value: 15000,
+    },
+    {
+        city: '13/6',
+        type: 'Severity 4',
+        value: 14000,
+    },
+];
