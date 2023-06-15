@@ -1,61 +1,53 @@
 import { Pie } from '@ant-design/plots';
-import { Column } from '@ant-design/plots';
+import { Column, G2 } from '@ant-design/plots';
+import { deepMix } from '@antv/util';
 import { configBatchs } from '../../context/dataDashbroad';
 import SubHeader from '../Header/SubHeader';
 import DashBroadItem from './branching/DashBroadItem';
+import { useEffect, useState } from 'react';
 const DashBroadBatches = () => {
-    const data = [
-        {
-            type: '13/6',
-            value: 100,
-        },
-        {
-            type: '14/6',
-            value: 250,
-        },
-        {
-            type: '15/6',
-            value: 134,
-        },
-        {
-            type: '17/6',
-            value: 64,
-        },
-        {
-            type: '18/6',
-            value: 230,
-        },
-        {
-            type: '19/6',
-            value: 250,
-        },
-        {
-            type: '20/6',
-            value: 160,
-        },
-        {
-            type: '21/6',
-            value: 122,
-        },
-    ];
+    const [data, setData] = useState([]);
+    useEffect(() => {
+        asyncFetch();
+    }, []);
 
-    const config = {
+    const asyncFetch = () => {
+        fetch('https://gw.alipayobjects.com/os/bmw-prod/be63e0a2-d2be-4c45-97fd-c00f752a66d4.json')
+            .then((response) => response.json())
+            .then((json) => setData(json))
+            .catch((error) => {
+                console.log('fetch data failed', error);
+            });
+    };
+    const configColumBatches = {
         data,
-        xField: 'type',
-        yField: 'value',
-        seriesField: '',
-        color: '#6C63F0',
-        label: {
-            fields: ['value'],
-            offset: 10,
-        },
-        legend: false || undefined,
+        xField: '城市',
+        yField: '销售额',
         xAxis: {
             label: {
-                autoHide: true,
                 autoRotate: false,
             },
         },
+        theme: deepMix(
+            {},
+            {
+                components: {
+                    scrollbar: {
+                        default: {
+                            style: {
+                                trackColor: '#002060',
+                                thumbColor: '#8c8c8c',
+                            },
+                        },
+                        hover: {
+                            style: {
+                                thumbColor: 'rgba(255,255,255,0.6)',
+                            },
+                        },
+                    },
+                },
+            },
+        ),
     };
 
     return (
@@ -70,7 +62,7 @@ const DashBroadBatches = () => {
             <DashBroadItem width={'45%'}>
                 <SubHeader title="Test Daily Frequency" size={14} color="black" />
                 <div>
-                    <Column {...config} />
+                    <Column {...configColumBatches} />
                 </div>
             </DashBroadItem>
         </div>

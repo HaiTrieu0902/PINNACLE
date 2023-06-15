@@ -31,6 +31,7 @@ export const configRelease = {
     label: {
         type: 'inner',
         offset: '-50%',
+        autoRotate: false,
         content: '{value}',
         style: {
             textAlign: 'center',
@@ -93,6 +94,7 @@ export const configRequiment = {
         type: 'inner',
         offset: '-50%',
         content: '{value}',
+        autoRotate: false,
         style: {
             textAlign: 'center',
             fontSize: 14,
@@ -150,6 +152,7 @@ export const configTestcase = {
         type: 'inner',
         offset: '-50%',
         content: '{value}',
+        autoRotate: false,
         style: {
             textAlign: 'center',
             fontSize: 14,
@@ -207,6 +210,7 @@ export const configBatchs = {
         type: 'inner',
         offset: '-50%',
         content: '{value}',
+        autoRotate: false,
         style: {
             textAlign: 'center',
             fontSize: 14,
@@ -264,6 +268,7 @@ export const configDefects = {
         type: 'inner',
         offset: '-50%',
         content: '{value}',
+        autoRotate: false,
         style: {
             textAlign: 'center',
             fontSize: 14,
