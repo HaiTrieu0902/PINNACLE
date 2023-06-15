@@ -20,3 +20,20 @@ export interface requirementWorkflowList {
     requirementCustom: WorkflowItems[];
     requirementRisk: WorkflowItems[];
 }
+
+export interface testCaseWorkflowList {
+    testCaseWorkflow: {
+        workflowItem: WorkflowItems[];
+        total: string | null;
+    };
+    testCaseCustom: WorkflowItems[];
+    testCaseException: WorkflowItems[];
+}
+
+export interface batchWorkflowDashboardList {
+    batchWorkflowDashboard: {
+        workflowItem: WorkflowItems[];
+        total: string | null;
+    };
+    batchExceptionDashboard: WorkflowItems[];
+}

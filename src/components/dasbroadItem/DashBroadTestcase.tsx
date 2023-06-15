@@ -1,10 +1,48 @@
-import React from 'react';
-import DashBroadItem from './branching/DashBroadItem';
-import SubHeader from '../Header/SubHeader';
 import { Pie } from '@ant-design/plots';
-import { configTestcase } from '../../context/dataDashbroad';
+import { testCaseWorkflowList } from '../../types/dashbroad';
+import SubHeader from '../Header/SubHeader';
+import DashBroadItem from './branching/DashBroadItem';
 import DashBroadCustom from './branching/DashBroadCustom';
-const DashBroadTestcase = () => {
+
+interface DashBroadTestcaseProps {
+    testCaseWorkflowList: testCaseWorkflowList;
+}
+
+const DashBroadTestcase = ({ testCaseWorkflowList }: DashBroadTestcaseProps) => {
+    const handleColorTestCase = () => {
+        return testCaseWorkflowList.testCaseWorkflow?.workflowItem?.map((item) => {
+            return item?.backColor ? item.backColor : '';
+        });
+    };
+
+    const configTestcase = {
+        appendPadding: 44,
+        data: testCaseWorkflowList.testCaseWorkflow.workflowItem,
+        angleField: 'value',
+        colorField: 'text',
+        radius: 1,
+        innerRadius: 0.6,
+        label: {
+            type: 'inner',
+            offset: '-50%',
+            content: '{value}',
+            autoRotate: false,
+            style: {
+                textAlign: 'center',
+                fontSize: 14,
+            },
+        },
+        color: handleColorTestCase(),
+        interactions: [
+            {
+                type: 'element-selected',
+            },
+            {
+                type: 'element-active',
+            },
+        ],
+    };
+
     return (
         <div className="flex w-full gap-2">
             <DashBroadItem width={'55%'}>
@@ -17,24 +55,16 @@ const DashBroadTestcase = () => {
             <DashBroadItem width={'45%'}>
                 <SubHeader title="Custom Test Case" size={14} color="black" />
                 <div className="ml-8 mt-9 flex flex-col gap-8">
-                    {/* <DashBroadCustom
-                        color="#64BFE8"
-                        bgColor="rgba(100, 191, 232, 0.1)"
-                        value="44"
-                        title="Not executed"
-                    />
-                    <DashBroadCustom
-                        color="#739EF9"
-                        bgColor="rgba(115, 158, 249, 0.1)"
-                        value="15"
-                        title="Failed when last executed"
-                    />
-                    <DashBroadCustom
-                        color="#F2B41C"
-                        bgColor="rgba(242, 180, 28, 0.1)"
-                        value="90"
-                        title="Blocked when last executed"
-                    /> */}
+                    {testCaseWorkflowList.testCaseCustom.map((testCase, index) => {
+                        return (
+                            <DashBroadCustom
+                                key={index}
+                                color={String(testCase.backColor)}
+                                value={String(testCase.value)}
+                                title={testCase.text}
+                            />
+                        );
+                    })}
                 </div>
             </DashBroadItem>
         </div>

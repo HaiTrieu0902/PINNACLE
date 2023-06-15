@@ -142,18 +142,6 @@ export const configTestcase = {
             type: 'element-active',
         },
     ],
-    // statistic: {
-    //     title: false,
-    //     content: {
-    //         style: {
-    //             whiteSpace: 'pre-wrap',
-    //             overflow: 'hidden',
-    //             textOverflow: 'ellipsis',
-    //             fontSize: 14,
-    //         },
-    //         content: 'Total\n100',
-    //     },
-    // },
 };
 
 export const dataBatchs = [

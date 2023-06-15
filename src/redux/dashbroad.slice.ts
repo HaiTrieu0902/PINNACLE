@@ -3,7 +3,12 @@ import Cookies from 'js-cookie';
 import { ACCESS_TOKEN_KEY } from '../utils/constant';
 import { API_PATHS } from '../configs/api';
 import axios from 'axios';
-import { releaseWorkflowList, requirementWorkflowList } from '../types/dashbroad';
+import {
+    batchWorkflowDashboardList,
+    releaseWorkflowList,
+    requirementWorkflowList,
+    testCaseWorkflowList,
+} from '../types/dashbroad';
 
 type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
 type PendingAction = ReturnType<GenericAsyncThunk['pending']>;
@@ -13,6 +18,9 @@ type FulfilledAction = ReturnType<GenericAsyncThunk['fulfilled']>;
 interface Dashbroad {
     releaseWorkflow: releaseWorkflowList;
     requirementWorkflowList: requirementWorkflowList;
+    testCaseWorkflowList: testCaseWorkflowList;
+    batchWorkflowDashboardList: batchWorkflowDashboardList;
+
     loading: boolean;
 }
 
@@ -25,12 +33,29 @@ const initialState: Dashbroad = {
         },
     },
     requirementWorkflowList: {
+        requirementCustom: [],
         requirementWorkflow: {
             workflowItems: [],
             total: '',
         },
-        requirementCustom: [],
         requirementRisk: [],
+    },
+
+    testCaseWorkflowList: {
+        testCaseCustom: [],
+        testCaseWorkflow: {
+            workflowItem: [],
+            total: '',
+        },
+        testCaseException: [],
+    },
+
+    batchWorkflowDashboardList: {
+        batchExceptionDashboard: [],
+        batchWorkflowDashboard: {
+            workflowItem: [],
+            total: '',
+        },
     },
 
     loading: false,
@@ -54,8 +79,29 @@ export const getrequirementWorkflow = createAsyncThunk('requirementWorkflow/getR
     return data;
 });
 
+// get TescaseWork
+export const gettestCaseWorkflow = createAsyncThunk('testCaseWorkflow/getTestCaseWorkflow', async () => {
+    const response = await axios.get(`${API_PATHS.API}/${API_PATHS.testcasedashboard}`, {
+        headers: { Auth: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
+    });
+    const data = response.data;
+    return data;
+});
+
+// get batchWorkflowDashboard
+export const getbatchWorkflowDashboard = createAsyncThunk(
+    'batchWorkflowDashboard/getBatchWorkflowDashboard',
+    async () => {
+        const response = await axios.get(`${API_PATHS.API}/${API_PATHS.batchDashboard}`, {
+            headers: { Auth: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
+        });
+        const data = response.data;
+        return data;
+    },
+);
+
 const dashbroadSlice = createSlice({
-    name: 'auth',
+    name: 'dashbroad',
     initialState,
     reducers: {},
     extraReducers(builder) {
@@ -65,6 +111,12 @@ const dashbroadSlice = createSlice({
             })
             .addCase(getrequirementWorkflow.fulfilled, (state, action) => {
                 state.requirementWorkflowList = action.payload;
+            })
+            .addCase(gettestCaseWorkflow.fulfilled, (state, action) => {
+                state.testCaseWorkflowList = action.payload;
+            })
+            .addCase(getbatchWorkflowDashboard.fulfilled, (state, action) => {
+                state.batchWorkflowDashboardList = action.payload;
             })
             .addMatcher<PendingAction>(
                 (action) => action.type.endsWith('/pending'),

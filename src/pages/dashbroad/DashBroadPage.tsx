@@ -10,20 +10,30 @@ import DashBroadRequiment from '../../components/dasbroadItem/DashBroadRequiment
 import DashBroadTestcase from '../../components/dasbroadItem/DashBroadTestcase';
 import './DashBroadPage.scss';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { getreleaseWorkflow, getrequirementWorkflow } from '../../redux/dashbroad.slice';
+import {
+    getbatchWorkflowDashboard,
+    getreleaseWorkflow,
+    getrequirementWorkflow,
+    gettestCaseWorkflow,
+} from '../../redux/dashbroad.slice';
 
 const DashBroadPage = () => {
     const dispatch = useAppDispatch();
-    const { releaseWorkflow, requirementWorkflowList } = useAppSelector((state) => state.dashbroad);
+    const { releaseWorkflow, requirementWorkflowList, testCaseWorkflowList, batchWorkflowDashboardList } =
+        useAppSelector((state) => state.dashbroad);
     const [activeTab, setActiveTab] = useState('1');
 
     // API get getreleaseWorkflow
     useEffect(() => {
         const releaseWorkflow = dispatch(getreleaseWorkflow());
         const requirementWorkflow = dispatch(getrequirementWorkflow());
+        const testCaseWorkflow = dispatch(gettestCaseWorkflow());
+        const batchWorkflowDashboard = dispatch(getbatchWorkflowDashboard());
         return () => {
             releaseWorkflow.abort();
             requirementWorkflow.abort();
+            testCaseWorkflow.abort();
+            batchWorkflowDashboard.abort();
         };
     }, [dispatch]);
 
@@ -45,12 +55,12 @@ const DashBroadPage = () => {
         {
             key: '3',
             label: `Test Cases`,
-            children: <DashBroadTestcase />,
+            children: <DashBroadTestcase testCaseWorkflowList={testCaseWorkflowList} />,
         },
         {
             key: '4',
             label: `Batches`,
-            children: <DashBroadBatches />,
+            children: <DashBroadBatches batchWorkflowDashboardList={batchWorkflowDashboardList} />,
         },
         {
             key: '5',
@@ -58,8 +68,6 @@ const DashBroadPage = () => {
             children: <DashBroadDefect />,
         },
     ];
-
-    console.log('releaseWorkflow', releaseWorkflow);
 
     return (
         <div className="fixer-pt ml-content">

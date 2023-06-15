@@ -3,11 +3,56 @@ import { deepMix } from '@antv/util';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
-import { configBatchs } from '../../context/dataDashbroad';
 import SubHeader from '../Header/SubHeader';
 import DashBroadItem from './branching/DashBroadItem';
-const DashBroadBatches = () => {
+import { batchWorkflowDashboardList } from '../../types/dashbroad';
+
+interface DashBroadBatchesProps {
+    batchWorkflowDashboardList: batchWorkflowDashboardList;
+}
+
+const DashBroadBatches = ({ batchWorkflowDashboardList }: DashBroadBatchesProps) => {
     const [data, setData] = useState([]);
+
+    const configBatchs = {
+        appendPadding: 44,
+        data: batchWorkflowDashboardList.batchWorkflowDashboard.workflowItem,
+        angleField: 'value',
+        colorField: 'type',
+        radius: 1,
+        innerRadius: 0.6,
+        label: {
+            type: 'inner',
+            offset: '-50%',
+            content: '{value}',
+            autoRotate: false,
+            style: {
+                textAlign: 'center',
+                fontSize: 14,
+            },
+        },
+        interactions: [
+            {
+                type: 'element-selected',
+            },
+            {
+                type: 'element-active',
+            },
+        ],
+        // statistic: {
+        //     title: false,
+        //     content: {
+        //         style: {
+        //             whiteSpace: 'pre-wrap',
+        //             overflow: 'hidden',
+        //             textOverflow: 'ellipsis',
+        //             fontSize: 14,
+        //         },
+        //         content: 'Total\n100',
+        //     },
+        // },
+    };
+
     useEffect(() => {
         asyncFetch();
     }, []);
@@ -20,6 +65,7 @@ const DashBroadBatches = () => {
                 console.log('fetch data failed', error);
             });
     };
+
     const configColumBatches = {
         appendPadding: 5,
         autoFit: true,
