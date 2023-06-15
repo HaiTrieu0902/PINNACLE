@@ -1,7 +1,7 @@
 import type { TabsProps } from 'antd';
 import { Tabs } from 'antd';
 import TabPane from 'antd/es/tabs/TabPane';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ContainerLayout } from '../../components/container/ContainerLayout';
 import DashBroadBatches from '../../components/dasbroadItem/DashBroadBatches';
 import DashBroadDefect from '../../components/dasbroadItem/DashBroadDefect';
@@ -9,23 +9,38 @@ import DashBroadRelease from '../../components/dasbroadItem/DashBroadRelease';
 import DashBroadRequiment from '../../components/dasbroadItem/DashBroadRequiment';
 import DashBroadTestcase from '../../components/dasbroadItem/DashBroadTestcase';
 import './DashBroadPage.scss';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { getreleaseWorkflow, getrequirementWorkflow } from '../../redux/dashbroad.slice';
 
 const DashBroadPage = () => {
+    const dispatch = useAppDispatch();
+    const { releaseWorkflow, requirementWorkflowList } = useAppSelector((state) => state.dashbroad);
     const [activeTab, setActiveTab] = useState('1');
-    const onChange = (key: string) => {
+
+    // API get getreleaseWorkflow
+    useEffect(() => {
+        const releaseWorkflow = dispatch(getreleaseWorkflow());
+        const requirementWorkflow = dispatch(getrequirementWorkflow());
+        return () => {
+            releaseWorkflow.abort();
+            requirementWorkflow.abort();
+        };
+    }, [dispatch]);
+
+    // change Tab
+    const onChangeTab = (key: string) => {
         setActiveTab(key);
     };
-
     const items: TabsProps['items'] = [
         {
             key: '1',
             label: `Releases`,
-            children: <DashBroadRelease />,
+            children: <DashBroadRelease releaseWorkflow={releaseWorkflow} />,
         },
         {
             key: '2',
             label: `Requiments`,
-            children: <DashBroadRequiment />,
+            children: <DashBroadRequiment requirementWorkflowList={requirementWorkflowList} />,
         },
         {
             key: '3',
@@ -44,6 +59,8 @@ const DashBroadPage = () => {
         },
     ];
 
+    console.log('releaseWorkflow', releaseWorkflow);
+
     return (
         <div className="fixer-pt ml-content">
             <ContainerLayout>
@@ -55,7 +72,7 @@ const DashBroadPage = () => {
                             activeKey={activeTab}
                             defaultActiveKey="1"
                             items={items}
-                            onChange={onChange}
+                            onChange={onChangeTab}
                             size="large"
                         ></Tabs>
                     </div>

@@ -46,18 +46,6 @@ export const configRelease = {
             type: 'element-active',
         },
     ],
-    // statistic: {
-    //     title: false,
-    //     content: {
-    //         style: {
-    //             whiteSpace: 'pre-wrap',
-    //             overflow: 'hidden',
-    //             textOverflow: 'ellipsis',
-    //             fontSize: 14,
-    //         },
-    //         content: 'Total\n100',
-    //     },
-    // },
 };
 
 export const dataRequiment = [
@@ -108,18 +96,6 @@ export const configRequiment = {
             type: 'element-active',
         },
     ],
-    // statistic: {
-    //     title: false,
-    //     content: {
-    //         style: {
-    //             whiteSpace: 'pre-wrap',
-    //             overflow: 'hidden',
-    //             textOverflow: 'ellipsis',
-    //             fontSize: 14,
-    //         },
-    //         content: 'Total\n100',
-    //     },
-    // },
 };
 
 export const dataTestCase = [

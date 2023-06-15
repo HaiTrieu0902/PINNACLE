@@ -9,8 +9,6 @@
 
 .dashborad-customer {
     .dashborad-circle {
-        width: 60px;
-        height: 60px;
         border-radius: 9999px;
     }
     .dashborad-circle-title {
@@ -18,5 +16,10 @@
         font-weight: 400;
         font-size: 14px;
         line-height: 18px;
+    }
+    .dashborad-circle-value {
+        border-radius: 9999px;
+        width: 60px;
+        height: 60px;
     }
 }

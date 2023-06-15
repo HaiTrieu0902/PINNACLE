@@ -1,10 +1,50 @@
-import React from 'react';
 import DashBroadItem from './branching/DashBroadItem';
 import SubHeader from '../Header/SubHeader';
 import { Pie } from '@ant-design/plots';
-import { configRequiment } from '../../context/dataDashbroad';
+
+import { requirementWorkflowList } from './../../types/dashbroad';
 import DashBroadCustom from './branching/DashBroadCustom';
-const DashBroadRequiment = () => {
+
+interface DashBroadRequimentProps {
+    requirementWorkflowList: requirementWorkflowList;
+}
+
+const DashBroadRequiment = ({ requirementWorkflowList }: DashBroadRequimentProps) => {
+    console.log('requirementWorkflowList', requirementWorkflowList.requirementWorkflow);
+
+    const handleColorRequiment = () => {
+        return requirementWorkflowList.requirementWorkflow.workflowItems?.map((item) => {
+            return item?.backColor ? item.backColor : '';
+        });
+    };
+    const configRequiment = {
+        appendPadding: 44,
+        data: requirementWorkflowList.requirementWorkflow.workflowItems,
+        angleField: 'value',
+        colorField: 'text',
+        radius: 1,
+        innerRadius: 0.6,
+        label: {
+            type: 'inner',
+            offset: '-50%',
+            content: '{value}',
+            autoRotate: false,
+            style: {
+                textAlign: 'center',
+                fontSize: 14,
+            },
+        },
+        color: handleColorRequiment(),
+        interactions: [
+            {
+                type: 'element-selected',
+            },
+            {
+                type: 'element-active',
+            },
+        ],
+    };
+
     return (
         <div className="flex w-full gap-2">
             <DashBroadItem width={'55%'}>
@@ -17,25 +57,14 @@ const DashBroadRequiment = () => {
             <DashBroadItem width={'45%'}>
                 <SubHeader title="Custom Requiment" size={14} color="black" />
                 <div className="ml-8 mt-10 flex flex-col gap-8">
-                    <DashBroadCustom
-                        color="#64BFE8"
-                        bgColor="rgba(100, 191, 232, 0.1)"
-                        value="44"
-                        title="Uncovered Requirement (i.e not linked to any tests)"
-                    />
-
-                    <DashBroadCustom
-                        color="#F2B41C"
-                        bgColor="rgba(242, 180, 28, 0.1)"
-                        value="90"
-                        title="Blocked Requirements"
-                    />
-                    <DashBroadCustom
-                        color="#71C09A"
-                        bgColor="rgba(113, 192, 154, 0.1)"
-                        value="88"
-                        title="Failed Requirements"
-                    />
+                    {requirementWorkflowList.requirementCustom.map((item, index) => (
+                        <DashBroadCustom
+                            key={index}
+                            color={String(item.backColor)}
+                            value={String(item.value)}
+                            title={item.text}
+                        />
+                    ))}
                 </div>
             </DashBroadItem>
         </div>

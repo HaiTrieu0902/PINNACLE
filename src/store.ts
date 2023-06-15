@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import authSlice from './redux/authToken';
+import dashbroadSlice from './redux/dashbroad.slice';
 
 const store = configureStore({
     reducer: {
         auth: authSlice,
+        dashbroad: dashbroadSlice,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

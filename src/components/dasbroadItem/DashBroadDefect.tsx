@@ -7,21 +7,6 @@ import { useEffect, useState } from 'react';
 import { columnDefect } from '../../context/dataDashbroad';
 
 const DashBroadDefect = () => {
-    // const [data, setData] = useState([]);
-
-    // console.log('data', data);
-    // useEffect(() => {
-    //     asyncFetch();
-    // }, []);
-
-    // const asyncFetch = () => {
-    //     fetch('https://gw.alipayobjects.com/os/antfincdn/PC3daFYjNw/column-data.json')
-    //         .then((response) => response.json())
-    //         .then((json) => setData(json))
-    //         .catch((error) => {
-    //             console.log('fetch data failed', error);
-    //         });
-    // };
     const config = {
         data: columnDefect,
         xField: 'city',

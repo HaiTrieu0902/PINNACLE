@@ -17,7 +17,7 @@ const DashBroadTestcase = () => {
             <DashBroadItem width={'45%'}>
                 <SubHeader title="Custom Test Case" size={14} color="black" />
                 <div className="ml-8 mt-9 flex flex-col gap-8">
-                    <DashBroadCustom
+                    {/* <DashBroadCustom
                         color="#64BFE8"
                         bgColor="rgba(100, 191, 232, 0.1)"
                         value="44"
@@ -34,7 +34,7 @@ const DashBroadTestcase = () => {
                         bgColor="rgba(242, 180, 28, 0.1)"
                         value="90"
                         title="Blocked when last executed"
-                    />
+                    /> */}
                 </div>
             </DashBroadItem>
         </div>

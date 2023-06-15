@@ -1,10 +1,11 @@
-import { Pie } from '@ant-design/plots';
-import { Column, G2 } from '@ant-design/plots';
+import { Column, Pie } from '@ant-design/plots';
 import { deepMix } from '@antv/util';
+import { DatePicker } from 'antd';
+import dayjs from 'dayjs';
+import { useEffect, useState } from 'react';
 import { configBatchs } from '../../context/dataDashbroad';
 import SubHeader from '../Header/SubHeader';
 import DashBroadItem from './branching/DashBroadItem';
-import { useEffect, useState } from 'react';
 const DashBroadBatches = () => {
     const [data, setData] = useState([]);
     useEffect(() => {
@@ -20,6 +21,8 @@ const DashBroadBatches = () => {
             });
     };
     const configColumBatches = {
+        appendPadding: 5,
+        autoFit: true,
         data,
         xField: '城市',
         yField: '销售额',
@@ -65,7 +68,23 @@ const DashBroadBatches = () => {
             <DashBroadItem width={'45%'}>
                 <SubHeader title="Test Daily Frequency" size={14} color="black" />
                 <div>
-                    <Column {...configColumBatches} />
+                    <div className="dashbroad-datepicker flex justify-between mb-10 mt-3">
+                        <div className="flex gap-4 items-center">
+                            <span>Form: </span>
+                            <DatePicker
+                                defaultValue={dayjs(new Date().toISOString(), 'YYYY-MM-DD')}
+                                format={'YYYY-MM-DD'}
+                            />
+                        </div>
+                        <div className="flex gap-4 items-center">
+                            <span>To: </span>
+                            <DatePicker
+                                defaultValue={dayjs(new Date().toISOString(), 'YYYY-MM-DD')}
+                                format={'YYYY-MM-DD'}
+                            />
+                        </div>
+                    </div>
+                    <Column {...configColumBatches} style={{ width: '100%', height: '320px' }} />
                 </div>
             </DashBroadItem>
         </div>

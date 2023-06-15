@@ -1,21 +1,19 @@
-import React from 'react';
-
 interface DashBroadCustomProps {
     title: string;
     value: string;
     color: string;
     direction?: string;
-    bgColor: string;
 }
 
-const DashBroadCustom = ({ title, value, color, bgColor }: DashBroadCustomProps) => {
+const DashBroadCustom = ({ title, value, color }: DashBroadCustomProps) => {
     return (
         <div className="dashborad-customer flex items-center gap-[46px]">
             <div
-                style={{ backgroundColor: bgColor, border: `3px solid ${color}` }}
-                className={`dashborad-circle flex items-center justify-center`}
+                style={{ border: `3px solid ${color}` }}
+                className={`dashborad-circle flex items-center justify-center relative`}
             >
-                <span>{value}</span>
+                <span style={{ backgroundColor: color, opacity: 0.2 }} className="dashborad-circle-value"></span>
+                <p className="absolute">{value}</p>
             </div>
             <span style={{ color: color }} className="dashborad-circle-title">
                 {title}
