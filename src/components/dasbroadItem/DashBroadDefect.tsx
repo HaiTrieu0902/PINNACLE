@@ -5,41 +5,13 @@ import DashBroadItem from './branching/DashBroadItem';
 import { useEffect, useState } from 'react';
 import { columnDefect } from '../../context/dataDashbroad';
 import { defectWorkflowList } from '../../types/dashbroad';
-import { handleColorWorkflowItems } from '../../utils/dashbroadColor';
+import { generatePieChartConfig, handleColorWorkflowItems } from '../../utils/dashbroadColor';
 
 interface DashBroadDefectProps {
     defectWorkflowList: defectWorkflowList;
 }
 
 const DashBroadDefect = ({ defectWorkflowList }: DashBroadDefectProps) => {
-    const configDefects = {
-        appendPadding: 30,
-        data: defectWorkflowList.defectWorkflow?.workflowItems,
-        angleField: 'value',
-        colorField: 'text',
-        radius: 1,
-        innerRadius: 0.6,
-        label: {
-            type: 'inner',
-            offset: '-50%',
-            content: '{value}',
-            autoRotate: false,
-            style: {
-                textAlign: 'center',
-                fontSize: 14,
-            },
-        },
-        color: handleColorWorkflowItems(defectWorkflowList.defectWorkflow?.workflowItems),
-        interactions: [
-            {
-                type: 'element-selected',
-            },
-            {
-                type: 'element-active',
-            },
-        ],
-    };
-
     const configColumDefect = {
         data: columnDefect,
         xField: 'city',
@@ -54,7 +26,7 @@ const DashBroadDefect = ({ defectWorkflowList }: DashBroadDefectProps) => {
             <DashBroadItem width={'55%'}>
                 <SubHeader title="Requiment Workflow" size={14} color="black" />
                 <div className="-ml-10">
-                    <Pie {...configDefects} />
+                    <Pie {...generatePieChartConfig(defectWorkflowList.defectWorkflow?.workflowItems)} />
                 </div>
             </DashBroadItem>
 

@@ -3,10 +3,10 @@ import { deepMix } from '@antv/util';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
+import { batchWorkflowDashboardList } from '../../types/dashbroad';
+import { generatePieChartConfig } from '../../utils/dashbroadColor';
 import SubHeader from '../Header/SubHeader';
 import DashBroadItem from './branching/DashBroadItem';
-import { batchWorkflowDashboardList } from '../../types/dashbroad';
-import { handleColorWorkflowItems } from '../../utils/dashbroadColor';
 
 interface DashBroadBatchesProps {
     batchWorkflowDashboardList: batchWorkflowDashboardList;
@@ -14,33 +14,6 @@ interface DashBroadBatchesProps {
 
 const DashBroadBatches = ({ batchWorkflowDashboardList }: DashBroadBatchesProps) => {
     const [data, setData] = useState([]);
-    const configBatchs = {
-        appendPadding: 30,
-        data: batchWorkflowDashboardList.batchWorkflowDashboard?.workflowItem,
-        angleField: 'value',
-        colorField: 'text',
-        radius: 1,
-        innerRadius: 0.6,
-        label: {
-            type: 'inner',
-            offset: '-50%',
-            content: '{value}',
-            autoRotate: false,
-            style: {
-                textAlign: 'center',
-                fontSize: 14,
-            },
-        },
-        color: handleColorWorkflowItems(batchWorkflowDashboardList.batchWorkflowDashboard?.workflowItem),
-        interactions: [
-            {
-                type: 'element-selected',
-            },
-            {
-                type: 'element-active',
-            },
-        ],
-    };
 
     useEffect(() => {
         asyncFetch();
@@ -96,7 +69,7 @@ const DashBroadBatches = ({ batchWorkflowDashboardList }: DashBroadBatchesProps)
             <DashBroadItem width={'55%'}>
                 <SubHeader title="Batch Workflow" size={14} color="black" />
                 <div className="-ml-10">
-                    <Pie {...configBatchs} />
+                    <Pie {...generatePieChartConfig(batchWorkflowDashboardList.batchWorkflowDashboard?.workflowItem)} />
                 </div>
             </DashBroadItem>
 

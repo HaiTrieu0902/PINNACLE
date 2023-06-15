@@ -1,6 +1,6 @@
 import { Pie } from '@ant-design/plots';
 import { testCaseWorkflowList } from '../../types/dashbroad';
-import { handleColorWorkflowItems } from '../../utils/dashbroadColor';
+import { generatePieChartConfig } from '../../utils/dashbroadColor';
 import SubHeader from '../Header/SubHeader';
 import DashBroadCustom from './branching/DashBroadCustom';
 import DashBroadItem from './branching/DashBroadItem';
@@ -10,40 +10,12 @@ interface DashBroadTestcaseProps {
 }
 
 const DashBroadTestcase = ({ testCaseWorkflowList }: DashBroadTestcaseProps) => {
-    const configTestcase = {
-        appendPadding: 30,
-        data: testCaseWorkflowList.testCaseWorkflow?.workflowItem,
-        angleField: 'value',
-        colorField: 'text',
-        radius: 1,
-        innerRadius: 0.6,
-        label: {
-            type: 'inner',
-            offset: '-50%',
-            content: '{value}',
-            autoRotate: false,
-            style: {
-                textAlign: 'center',
-                fontSize: 14,
-            },
-        },
-        color: handleColorWorkflowItems(testCaseWorkflowList.testCaseWorkflow?.workflowItem),
-        interactions: [
-            {
-                type: 'element-selected',
-            },
-            {
-                type: 'element-active',
-            },
-        ],
-    };
-
     return (
         <div className="flex w-full gap-2">
             <DashBroadItem width={'55%'}>
                 <SubHeader title="Test Case Workflow" size={14} color="black" />
                 <div className="-ml-10">
-                    <Pie {...configTestcase} />
+                    <Pie {...generatePieChartConfig(testCaseWorkflowList.testCaseWorkflow?.workflowItem)} />
                 </div>
             </DashBroadItem>
 
