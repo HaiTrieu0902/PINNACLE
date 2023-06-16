@@ -127,7 +127,7 @@ export const getdefectTrendWorkflow = createAsyncThunk(
         return data;
     },
 );
-///Dashboard/batch-test-daily-dashboard?fromDate=2022-05-04T10:45:13&toDate=2023-06-13T10:45:07&forItem=Test Cases
+
 // get btachDaily
 export const getBatchDailyWorkflow = createAsyncThunk(
     'BatchDailyWorkflow/getBatchDailyWorkflow',
