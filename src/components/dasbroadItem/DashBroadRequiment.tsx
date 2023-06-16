@@ -12,13 +12,13 @@ interface DashBroadRequimentProps {
 const DashBroadRequiment = ({ requirementWorkflowList }: DashBroadRequimentProps) => {
     return (
         <div className="flex w-full gap-2 flex-wrap">
-            <DashBroadItem width={'54%'} height="450px">
+            <DashBroadItem width={'54%'} height="480px">
                 <SubHeader title="Requirement Workflow" size={14} color="black" />
                 <div className="-ml-10">
                     <Pie {...generatePieChartConfig(requirementWorkflowList.requirementWorkflow?.workflowItems)} />
                 </div>
             </DashBroadItem>
-            <DashBroadItem width={'45%'} height="450px">
+            <DashBroadItem width={'45%'} height="480px">
                 <SubHeader title="Custom Requirement" size={14} color="black" />
                 <div className="ml-8 mt-10 flex flex-col gap-8">
                     {requirementWorkflowList.requirementCustom.map((item, index) => (
@@ -32,7 +32,7 @@ const DashBroadRequiment = ({ requirementWorkflowList }: DashBroadRequimentProps
                 </div>
             </DashBroadItem>
 
-            <DashBroadItem width={'54%'} height="180px">
+            <DashBroadItem width={'54%'} height="190px">
                 <SubHeader title="Requirement Risk" size={14} color="black" />
                 <div className="flex mt-6 items-center justify-center gap-11">
                     {requirementWorkflowList.requirementRisk.map((item, index) => (

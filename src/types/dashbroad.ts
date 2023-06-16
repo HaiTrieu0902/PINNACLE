@@ -46,3 +46,31 @@ export interface defectWorkflowList {
     defectExceptions: WorkflowItems[];
     defectRisk: WorkflowItems[];
 }
+
+export interface defectTrendWork {
+    dateCurrent: string;
+    dateCurrentString: string;
+    totalDefect: number;
+    serverity: number;
+    serverityName: string;
+    backColor: string;
+}
+
+export interface defectTrendWorkList {
+    defectTrendWork: defectTrendWork;
+}
+
+export interface batchDaisy {
+    totalRuns: number;
+    dateStarted: string;
+}
+
+export interface batchDaisyList {
+    defectTrendWork: batchDaisy;
+}
+
+export interface batchDailyExcute {
+    fromDate: string;
+    toDate: string;
+    Type: string;
+}

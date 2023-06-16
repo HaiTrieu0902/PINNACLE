@@ -12,14 +12,14 @@ interface DashBroadTestcaseProps {
 const DashBroadTestcase = ({ testCaseWorkflowList }: DashBroadTestcaseProps) => {
     return (
         <div className="flex w-full gap-2 flex-wrap">
-            <DashBroadItem width={'54%'} height="450px">
+            <DashBroadItem width={'54%'} height="480px">
                 <SubHeader title="Test Case Workflow" size={14} color="black" />
                 <div className="-ml-10">
                     <Pie {...generatePieChartConfig(testCaseWorkflowList.testCaseWorkflow?.workflowItem)} />
                 </div>
             </DashBroadItem>
 
-            <DashBroadItem width={'45%'} height="450px">
+            <DashBroadItem width={'45%'} height="480px">
                 <SubHeader title="Custom Test Case" size={14} color="black" />
                 <div className="ml-8 mt-9 flex flex-col gap-8">
                     {testCaseWorkflowList.testCaseCustom.map((testCase, index) => {
@@ -35,7 +35,7 @@ const DashBroadTestcase = ({ testCaseWorkflowList }: DashBroadTestcaseProps) => 
                 </div>
             </DashBroadItem>
 
-            <DashBroadItem width={'54%'} height="180px">
+            <DashBroadItem width={'54%'} height="190px">
                 <SubHeader title="Test Case Exception" size={14} color="black" />
                 <div className="flex mt-6 items-center justify-center gap-11">
                     {testCaseWorkflowList.testCaseException.map((item, index) => (

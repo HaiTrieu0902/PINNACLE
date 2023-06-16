@@ -1,39 +1,47 @@
 import { Column, Pie } from '@ant-design/plots';
 import { deepMix } from '@antv/util';
-import { DatePicker } from 'antd';
-import dayjs from 'dayjs';
+import { DatePicker, Select } from 'antd';
+import dayjs, { Dayjs } from 'dayjs';
 import { useEffect, useState } from 'react';
 import { batchWorkflowDashboardList } from '../../types/dashbroad';
 import { generatePieChartConfig } from '../../utils/dashbroadColor';
 import SubHeader from '../Header/SubHeader';
 import DashBroadItem from './branching/DashBroadItem';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { getBatchDailyWorkflow } from '../../redux/dashbroad.slice';
 
 interface DashBroadBatchesProps {
     batchWorkflowDashboardList: batchWorkflowDashboardList;
 }
 
 const DashBroadBatches = ({ batchWorkflowDashboardList }: DashBroadBatchesProps) => {
-    const [data, setData] = useState([]);
+    const dispatch = useAppDispatch();
+    const { batchDaisyList } = useAppSelector((state) => state.dashbroad);
+    const [formItem, setFormItem] = useState('1');
+    const [fromDate, setFromDate] = useState<dayjs.Dayjs | null>(dayjs(new Date().toISOString(), 'YYYY-MM-DD'));
+    const [toDate, setToDate] = useState<dayjs.Dayjs | null>(dayjs(new Date().toISOString(), 'YYYY-MM-DD'));
 
+    console.log('from');
+    // get API
     useEffect(() => {
-        asyncFetch();
-    }, []);
-
-    const asyncFetch = () => {
-        fetch('https://gw.alipayobjects.com/os/bmw-prod/be63e0a2-d2be-4c45-97fd-c00f752a66d4.json')
-            .then((response) => response.json())
-            .then((json) => setData(json))
-            .catch((error) => {
-                console.log('fetch data failed', error);
-            });
-    };
+        const batchDailyWorkflow = dispatch(
+            getBatchDailyWorkflow({
+                fromDate: String(fromDate?.toISOString()),
+                toDate: String(toDate?.toISOString()),
+                Type: formItem,
+            }),
+        );
+        return () => {
+            batchDailyWorkflow.abort();
+        };
+    }, [dispatch, formItem, fromDate, toDate]);
 
     const configColumBatches = {
         appendPadding: 5,
         autoFit: true,
-        data,
-        xField: '城市',
-        yField: '销售额',
+        data: batchDaisyList,
+        xField: 'dateStartedString',
+        yField: 'totalRuns',
         xAxis: {
             label: {
                 autoRotate: false,
@@ -64,35 +72,46 @@ const DashBroadBatches = ({ batchWorkflowDashboardList }: DashBroadBatchesProps)
         },
     };
 
+    const handleChangeSelect = (value: string) => {
+        setFormItem(value);
+    };
+
     return (
         <div className="flex w-full gap-2">
-            <DashBroadItem width={'54%'} height="450px">
+            <DashBroadItem width={'54%'} height="480px">
                 <SubHeader title="Batch Workflow" size={14} color="black" />
                 <div className="-ml-10">
                     <Pie {...generatePieChartConfig(batchWorkflowDashboardList.batchWorkflowDashboard?.workflowItem)} />
                 </div>
             </DashBroadItem>
 
-            <DashBroadItem width={'45%'} height="450px">
+            <DashBroadItem width={'45%'} height="480px">
                 <SubHeader title="Test Daily Frequency" size={14} color="black" />
                 <div>
                     <div className="dashbroad-datepicker flex justify-between mb-10 mt-3">
                         <div className="flex gap-4 items-center">
                             <span>Form: </span>
-                            <DatePicker
-                                defaultValue={dayjs(new Date().toISOString(), 'YYYY-MM-DD')}
-                                format={'YYYY-MM-DD'}
-                            />
+                            <DatePicker value={fromDate} onChange={(date) => setFromDate(date)} format={'YYYY-MM-DD'} />
                         </div>
                         <div className="flex gap-4 items-center">
                             <span>To: </span>
-                            <DatePicker
-                                defaultValue={dayjs(new Date().toISOString(), 'YYYY-MM-DD')}
-                                format={'YYYY-MM-DD'}
-                            />
+                            <DatePicker value={toDate} onChange={(date) => setToDate(date)} format={'YYYY-MM-DD'} />
                         </div>
                     </div>
-                    <Column {...configColumBatches} style={{ width: '100%', height: '320px' }} />
+                    <div className="-mt-6 mb-2">
+                        <Select
+                            defaultValue="Test Cases"
+                            style={{ width: 140 }}
+                            onChange={handleChangeSelect}
+                            options={[
+                                { value: 'Test Cases', label: 'Test Cases' },
+                                { value: 'Components', label: 'Components' },
+                                { value: 'Test Steps', label: 'Test Steps' },
+                            ]}
+                        />
+                    </div>
+
+                    <Column {...configColumBatches} style={{ width: '100%', height: '340px' }} />
                 </div>
             </DashBroadItem>
         </div>

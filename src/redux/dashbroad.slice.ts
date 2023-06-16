@@ -4,7 +4,11 @@ import { ACCESS_TOKEN_KEY } from '../utils/constant';
 import { API_PATHS } from '../configs/api';
 import axios from 'axios';
 import {
+    batchDailyExcute,
+    batchDaisyList,
     batchWorkflowDashboardList,
+    defectTrendWork,
+    defectTrendWorkList,
     defectWorkflowList,
     releaseWorkflowList,
     requirementWorkflowList,
@@ -22,6 +26,8 @@ interface Dashbroad {
     testCaseWorkflowList: testCaseWorkflowList;
     batchWorkflowDashboardList: batchWorkflowDashboardList;
     defectWorkflowList: defectWorkflowList;
+    defectTrendWorkList: defectTrendWork[];
+    batchDaisyList: batchDaisyList[];
 
     loading: boolean;
 }
@@ -69,6 +75,8 @@ const initialState: Dashbroad = {
         defectRisk: [],
     },
 
+    defectTrendWorkList: [],
+    batchDaisyList: [],
     loading: false,
 };
 
@@ -120,6 +128,33 @@ export const getdefectWorkflow = createAsyncThunk('defectWorkflow/getdefectWorkf
     return data;
 });
 
+// get defectTrendWorkList
+export const getdefectTrendWorkflow = createAsyncThunk(
+    'defectTrendWorkflow/getdefectTrendWorkflow',
+    async (id: string) => {
+        const response = await axios.get(`${API_PATHS.API}/${API_PATHS.defectTrendWorkList}=${id}`, {
+            headers: { Auth: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
+        });
+        const data = response.data;
+        return data;
+    },
+);
+///Dashboard/batch-test-daily-dashboard?fromDate=2022-05-04T10:45:13&toDate=2023-06-13T10:45:07&forItem=Test Cases
+// get btachDaily
+export const getBatchDailyWorkflow = createAsyncThunk(
+    'BatchDailyWorkflow/getBatchDailyWorkflow',
+    async ({ fromDate, toDate, Type }: batchDailyExcute) => {
+        const response = await axios.get(
+            `${API_PATHS.API}/Dashboard/batch-test-daily-dashboard?fromDate=${fromDate}&toDate=${toDate}&forItem=${Type}`,
+            {
+                headers: { Auth: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
+            },
+        );
+        const data = response.data;
+        return data;
+    },
+);
+
 const dashbroadSlice = createSlice({
     name: 'dashbroad',
     initialState,
@@ -140,6 +175,12 @@ const dashbroadSlice = createSlice({
             })
             .addCase(getdefectWorkflow.fulfilled, (state, action) => {
                 state.defectWorkflowList = action.payload;
+            })
+            .addCase(getdefectTrendWorkflow.fulfilled, (state, action) => {
+                state.defectTrendWorkList = action.payload;
+            })
+            .addCase(getBatchDailyWorkflow.fulfilled, (state, action) => {
+                state.batchDaisyList = action.payload;
             })
             .addMatcher<PendingAction>(
                 (action) => action.type.endsWith('/pending'),
