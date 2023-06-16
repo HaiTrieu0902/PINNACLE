@@ -9,6 +9,7 @@ import SubHeader from '../Header/SubHeader';
 import DashBroadItem from './branching/DashBroadItem';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { getBatchDailyWorkflow } from '../../redux/dashbroad.slice';
+import DashBroadCustom from './branching/DashBroadCustom';
 
 interface DashBroadBatchesProps {
     batchWorkflowDashboardList: batchWorkflowDashboardList;
@@ -21,7 +22,6 @@ const DashBroadBatches = ({ batchWorkflowDashboardList }: DashBroadBatchesProps)
     const [fromDate, setFromDate] = useState<dayjs.Dayjs | null>(dayjs('2022-05-13', 'YYYY-MM-DD'));
     const [toDate, setToDate] = useState<dayjs.Dayjs | null>(dayjs(new Date().toISOString(), 'YYYY-MM-DD'));
 
-    console.log('from');
     // get API
     useEffect(() => {
         const batchDailyWorkflow = dispatch(
@@ -77,7 +77,7 @@ const DashBroadBatches = ({ batchWorkflowDashboardList }: DashBroadBatchesProps)
     };
 
     return (
-        <div className="flex w-full gap-2">
+        <div className="flex w-full gap-2 flex-wrap">
             <DashBroadItem width={'54%'} height="480px">
                 <SubHeader title="Batch Workflow" size={14} color="black" />
                 <div className="-ml-10">
@@ -112,6 +112,21 @@ const DashBroadBatches = ({ batchWorkflowDashboardList }: DashBroadBatchesProps)
                     </div>
 
                     <Column {...configColumBatches} style={{ width: '100%', height: '340px' }} />
+                </div>
+            </DashBroadItem>
+
+            <DashBroadItem width={'54%'} height="190px">
+                <SubHeader title="Exception Dashboard" size={14} color="black" />
+                <div className="flex mt-6 items-center justify-center gap-11">
+                    {batchWorkflowDashboardList.batchExceptionDashboard.map((item, index) => (
+                        <DashBroadCustom
+                            key={index}
+                            color={String(item.backColor)}
+                            value={String(item.value)}
+                            title={item.text}
+                            direction="column"
+                        />
+                    ))}
                 </div>
             </DashBroadItem>
         </div>

@@ -1,19 +1,19 @@
-import { createSlice, PayloadAction, createAsyncThunk, AsyncThunk } from '@reduxjs/toolkit';
-import Cookies from 'js-cookie';
-import { ACCESS_TOKEN_KEY } from '../utils/constant';
-import { API_PATHS } from '../configs/api';
+import { AsyncThunk, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import Cookies from 'js-cookie';
+import { API_PATHS } from '../configs/api';
 import {
     batchDailyExcute,
     batchDaisyList,
     batchWorkflowDashboardList,
     defectTrendWork,
-    defectTrendWorkList,
     defectWorkflowList,
     releaseWorkflowList,
     requirementWorkflowList,
     testCaseWorkflowList,
 } from '../types/dashbroad';
+import { ACCESS_TOKEN_KEY } from '../utils/constant';
+import { axiosData } from '../configs/axiosApiCusomer';
 
 type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
 type PendingAction = ReturnType<GenericAsyncThunk['pending']>;
@@ -82,28 +82,22 @@ const initialState: Dashbroad = {
 
 // get releaseWorkflow
 export const getreleaseWorkflow = createAsyncThunk('releaseWorkflow/getEeleaseWorkflow', async () => {
-    const response = await axios.get(`${API_PATHS.API}/${API_PATHS.releaseDashbroad}`, {
-        headers: { Auth: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
-    });
-    const data = response.data;
+    const url = `${API_PATHS.API}/${API_PATHS.releaseDashbroad}`;
+    const data = await axiosData(url, 'GET');
     return data;
 });
 
 // get requirementWorkflowList
 export const getrequirementWorkflow = createAsyncThunk('requirementWorkflow/getRequirementWorkflow', async () => {
-    const response = await axios.get(`${API_PATHS.API}/${API_PATHS.requimentDashbroad}`, {
-        headers: { Auth: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
-    });
-    const data = response.data;
+    const url = `${API_PATHS.API}/${API_PATHS.requimentDashbroad}`;
+    const data = await axiosData(url, 'GET');
     return data;
 });
 
 // get TescaseWork
 export const gettestCaseWorkflow = createAsyncThunk('testCaseWorkflow/getTestCaseWorkflow', async () => {
-    const response = await axios.get(`${API_PATHS.API}/${API_PATHS.testcasedashboard}`, {
-        headers: { Auth: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
-    });
-    const data = response.data;
+    const url = `${API_PATHS.API}/${API_PATHS.testcasedashboard}`;
+    const data = await axiosData(url, 'GET');
     return data;
 });
 
@@ -111,20 +105,16 @@ export const gettestCaseWorkflow = createAsyncThunk('testCaseWorkflow/getTestCas
 export const getbatchWorkflowDashboard = createAsyncThunk(
     'batchWorkflowDashboard/getBatchWorkflowDashboard',
     async () => {
-        const response = await axios.get(`${API_PATHS.API}/${API_PATHS.batchDashboard}`, {
-            headers: { Auth: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
-        });
-        const data = response.data;
+        const url = `${API_PATHS.API}/${API_PATHS.batchDashboard}`;
+        const data = await axiosData(url, 'GET');
         return data;
     },
 );
 
 // get defects
 export const getdefectWorkflow = createAsyncThunk('defectWorkflow/getdefectWorkflow', async () => {
-    const response = await axios.get(`${API_PATHS.API}/${API_PATHS.defectsDashboard}`, {
-        headers: { Auth: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
-    });
-    const data = response.data;
+    const url = `${API_PATHS.API}/${API_PATHS.defectsDashboard}`;
+    const data = await axiosData(url, 'GET');
     return data;
 });
 
@@ -132,10 +122,8 @@ export const getdefectWorkflow = createAsyncThunk('defectWorkflow/getdefectWorkf
 export const getdefectTrendWorkflow = createAsyncThunk(
     'defectTrendWorkflow/getdefectTrendWorkflow',
     async (id: string) => {
-        const response = await axios.get(`${API_PATHS.API}/${API_PATHS.defectTrendWorkList}=${id}`, {
-            headers: { Auth: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
-        });
-        const data = response.data;
+        const url = `${API_PATHS.API}/${API_PATHS.defectTrendWorkList}=${id}`;
+        const data = await axiosData(url, 'GET');
         return data;
     },
 );
@@ -144,13 +132,8 @@ export const getdefectTrendWorkflow = createAsyncThunk(
 export const getBatchDailyWorkflow = createAsyncThunk(
     'BatchDailyWorkflow/getBatchDailyWorkflow',
     async ({ fromDate, toDate, Type }: batchDailyExcute) => {
-        const response = await axios.get(
-            `${API_PATHS.API}/Dashboard/batch-test-daily-dashboard?fromDate=${fromDate}&toDate=${toDate}&forItem=${Type}`,
-            {
-                headers: { Auth: `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}` },
-            },
-        );
-        const data = response.data;
+        const url = `${API_PATHS.API}/Dashboard/batch-test-daily-dashboard?fromDate=${fromDate}&toDate=${toDate}&forItem=${Type}`;
+        const data = await axiosData(url, 'GET');
         return data;
     },
 );
