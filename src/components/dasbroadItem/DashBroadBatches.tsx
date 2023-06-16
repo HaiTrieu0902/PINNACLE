@@ -18,7 +18,7 @@ const DashBroadBatches = ({ batchWorkflowDashboardList }: DashBroadBatchesProps)
     const dispatch = useAppDispatch();
     const { batchDaisyList } = useAppSelector((state) => state.dashbroad);
     const [formItem, setFormItem] = useState('1');
-    const [fromDate, setFromDate] = useState<dayjs.Dayjs | null>(dayjs(new Date().toISOString(), 'YYYY-MM-DD'));
+    const [fromDate, setFromDate] = useState<dayjs.Dayjs | null>(dayjs('2022-05-13', 'YYYY-MM-DD'));
     const [toDate, setToDate] = useState<dayjs.Dayjs | null>(dayjs(new Date().toISOString(), 'YYYY-MM-DD'));
 
     console.log('from');

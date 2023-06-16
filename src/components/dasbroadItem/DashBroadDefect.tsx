@@ -30,6 +30,8 @@ const DashBroadDefect = ({ defectWorkflowList }: DashBroadDefectProps) => {
         };
     }, [dispatch, valueDate]);
 
+    console.log('loggg', defectTrendWorkList);
+
     const configColumDefect = {
         data: defectTrendWorkList,
         xField: 'dateCurrentString',
@@ -37,7 +39,7 @@ const DashBroadDefect = ({ defectWorkflowList }: DashBroadDefectProps) => {
         seriesField: 'serverityName',
         groupField: 'serverity',
         color: handleColorColumnDefection(),
-        isGroup: false,
+        isStack: true,
         xAxis: {
             label: {
                 autoRotate: false,
@@ -65,6 +67,9 @@ const DashBroadDefect = ({ defectWorkflowList }: DashBroadDefectProps) => {
         ),
         scrollbar: {
             type: 'horizontal' as 'horizontal' | 'vertical' | undefined,
+        },
+        legend: {
+            position: 'top-right' as const,
         },
     };
 
