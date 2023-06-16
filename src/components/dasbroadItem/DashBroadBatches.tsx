@@ -66,14 +66,14 @@ const DashBroadBatches = ({ batchWorkflowDashboardList }: DashBroadBatchesProps)
 
     return (
         <div className="flex w-full gap-2">
-            <DashBroadItem width={'55%'}>
+            <DashBroadItem width={'54%'} height="450px">
                 <SubHeader title="Batch Workflow" size={14} color="black" />
                 <div className="-ml-10">
                     <Pie {...generatePieChartConfig(batchWorkflowDashboardList.batchWorkflowDashboard?.workflowItem)} />
                 </div>
             </DashBroadItem>
 
-            <DashBroadItem width={'45%'}>
+            <DashBroadItem width={'45%'} height="450px">
                 <SubHeader title="Test Daily Frequency" size={14} color="black" />
                 <div>
                     <div className="dashbroad-datepicker flex justify-between mb-10 mt-3">

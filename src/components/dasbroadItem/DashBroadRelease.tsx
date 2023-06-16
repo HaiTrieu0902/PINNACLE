@@ -11,14 +11,14 @@ interface DashBroadReleaseProps {
 
 const DashBroadRelease = ({ releaseWorkflow }: DashBroadReleaseProps) => {
     return (
-        <div className="flex w-full gap-2">
-            <DashBroadItem width={'55%'}>
+        <div className="flex w-full gap-2 flex-wrap">
+            <DashBroadItem width={'54%'} height="450px">
                 <SubHeader title="Release Workflow" size={14} color="black" />
                 <div className="-ml-10">
                     <Pie {...generatePieChartConfig(releaseWorkflow.releaseWorkflow?.workflowItems)} />
                 </div>
             </DashBroadItem>
-            <DashBroadItem width={'45%'}>
+            <DashBroadItem width={'45%'} height="450px">
                 <SubHeader title="Custom Release" size={14} color="black" />
                 <div className="ml-8 mt-8 flex flex-col gap-8">
                     {releaseWorkflow.releaseCustom.map((release, index) => (
