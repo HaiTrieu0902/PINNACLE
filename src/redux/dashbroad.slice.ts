@@ -1,7 +1,6 @@
 import { AsyncThunk, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
-import Cookies from 'js-cookie';
 import { API_PATHS } from '../configs/api';
+import { axiosData } from '../configs/axiosApiCusomer';
 import {
     batchDailyExcute,
     batchDaisyList,
@@ -12,8 +11,6 @@ import {
     requirementWorkflowList,
     testCaseWorkflowList,
 } from '../types/dashbroad';
-import { ACCESS_TOKEN_KEY } from '../utils/constant';
-import { axiosData } from '../configs/axiosApiCusomer';
 
 type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
 type PendingAction = ReturnType<GenericAsyncThunk['pending']>;

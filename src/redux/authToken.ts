@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, createAsyncThunk, AsyncThunk } from '@reduxjs/toolkit';
+import { AsyncThunk, PayloadAction, createSlice } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
 import { ACCESS_TOKEN_KEY } from '../utils/constant';
 
