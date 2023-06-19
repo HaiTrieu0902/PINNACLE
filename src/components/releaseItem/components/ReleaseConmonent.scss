@@ -3,4 +3,13 @@
         display: flex;
         justify-content: space-between;
     }
+    .grid-view__data {
+        height: 67vh;
+        margin-top: 10px;
+        overflow-y: auto;
+
+        .ant-collapse-content-box {
+            padding: 0;
+        }
+    }
 }

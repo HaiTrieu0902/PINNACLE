@@ -1,0 +1,31 @@
+.custom-table-collapse {
+    .ant-collapse-content-box {
+        padding: 0px !important;
+    }
+}
+
+.grid-view__data .ant-collapse-content-box {
+    padding: 0;
+}
+
+.ant-table-placeholder {
+    display: none;
+}
+.ant-collapse {
+    border-radius: 0;
+}
+
+.ant-collapse-item {
+    border-radius: 0;
+}
+.ant-collapse-header {
+    background-color: #ebebeb;
+}
+.custom-table-data {
+    width: 100%;
+
+    .ant-table-cell {
+        cursor: pointer;
+        padding: 12px 12px !important;
+    }
+}

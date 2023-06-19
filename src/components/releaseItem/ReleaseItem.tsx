@@ -32,6 +32,7 @@ const ReleaseItem = () => {
                     <ReleaseGridView />
                 </Card>
             </ContainerItem>
+
             <ContainerItem className="release-right" width="49.5%">
                 <Card title={<h3 className="custom-card-title">Release</h3>} style={{ height: '100vh' }}></Card>
             </ContainerItem>

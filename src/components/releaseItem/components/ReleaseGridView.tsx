@@ -5,6 +5,7 @@ import SearchInput from '../../search/SearchInput';
 import './ReleaseConmonent.scss';
 import { useState } from 'react';
 import TableView from '../../table/TableView';
+import TableData from '../../table/TableData';
 const ReleaseGridView = () => {
     const [valueActivePath, setValueActivePath] = useState(false);
     const [searchValue, setSearchValue] = useState('');
@@ -31,6 +32,9 @@ const ReleaseGridView = () => {
             </div>
             <div className="mt-3">
                 <TableView />
+            </div>
+            <div className="grid-view__data">
+                <TableData />
             </div>
         </div>
     );
