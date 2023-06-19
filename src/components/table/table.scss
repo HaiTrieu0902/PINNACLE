@@ -4,6 +4,20 @@
     }
 }
 
+.custom-table-data {
+    width: 100%;
+
+    .ant-table-cell {
+        cursor: pointer;
+        padding: 8px 12px !important;
+    }
+
+    .active-row {
+        background-color: #002060;
+        color: #ffffff;
+    }
+}
+
 .grid-view__data .ant-collapse-content-box {
     padding: 0;
 }
@@ -11,6 +25,7 @@
 .ant-table-placeholder {
     display: none;
 }
+
 .ant-collapse {
     border-radius: 0;
 }
@@ -21,11 +36,12 @@
 .ant-collapse-header {
     background-color: #ebebeb;
 }
-.custom-table-data {
-    width: 100%;
 
-    .ant-table-cell {
-        cursor: pointer;
-        padding: 12px 12px !important;
-    }
+// CSS cutomer break dom
+:where(.css-dev-only-do-not-override-12jzuas).ant-table-wrapper .ant-table-tbody > tr.ant-table-row:hover > th,
+:where(.css-dev-only-do-not-override-12jzuas).ant-table-wrapper .ant-table-tbody > tr.ant-table-row:hover > td,
+:where(.css-dev-only-do-not-override-12jzuas).ant-table-wrapper .ant-table-tbody > tr > th.ant-table-cell-row-hover,
+:where(.css-dev-only-do-not-override-12jzuas).ant-table-wrapper .ant-table-tbody > tr > td.ant-table-cell-row-hover {
+    background: #002060;
+    color: #ffffff;
 }

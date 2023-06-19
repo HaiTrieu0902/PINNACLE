@@ -1,6 +1,7 @@
 import { Card, Select } from 'antd';
 import { useState } from 'react';
 import ContainerItem from '../container/ContainerItem';
+import CreateOrDeleteRelease from './CreateOrDeleteRelease';
 import './ReleaseItem.scss';
 import ReleaseGridView from './components/ReleaseGridView';
 
@@ -34,7 +35,11 @@ const ReleaseItem = () => {
             </ContainerItem>
 
             <ContainerItem className="release-right" width="49.5%">
-                <Card title={<h3 className="custom-card-title">Release</h3>} style={{ height: '100vh' }}></Card>
+                <Card
+                    title={<h3 className="custom-card-title">Release</h3>}
+                    extra={<CreateOrDeleteRelease />}
+                    style={{ height: '100vh' }}
+                ></Card>
             </ContainerItem>
         </div>
     );
