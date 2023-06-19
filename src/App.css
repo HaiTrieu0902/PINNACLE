@@ -10,6 +10,23 @@
     margin-left: 260px;
 }
 
+.input-search-item {
+}
+
+.button-items {
+    display: flex;
+    background-color: #002060 !important;
+    color: #ffffff;
+    align-items: center;
+    height: 32px;
+    width: 72px;
+}
+
+.button-items:hover {
+    background-color: #002060 !important;
+    color: #ffffff !important;
+}
+
 /* Css dom customer antd Design */
 
 /* Undo navigate tab */

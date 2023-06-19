@@ -1,0 +1,13 @@
+.button-items {
+    display: flex;
+    background-color: #002060;
+    color: #ffffff;
+    align-items: center;
+    height: 32px;
+    width: 72px;
+
+    &:hover {
+        background-color: #002060 !important;
+        color: #ffffff !important;
+    }
+}
