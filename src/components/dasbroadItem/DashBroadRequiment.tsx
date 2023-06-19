@@ -1,9 +1,9 @@
 import { Pie } from '@ant-design/plots';
-import SubHeader from '../Header/SubHeader';
-import DashBroadItem from './branching/DashBroadItem';
 import { generatePieChartConfig } from '../../utils/dashbroadColor';
+import SubHeader from '../Header/SubHeader';
 import { requirementWorkflowList } from './../../types/dashbroad';
 import DashBroadCustom from './branching/DashBroadCustom';
+import DashBroadItem from './branching/DashBroadItem';
 
 interface DashBroadRequimentProps {
     requirementWorkflowList: requirementWorkflowList;

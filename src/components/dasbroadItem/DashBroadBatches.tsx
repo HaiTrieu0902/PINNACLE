@@ -1,15 +1,15 @@
 import { Column, Pie } from '@ant-design/plots';
 import { deepMix } from '@antv/util';
 import { DatePicker, Select } from 'antd';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
+import { getBatchDailyWorkflow } from '../../redux/dashbroad.slice';
+import { useAppDispatch, useAppSelector } from '../../store';
 import { batchWorkflowDashboardList } from '../../types/dashbroad';
 import { generatePieChartConfig } from '../../utils/dashbroadColor';
 import SubHeader from '../Header/SubHeader';
-import DashBroadItem from './branching/DashBroadItem';
-import { useAppDispatch, useAppSelector } from '../../store';
-import { getBatchDailyWorkflow } from '../../redux/dashbroad.slice';
 import DashBroadCustom from './branching/DashBroadCustom';
+import DashBroadItem from './branching/DashBroadItem';
 
 interface DashBroadBatchesProps {
     batchWorkflowDashboardList: batchWorkflowDashboardList;
