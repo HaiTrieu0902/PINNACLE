@@ -4,6 +4,8 @@ import { ROUTES } from '../configs/routes';
 const LoginPage = lazy(() => import('../modules/page/LoginPage'));
 const HomePage = lazy(() => import('../pages/HomePage'));
 const DashBroadPage = lazy(() => import('../pages/dashbroad/DashBroadPage'));
+
+const RelasePage = lazy(() => import('../pages/release/ReleasePage'));
 export const RoutesConfig = () => {
     return (
         <>
@@ -13,6 +15,7 @@ export const RoutesConfig = () => {
                     <Route path={ROUTES.login} Component={LoginPage} />
                     <Route path={ROUTES.home} Component={HomePage} />
                     <Route path={ROUTES.dashbroad} Component={DashBroadPage} />
+                    <Route path={ROUTES.release} Component={RelasePage} />
                 </Routes>
             </Suspense>
         </>

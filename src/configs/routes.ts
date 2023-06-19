@@ -3,4 +3,5 @@ export const ROUTES = {
     login: '/login',
     home: '/home',
     dashbroad: '/dashboard',
+    release: '/release',
 };
