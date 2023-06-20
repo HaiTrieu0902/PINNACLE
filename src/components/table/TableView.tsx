@@ -24,10 +24,16 @@ const columns: ColumnsType<DataType> = [
         width: 250,
     },
     {
+        title: 'Type',
+        dataIndex: 'type',
+        sorter: {},
+        width: 60,
+    },
+    {
         title: 'Business Importance',
         dataIndex: 'business',
         sorter: {},
-        width: 200,
+        width: 100,
     },
     {
         title: 'Owner',

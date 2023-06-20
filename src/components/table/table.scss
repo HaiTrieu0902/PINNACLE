@@ -45,3 +45,14 @@
     background: #002060;
     color: #ffffff;
 }
+
+.ant-table-thead th {
+    white-space: nowrap !important;
+}
+
+.ant-table-column-title {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    word-break: keep-all !important;
+    width: 60px;
+}
