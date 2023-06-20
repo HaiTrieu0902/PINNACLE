@@ -1,13 +1,25 @@
 .custom-table-collapse {
+    font-family: 'Poppins', sans-serif;
+
+    .ant-collapse-header-text {
+        font-weight: 600;
+        background-color: #ebebeb;
+        color: rgba(0, 0, 0, 0.85);
+    }
+
     .ant-collapse-content-box {
         padding: 0px !important;
+        font-family: 'Poppins', sans-serif;
     }
 }
 
 .custom-table-data {
     width: 100%;
+    font-family: 'Poppins', sans-serif;
 
     .ant-table-cell {
+        font-family: 'Poppins', sans-serif;
+
         cursor: pointer;
         padding: 8px 12px !important;
     }
@@ -48,11 +60,4 @@
 
 .ant-table-thead th {
     white-space: nowrap !important;
-}
-
-.ant-table-column-title {
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    word-break: keep-all !important;
-    width: 60px;
 }

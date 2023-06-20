@@ -1,9 +1,9 @@
-import { AsyncThunk, PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import Cookies from 'js-cookie';
-import { ACCESS_TOKEN_KEY } from '../utils/constant';
-import { releasesGridChartList } from '../types/release';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { API_PATHS } from '../configs/api';
 import { axiosData } from '../configs/axiosApiCusomer';
+import { releasesGridChartList } from '../types/release';
+import { RootState } from '../store';
 
 const params = {
     page: 0,
@@ -27,7 +27,7 @@ const initialState: Release = {
                 folderGrid: {
                     folderId: 0,
                     folderName: null,
-                    folderNameShow: 'ds',
+                    folderNameShow: '',
                     parentFolderId: null,
                 },
                 releaseGridDtos: [],
@@ -45,14 +45,31 @@ export const getReleaseChart = createAsyncThunk('ReleaseChart/getReleaseChart', 
 const releaseSlice = createSlice({
     name: 'release',
     initialState,
-    reducers: {},
+    reducers: {
+        filterReleasesGridCharTable: (state, action: PayloadAction<any>) => {
+            const searchTerm = action.payload;
+            console.log(JSON.parse(JSON.stringify(state.releasesGridChartList.releasesGridChart)));
+
+            console.log(
+                'hihihh',
+                JSON.parse(
+                    JSON.stringify(
+                        state.releasesGridChartList.releasesGridChart.forEach((item) => {
+                            return item.releaseGridDtos.slice().sort((a, b) => b.id - a.id);
+                        }),
+                    ),
+                ),
+            );
+        },
+    },
     extraReducers(builder) {
         builder.addCase(getReleaseChart.fulfilled, (state, action) => {
+            console.log(action.payload);
             state.releasesGridChartList = action.payload;
         });
     },
 });
 
-// export const { getAccessToken, logout } = releaseSlice.actions;
+export const { filterReleasesGridCharTable } = releaseSlice.actions;
 
 export default releaseSlice.reducer;

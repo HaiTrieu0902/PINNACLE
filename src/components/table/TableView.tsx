@@ -1,13 +1,12 @@
-import React from 'react';
-import { Table, Empty } from 'antd';
+import { Table } from 'antd';
 import type { ColumnsType, TableProps } from 'antd/es/table';
+import React from 'react';
 import './table.scss';
+import { useAppDispatch } from '../../store';
+import { filterReleasesGridCharTable } from '../../redux/release.slice';
 interface DataType {
     key: React.Key;
     name: string;
-    chinese: number;
-    math: number;
-    english: number;
 }
 
 const columns: ColumnsType<DataType> = [
@@ -27,25 +26,36 @@ const columns: ColumnsType<DataType> = [
         title: 'Type',
         dataIndex: 'type',
         sorter: {},
-        width: 60,
+        width: 100,
     },
     {
         title: 'Business Importance',
         dataIndex: 'business',
         sorter: {},
         width: 100,
+        ellipsis: true,
     },
     {
         title: 'Owner',
         dataIndex: 'owner',
         sorter: {},
-        width: 60,
+        width: 70,
     },
 ];
 
 const TableView = () => {
+    const dispatch = useAppDispatch();
+
     const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter, extra) => {
-        console.log('params', pagination, filters, sorter, extra);
+        if (Array.isArray(sorter)) {
+            sorter.forEach((item) => {
+                console.log('params', item.order, item.field);
+                dispatch(filterReleasesGridCharTable({ order: item.order, field: item.field }));
+            });
+        } else {
+            console.log('params', sorter?.order, sorter?.field);
+            dispatch(filterReleasesGridCharTable({ order: sorter?.order, field: sorter?.field }));
+        }
     };
     return <Table columns={columns} onChange={onChange} size="small" />;
 };
