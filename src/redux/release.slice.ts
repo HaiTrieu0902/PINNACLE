@@ -3,7 +3,6 @@ import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { API_PATHS } from '../configs/api';
 import { axiosData } from '../configs/axiosApiCusomer';
 import { releasesGridChartList } from '../types/release';
-import { RootState } from '../store';
 
 const params = {
     page: 0,
@@ -17,10 +16,38 @@ const params = {
 
 interface Release {
     releasesGridChartList: releasesGridChartList;
+    conditionSorter: {
+        order: string | undefined;
+        field: string | undefined;
+    };
+
+    keySearch: string | null;
+    originalReleasesGridChartList: releasesGridChartList;
 }
 
 const initialState: Release = {
     releasesGridChartList: {
+        lastestReleaseId: 0,
+        releasesGridChart: [
+            {
+                folderGrid: {
+                    folderId: 0,
+                    folderName: null,
+                    folderNameShow: '',
+                    parentFolderId: null,
+                },
+                releaseGridDtos: [],
+            },
+        ],
+    },
+
+    conditionSorter: {
+        order: undefined,
+        field: undefined,
+    },
+    keySearch: null,
+
+    originalReleasesGridChartList: {
         lastestReleaseId: 0,
         releasesGridChart: [
             {
@@ -47,29 +74,54 @@ const releaseSlice = createSlice({
     initialState,
     reducers: {
         filterReleasesGridCharTable: (state, action: PayloadAction<any>) => {
-            const searchTerm = action.payload;
-            console.log(JSON.parse(JSON.stringify(state.releasesGridChartList.releasesGridChart)));
+            state.conditionSorter = action.payload;
+        },
+        changeValueKeySearch: (state, action: PayloadAction<string>) => {
+            state.keySearch = action.payload;
+            const searchValue = action.payload.toLowerCase();
 
-            console.log(
-                'hihihh',
-                JSON.parse(
-                    JSON.stringify(
-                        state.releasesGridChartList.releasesGridChart.forEach((item) => {
-                            return item.releaseGridDtos.slice().sort((a, b) => b.id - a.id);
-                        }),
-                    ),
-                ),
-            );
+            if (searchValue.trim() === '') {
+                state.releasesGridChartList = state.originalReleasesGridChartList;
+            } else {
+                state.releasesGridChartList.releasesGridChart = state.releasesGridChartList.releasesGridChart.map(
+                    (folder) => {
+                        const filteredReleaseGridDtos = folder.releaseGridDtos.filter((release) => {
+                            const folderNameMatch = folder.folderGrid.folderNameShow
+                                ?.toLowerCase()
+                                .includes(searchValue);
+                            const titleMatch = release.title.toLowerCase().includes(searchValue);
+                            const idMatch = release.id.toString().toLowerCase().includes(searchValue);
+                            const ownerMatch = release.owner.toLowerCase().includes(searchValue);
+                            const typeMatch = release.type.toLowerCase().includes(searchValue);
+                            const bussinessMatch = release.businessImportance.toLowerCase().includes(searchValue);
+                            return (
+                                folderNameMatch || titleMatch || idMatch || ownerMatch || typeMatch || bussinessMatch
+                            );
+                        });
+
+                        return {
+                            folderGrid: folder.folderGrid,
+                            releaseGridDtos: filteredReleaseGridDtos,
+                        };
+                    },
+                );
+                state.releasesGridChartList.releasesGridChart = state.releasesGridChartList.releasesGridChart.filter(
+                    (folder) => folder.releaseGridDtos.length > 0,
+                );
+            }
+        },
+        arrangeReleasesGridCharTable: (state, action) => {
+            return;
         },
     },
     extraReducers(builder) {
         builder.addCase(getReleaseChart.fulfilled, (state, action) => {
-            console.log(action.payload);
             state.releasesGridChartList = action.payload;
+            state.originalReleasesGridChartList = action.payload;
         });
     },
 });
 
-export const { filterReleasesGridCharTable } = releaseSlice.actions;
+export const { filterReleasesGridCharTable, changeValueKeySearch } = releaseSlice.actions;
 
 export default releaseSlice.reducer;

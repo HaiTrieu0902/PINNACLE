@@ -1,8 +1,9 @@
+import { useEffect } from 'react';
 import { Table } from 'antd';
 import type { ColumnsType, TableProps } from 'antd/es/table';
 import React from 'react';
 import './table.scss';
-import { useAppDispatch } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store';
 import { filterReleasesGridCharTable } from '../../redux/release.slice';
 interface DataType {
     key: React.Key;
@@ -12,7 +13,7 @@ interface DataType {
 const columns: ColumnsType<DataType> = [
     {
         title: 'ID',
-        dataIndex: 'name',
+        dataIndex: 'id',
         sorter: {},
         width: 60,
     },
@@ -30,7 +31,7 @@ const columns: ColumnsType<DataType> = [
     },
     {
         title: 'Business Importance',
-        dataIndex: 'business',
+        dataIndex: 'businessImportance',
         sorter: {},
         width: 100,
         ellipsis: true,
@@ -49,11 +50,9 @@ const TableView = () => {
     const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter, extra) => {
         if (Array.isArray(sorter)) {
             sorter.forEach((item) => {
-                console.log('params', item.order, item.field);
                 dispatch(filterReleasesGridCharTable({ order: item.order, field: item.field }));
             });
         } else {
-            console.log('params', sorter?.order, sorter?.field);
             dispatch(filterReleasesGridCharTable({ order: sorter?.order, field: sorter?.field }));
         }
     };

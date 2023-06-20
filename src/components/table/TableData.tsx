@@ -1,46 +1,52 @@
-import type { CollapseProps } from 'antd';
 import { Collapse, Table } from 'antd';
 import { useEffect, useState } from 'react';
 import { getReleaseChart } from '../../redux/release.slice';
 import { useAppDispatch, useAppSelector } from '../../store';
 import './table.scss';
-
-const columns = [
-    { title: 'ID', dataIndex: 'id', key: 'id', width: 60 },
-    { title: 'Title', dataIndex: 'title', key: 'title', width: 250, ellipsis: true },
-    { title: 'Type', dataIndex: 'type', key: 'type', width: 100, ellipsis: true },
-    {
-        title: 'Business Importance',
-        dataIndex: 'businessImportance',
-        key: 'businessImportance',
-        width: 100,
-        ellipsis: true,
-    },
-    { title: 'Owner', dataIndex: 'owner', key: 'owner', width: 70, ellipsis: true },
-];
+import { columnsTableData } from '../../utils/releaseTable';
 
 const TableData: React.FC = () => {
     const dispatch = useAppDispatch();
-    const { releasesGridChartList } = useAppSelector((state) => state.release);
-    const [selectedRow, setSelectedRow] = useState<number | undefined>(undefined);
+    const { releasesGridChartList, conditionSorter } = useAppSelector((state) => state.release);
+    const [selectedRow, setSelectedRow] = useState<number | undefined>(releasesGridChartList.lastestReleaseId);
 
-    const onChange = (key: string | string[]) => {
-        console.log(key);
-    };
-
+    // call API
     useEffect(() => {
         const releaseChart = dispatch(getReleaseChart());
-
         return () => {
             releaseChart.abort();
         };
     }, [dispatch]);
 
+    // Change the selectedRow
+    useEffect(() => {
+        setSelectedRow(releasesGridChartList.lastestReleaseId);
+    }, [releasesGridChartList.lastestReleaseId]);
+
     const mappedItems = releasesGridChartList.releasesGridChart.map((item, index) => {
-        const dataSource = item.releaseGridDtos.map((releaseItem) => ({
+        let dataSource = item.releaseGridDtos.map((releaseItem) => ({
             ...releaseItem,
             key: releaseItem.id,
         }));
+
+        if (conditionSorter.field && conditionSorter.order) {
+            const { field, order } = conditionSorter;
+            dataSource = dataSource.sort((a, b) => {
+                const valueA = a[field as keyof typeof a];
+                const valueB = b[field as keyof typeof b];
+                if (valueA && valueB) {
+                    if (valueA < valueB) {
+                        return order === 'ascend' ? -1 : 1;
+                    }
+                    if (valueA > valueB) {
+                        return order === 'ascend' ? 1 : -1;
+                    }
+                }
+                return 0;
+            });
+        } else {
+            dataSource = dataSource.sort((a, b) => a.id - b.id);
+        }
         return {
             key: String(index),
             label: item.folderGrid.folderNameShow,
@@ -48,14 +54,15 @@ const TableData: React.FC = () => {
                 <Table
                     className="custom-table-data"
                     dataSource={dataSource}
-                    columns={columns}
+                    columns={columnsTableData}
                     showHeader={false}
                     pagination={false}
-                    rowClassName={(record, rowIndex) => (rowIndex === selectedRow ? 'active-row' : '')}
-                    onRow={(record, rowIndex) => {
+                    rowClassName={(record) => (record.id === selectedRow ? 'active-row' : '')}
+                    onRow={(record) => {
                         return {
                             onClick: () => {
-                                setSelectedRow(rowIndex);
+                                console.log('record', record);
+                                setSelectedRow(record.id);
                             },
                         };
                     }}
@@ -63,6 +70,10 @@ const TableData: React.FC = () => {
             ),
         };
     });
+
+    const onChange = (key: string | string[]) => {
+        console.log(key);
+    };
 
     return (
         <Collapse

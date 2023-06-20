@@ -5,8 +5,8 @@ export interface releaseGridDtos {
     id: number;
     owner: string;
     releaseParentId: string | null;
-    title: string | null;
-    type: string | null;
+    title: string | any;
+    type: string | any;
 }
 
 export interface folderGrid {
@@ -17,11 +17,15 @@ export interface folderGrid {
 }
 
 export interface releasesGridChartList {
-    lastestReleaseId: number | string;
-    releasesGridChart: [
-        {
-            folderGrid: folderGrid;
-            releaseGridDtos: releaseGridDtos[];
-        },
-    ];
+    lastestReleaseId: number;
+    // releasesGridChart: [
+    //     {
+    //         folderGrid: folderGrid;
+    //         releaseGridDtos: releaseGridDtos[];
+    //     },
+    // ];
+    releasesGridChart: {
+        folderGrid: folderGrid;
+        releaseGridDtos: releaseGridDtos[];
+    }[];
 }
