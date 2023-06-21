@@ -6,8 +6,8 @@ import { useAppDispatch, useAppSelector } from '../../store';
 import { defectWorkflowList } from '../../types/dashbroad';
 import { generatePieChartConfig } from '../../utils/dashbroadColor';
 import SubHeader from '../Header/SubHeader';
-import DashBroadCustom from './branching/DashBroadCustom';
-import DashBroadItem from './branching/DashBroadItem';
+import DashBroadItem from '../DasbroadItem/Branching/DashBroadItem';
+import DashBroadCustom from '../DasbroadItem/Branching/DashBroadCustom';
 
 import { Select } from 'antd';
 

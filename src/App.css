@@ -9,8 +9,9 @@
 .ml-content {
     margin-left: 260px;
 }
-
-.input-search-item {
+.ant-card-head,
+.ant-card-body {
+    font-family: 'Poppins', sans-serif;
 }
 
 .button-items {

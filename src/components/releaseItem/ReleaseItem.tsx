@@ -1,16 +1,16 @@
 import { Card, Select } from 'antd';
 import { useState } from 'react';
-import ContainerItem from '../container/ContainerItem';
-import CreateOrDeleteRelease from './CreateOrDeleteRelease';
+import ContainerItem from '../Container/ContainerItem';
+import CreateOrDeleteRelease from '../ReleaseItem/CreateOrDeleteRelease';
+import ReleaseDetail from '../ReleaseItem/components/ReleaseDetail/ReleaseDetail';
+import ReleaseFolderView from '../ReleaseItem/components/ReleaseFolderView/ReleaseFolderView';
+import ReleaseGridView from '../ReleaseItem/components/ReleaseGridView/ReleaseGridView';
 import './ReleaseItem.scss';
-import ReleaseGridView from './components/ReleaseGridView';
-
 const ReleaseItem = () => {
-    const [formItem, setFormItem] = useState('1');
+    const [formItem, setFormItem] = useState('grid');
     const handleChangeSelect = (value: string) => {
         setFormItem(value);
     };
-
     return (
         <div className="flex justify-between p-2">
             <ContainerItem className="release-register" width="49.5%">
@@ -22,14 +22,15 @@ const ReleaseItem = () => {
                             style={{ width: 140 }}
                             onChange={handleChangeSelect}
                             options={[
-                                { value: 'folder', label: 'Grid View' },
-                                { value: 'grid', label: 'Folder View' },
+                                { value: 'grid', label: 'Grid View' },
+                                { value: 'folder', label: 'Folder View' },
                             ]}
                         />
                     }
                     style={{ height: '100vh' }}
                 >
-                    <ReleaseGridView />
+                    {formItem === 'grid' && <ReleaseGridView />}
+                    {formItem === 'folder' && <ReleaseFolderView />}
                 </Card>
             </ContainerItem>
 
@@ -38,7 +39,9 @@ const ReleaseItem = () => {
                     title={<h3 className="custom-card-title">Release</h3>}
                     extra={<CreateOrDeleteRelease />}
                     style={{ height: '100vh' }}
-                ></Card>
+                >
+                    <ReleaseDetail />
+                </Card>
             </ContainerItem>
         </div>
     );

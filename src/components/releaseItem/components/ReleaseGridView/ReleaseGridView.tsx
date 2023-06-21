@@ -1,13 +1,12 @@
 import { Button } from 'antd';
-
-import { CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
-import SearchInput from '../../search/SearchInput';
-import './ReleaseConmonent.scss';
+import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
 import { useState } from 'react';
-import TableView from '../../table/TableView';
-import TableData from '../../table/TableData';
-import { useAppDispatch } from '../../../store';
-import { arrangeReleasesGridCharTable, changeValueKeySearch } from '../../../redux/release.slice';
+import { arrangeReleasesGridCharTable } from '../../../../redux/release.slice';
+import { useAppDispatch } from '../../../../store';
+import SearchInput from '../../../Search/SearchInput';
+import TableData from '../../../Table/TableData';
+import TableView from '../../../Table/TableView';
+import './ReleaseGridView.scss';
 const ReleaseGridView = () => {
     const dispatch = useAppDispatch();
     const [valueActivePath, setValueActivePath] = useState(false);
@@ -27,9 +26,9 @@ const ReleaseGridView = () => {
                 <Button onClick={handleClickPath} className="button-items">
                     <span className="text-sm font-medium">Path</span>
                     {valueActivePath ? (
-                        <CaretUpOutlined style={{ fontSize: '11px' }} />
-                    ) : (
                         <CaretDownOutlined style={{ fontSize: '11px' }} />
+                    ) : (
+                        <CaretUpOutlined style={{ fontSize: '11px' }} />
                     )}
                 </Button>
                 <SearchInput width="220px" onSearch={handleOnSearchGridView} />

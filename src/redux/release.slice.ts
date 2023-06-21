@@ -111,8 +111,21 @@ const releaseSlice = createSlice({
             }
         },
         arrangeReleasesGridCharTable: (state, action: PayloadAction<boolean>) => {
-            console.log('dap da cuoi thu', action.payload);
-            // xuwr ly ham loc o day
+            const sortOrder = action.payload;
+            // Hàm sắp xếp theo trường folderNameShow
+            const sortByFolderNameShow = (a: any, b: any) => {
+                const folderNameA = a.folderGrid.folderNameShow.toLowerCase();
+                const folderNameB = b.folderGrid.folderNameShow.toLowerCase();
+                if (sortOrder) {
+                    if (folderNameA < folderNameB) return -1;
+                    if (folderNameA > folderNameB) return 1;
+                } else if (!sortOrder) {
+                    if (folderNameA > folderNameB) return -1;
+                    if (folderNameA < folderNameB) return 1;
+                }
+                return 0;
+            };
+            state.releasesGridChartList.releasesGridChart.sort(sortByFolderNameShow);
         },
     },
     extraReducers(builder) {

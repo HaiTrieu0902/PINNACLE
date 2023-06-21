@@ -2,7 +2,7 @@ import type { TabsProps } from 'antd';
 import { Tabs } from 'antd';
 import TabPane from 'antd/es/tabs/TabPane';
 import { useState, useEffect } from 'react';
-import { ContainerLayout } from '../../components/container/ContainerLayout';
+import { ContainerLayout } from '../../components/Container/ContainerLayout';
 import DashBroadBatches from '../../components/dasbroadItem/DashBroadBatches';
 import DashBroadDefect from '../../components/dasbroadItem/DashBroadDefect';
 import DashBroadRelease from '../../components/dasbroadItem/DashBroadRelease';

@@ -2,8 +2,8 @@ import { Pie } from '@ant-design/plots';
 import { releaseWorkflowList } from '../../types/dashbroad';
 import { generatePieChartConfig } from '../../utils/dashbroadColor';
 import SubHeader from '../Header/SubHeader';
-import DashBroadCustom from './branching/DashBroadCustom';
-import DashBroadItem from './branching/DashBroadItem';
+import DashBroadItem from '../DasbroadItem/Branching/DashBroadItem';
+import DashBroadCustom from '../DasbroadItem/Branching/DashBroadCustom';
 
 interface DashBroadReleaseProps {
     releaseWorkflow: releaseWorkflowList;
