@@ -110,8 +110,9 @@ const releaseSlice = createSlice({
                 );
             }
         },
-        arrangeReleasesGridCharTable: (state, action) => {
-            return;
+        arrangeReleasesGridCharTable: (state, action: PayloadAction<boolean>) => {
+            console.log('dap da cuoi thu', action.payload);
+            // xuwr ly ham loc o day
         },
     },
     extraReducers(builder) {
@@ -122,6 +123,6 @@ const releaseSlice = createSlice({
     },
 });
 
-export const { filterReleasesGridCharTable, changeValueKeySearch } = releaseSlice.actions;
+export const { filterReleasesGridCharTable, changeValueKeySearch, arrangeReleasesGridCharTable } = releaseSlice.actions;
 
 export default releaseSlice.reducer;

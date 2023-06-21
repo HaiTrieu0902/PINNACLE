@@ -11,7 +11,6 @@ const ReleaseItem = () => {
         setFormItem(value);
     };
 
-    console.log('Release', formItem);
     return (
         <div className="flex justify-between p-2">
             <ContainerItem className="release-register" width="49.5%">

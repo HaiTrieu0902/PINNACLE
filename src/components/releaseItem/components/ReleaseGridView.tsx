@@ -6,12 +6,16 @@ import './ReleaseConmonent.scss';
 import { useState } from 'react';
 import TableView from '../../table/TableView';
 import TableData from '../../table/TableData';
+import { useAppDispatch } from '../../../store';
+import { arrangeReleasesGridCharTable, changeValueKeySearch } from '../../../redux/release.slice';
 const ReleaseGridView = () => {
+    const dispatch = useAppDispatch();
     const [valueActivePath, setValueActivePath] = useState(false);
     const [searchValue, setSearchValue] = useState('');
 
     const handleClickPath = () => {
         setValueActivePath((prev) => !prev);
+        dispatch(arrangeReleasesGridCharTable(valueActivePath));
     };
     const handleOnSearchGridView = (value: string) => {
         setSearchValue(value);
