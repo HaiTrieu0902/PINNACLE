@@ -77,7 +77,7 @@ const TableData: React.FC = () => {
 
     return (
         <Collapse
-            style={{ height: '69vh' }}
+            // style={{ height: '69vh' }}
             className="custom-table-collapse"
             items={mappedItems}
             defaultActiveKey={['0']}

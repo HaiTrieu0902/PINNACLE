@@ -57,7 +57,7 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
                             ]}
                             className="label-input"
                         >
-                            <Input id="login_account" placeholder="Enter your username" className="ant-input_login " />
+                            <Input id="login_account" placeholder="Enter your username" className="ant-input_login" />
                         </Form.Item>
 
                         <Form.Item
