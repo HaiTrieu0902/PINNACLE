@@ -2,7 +2,7 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { API_PATHS } from '../configs/api';
 import { axiosData } from '../configs/axiosApiCusomer';
-import { releasesGridChartList } from '../types/release';
+import { releaseDetail, releaseDetailList, releasesGridChartList } from '../types/release';
 
 const params = {
     page: 0,
@@ -16,6 +16,7 @@ const params = {
 
 interface Release {
     releasesGridChartList: releasesGridChartList;
+    releaseDetailList: releaseDetailList;
     conditionSorter: {
         order: string | undefined;
         field: string | undefined;
@@ -41,6 +42,9 @@ const initialState: Release = {
         ],
     },
 
+    releaseDetailList: {
+        releaseDetail: {} as Required<releaseDetail>,
+    },
     conditionSorter: {
         order: undefined,
         field: undefined,
@@ -63,9 +67,17 @@ const initialState: Release = {
     },
 };
 
+// get ReleaseChart
 export const getReleaseChart = createAsyncThunk('ReleaseChart/getReleaseChart', async () => {
     const url = `${API_PATHS.API}/ReleaseRegisters/get-release-grid-chart`;
     const data = await axiosData(url, 'POST', params);
+    return data;
+});
+
+// get releaseDetail
+export const getReleaseDetail = createAsyncThunk('ReleaseDetail/getReleaseDetail', async (id: number) => {
+    const url = `${API_PATHS.API}/Releases/get-release-detail?id=${id}`;
+    const data = await axiosData(url, 'GET');
     return data;
 });
 
@@ -129,10 +141,14 @@ const releaseSlice = createSlice({
         },
     },
     extraReducers(builder) {
-        builder.addCase(getReleaseChart.fulfilled, (state, action) => {
-            state.releasesGridChartList = action.payload;
-            state.originalReleasesGridChartList = action.payload;
-        });
+        builder
+            .addCase(getReleaseChart.fulfilled, (state, action) => {
+                state.releasesGridChartList = action.payload;
+                state.originalReleasesGridChartList = action.payload;
+            })
+            .addCase(getReleaseDetail.fulfilled, (state, action) => {
+                state.releaseDetailList = action.payload;
+            });
     },
 });
 

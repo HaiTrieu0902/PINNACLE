@@ -4,3 +4,23 @@
     font-size: 16px;
     font-weight: 500;
 }
+
+// Create OR Delete Release
+.add-new-modal {
+    overflow: hidden;
+    .add-new-modal__header {
+        color: #002060;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 24px;
+    }
+    .sub-title-common {
+        input {
+            font-family: 'Poppins', sans-serif;
+        }
+        .ant-form-item-explain-error {
+            font-size: 11px;
+            margin-left: 6px;
+        }
+    }
+}

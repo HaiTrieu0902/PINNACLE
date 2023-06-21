@@ -34,3 +34,11 @@
 :where(.css-dev-only-do-not-override-12jzuas).ant-tabs .ant-tabs-ink-bar {
     background: transparent !important;
 }
+
+/* card */
+:where(.css-dev-only-do-not-override-12jzuas).ant-card .ant-card-body {
+    padding: 14px;
+}
+:where(.css-dev-only-do-not-override-12jzuas).ant-card {
+    border-radius: 12px !important;
+}

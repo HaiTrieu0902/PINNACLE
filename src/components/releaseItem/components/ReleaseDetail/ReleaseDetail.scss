@@ -1,53 +1,57 @@
-.sub-title-common {
-    box-shadow: 0 5px 5px rgb(0 0 0/5%);
-    .ant-card-head {
-        border-bottom: 1px solid transparent;
-    }
-    .input-inline-custom {
-        color: #5daad6;
-        font-size: 13px;
-        font-weight: 400;
-        height: 30px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: calc(100% - 60px);
-    }
-    .select-inline-custom {
-        color: #5daad6 !important;
-        font-size: 13px !important;
-    }
-    .ant-select-selection-item {
-        color: #5daad6 !important;
-        font-size: 13px !important;
-    }
-    .ant-card-small {
-        .ant-card-body {
-            padding: 6px 12px 12px 12px;
-        }
-    }
-    .label-common {
-        color: #9a9ea4;
-        font-size: 14px;
-        font-weight: 400;
-    }
-}
-
-.release-right__content {
-    height: 61vh;
-    overflow-x: hidden;
-    overflow-y: auto;
-    width: 100%;
-
+.release-detail-container {
     .sub-title-common {
-        .ant-picker {
-            border-radius: 6px;
-            height: 30px;
-            width: 110px;
+        box-shadow: 0 5px 5px rgb(0 0 0/5%);
+        .ant-card-head {
+            border-bottom: 1px solid transparent;
         }
-        .ant-picker-input > input {
+        .ant-card-body {
+            padding: 12px !important;
+        }
+        .input-inline-custom {
+            color: #5daad6;
+            font-size: 13px;
+            font-weight: 400;
+            height: 30px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: calc(100% - 60px);
+        }
+        .select-inline-custom {
+            color: #5daad6 !important;
+            font-size: 13px !important;
+        }
+        .ant-select-selection-item {
+            color: #5daad6 !important;
+            font-size: 13px !important;
+        }
+        .ant-card-small {
+            .ant-card-body {
+                padding: 6px 12px 12px 12px;
+            }
+        }
+        .label-common {
             color: #9a9ea4;
-            font-size: 12px;
+            font-size: 14px;
+            font-weight: 400;
+        }
+    }
+    .release-right__content {
+        height: 61vh;
+        overflow-x: hidden;
+        overflow-y: auto;
+        width: 100%;
+
+        .sub-title-common {
+            .ant-picker {
+                border-radius: 6px;
+                height: 30px;
+                width: 110px;
+            }
+            .ant-picker-input > input {
+                color: #9a9ea4;
+                font-size: 12px;
+            }
         }
     }
 }

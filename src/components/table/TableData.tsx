@@ -1,6 +1,6 @@
 import { Collapse, Table } from 'antd';
 import { useEffect, useState } from 'react';
-import { getReleaseChart } from '../../redux/release.slice';
+import { getReleaseChart, getReleaseDetail } from '../../redux/release.slice';
 import { useAppDispatch, useAppSelector } from '../../store';
 import './table.scss';
 import { columnsTableData } from '../../utils/releaseTable';
@@ -22,6 +22,13 @@ const TableData: React.FC = () => {
     useEffect(() => {
         setSelectedRow(releasesGridChartList.lastestReleaseId);
     }, [releasesGridChartList.lastestReleaseId]);
+
+    // change value Id release details
+    useEffect(() => {
+        if (Number(selectedRow) != 0) {
+            dispatch(getReleaseDetail(Number(selectedRow)));
+        }
+    }, [dispatch, selectedRow]);
 
     const mappedItems = releasesGridChartList.releasesGridChart.map((item, index) => {
         let dataSource = item.releaseGridDtos.map((releaseItem) => ({
@@ -61,7 +68,7 @@ const TableData: React.FC = () => {
                     onRow={(record) => {
                         return {
                             onClick: () => {
-                                console.log('record', record);
+                                // console.log('record', record);
                                 setSelectedRow(record.id);
                             },
                         };
@@ -71,17 +78,12 @@ const TableData: React.FC = () => {
         };
     });
 
-    const onChange = (key: string | string[]) => {
-        console.log(key);
-    };
-
     return (
         <Collapse
             // style={{ height: '69vh' }}
             className="custom-table-collapse"
             items={mappedItems}
             defaultActiveKey={['0']}
-            onChange={onChange}
             size={'small'}
         />
     );

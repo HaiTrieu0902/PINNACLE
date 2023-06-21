@@ -21,7 +21,6 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
     };
 
     const handleCancel = () => {
-        console.log('Clicked cancel button');
         setOpen(false);
     };
 
