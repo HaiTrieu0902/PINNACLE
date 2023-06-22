@@ -1,18 +1,20 @@
 import { message } from 'antd';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { MessageContext } from '../../App';
 import { API_PATHS } from '../../configs/api';
+import { ROUTES } from '../../configs/routes';
+import { getAccessToken, getUserAuth } from '../../redux/authToken';
+import { useAppDispatch } from '../../store';
 import { ParamLogin } from '../../types/auth';
 import { ACCESS_TOKEN_KEY } from '../../utils/constant';
 import LoginForm from '../auth/LoginForm';
-import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../store';
-import { getAccessToken, getUserAuth } from '../../redux/authToken';
-import { ROUTES } from '../../configs/routes';
 const LoginPage = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const [messageApi, contextHolder] = message.useMessage();
+    const messageApi: any = useContext(MessageContext);
     const onLogin = async (value: ParamLogin) => {
         try {
             const res = await axios.post(`${API_PATHS.API}/${API_PATHS.signIn}`, {
@@ -26,31 +28,16 @@ const LoginPage = () => {
                 dispatch(getUserAuth(res.data.user));
                 navigate(ROUTES.home);
             }
-            messageApi.open({
-                type: 'success',
-                content: 'Login successful',
-                className: 'custom-class',
-                style: {
-                    marginTop: '2vh',
-                },
-            });
+            messageApi.success('Login SuccessFullly');
         } catch (error) {
-            console.log(error);
-            messageApi.open({
-                type: 'error',
-                content: 'Your UserID and Password combination do not match. Please retry again.',
-                className: 'custom-class',
-                style: {
-                    marginTop: '2vh',
-                },
-            });
+            messageApi.error('Your UserID and Password combination do not match. Please retry again.');
         }
     };
 
     return (
         <div style={{ height: '100vh' }} className="flex mx-auto items-center justify-center bg-[#fafafa]">
             <LoginForm onLogin={onLogin} />
-            {contextHolder}
+            {/* {contextHolder} */}
         </div>
     );
 };

@@ -110,8 +110,8 @@ export interface ParamReleaseAdd {
     releaseBusinessImportance: number;
     releaseAssignedTo: number;
     releaseCreatedBy: number;
-    targetReleaseStartDate: Date | string;
-    targetReleaseEndDate: Date | string;
+    targetReleaseStartDate: Date | any;
+    targetReleaseEndDate: Date | any;
     targetReleaseDurationDays: number;
     releaseType: number;
     releaseParentId: number | null;

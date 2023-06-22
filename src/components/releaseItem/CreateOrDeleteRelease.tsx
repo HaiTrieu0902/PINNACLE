@@ -1,7 +1,8 @@
 import { Button, Card, Col, DatePicker, Form, Image, Input, Modal, Row, Select } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { MessageContext } from '../../App';
 import addIcon from '../../assets/icon/addIcon.svg';
 import addIconActive from '../../assets/icon/addIconActive.svg';
 import deleteIcon from '../../assets/icon/deleteIcon.svg';
@@ -11,11 +12,14 @@ import { axiosData } from '../../configs/axiosApiCusomer';
 import { useAppSelector } from '../../store';
 import { ParamReleaseAdd, ParamReleaseDelete } from '../../types/release';
 import './ReleaseItem.scss';
+
 type IconType = typeof addIcon | typeof deleteIcon;
 const CreateOrDeleteRelease = () => {
-    const { releaseTypeList, releasesGanttChartList } = useAppSelector((state) => state.release);
+    const messageApi: any = useContext(MessageContext);
+    const { releaseTypeList, releasesGanttChartList, releaseIdDelete } = useAppSelector((state) => state.release);
     const { user } = useAppSelector((state) => state.auth);
     const [form] = Form.useForm();
+    const [formDelete] = Form.useForm();
     const [newReleaseId, setNewReleaseId] = useState<number>(0);
     const [hoveredIcon, setHoveredIcon] = useState<IconType | null>(null);
     const [openAdd, setOpenAdd] = useState(false);
@@ -23,6 +27,7 @@ const CreateOrDeleteRelease = () => {
 
     // handle add release
     const handleFormAddSubmit = async (values: ParamReleaseAdd) => {
+        const diff = values.targetReleaseEndDate.diff(values.targetReleaseStartDate, 'days');
         const param: ParamReleaseAdd = {
             releaseId: Number(newReleaseId),
             releaseLabel: values.releaseLabel,
@@ -36,7 +41,7 @@ const CreateOrDeleteRelease = () => {
             releaseCreatedBy: user?.userId,
             targetReleaseStartDate: values.targetReleaseStartDate,
             targetReleaseEndDate: values.targetReleaseEndDate,
-            targetReleaseDurationDays: 0,
+            targetReleaseDurationDays: Number(diff),
             releaseType: values.releaseType,
             releaseParentId: null,
             logicalDelete: 0,
@@ -47,17 +52,21 @@ const CreateOrDeleteRelease = () => {
         const data = await axiosData(url, 'POST', param);
         form.resetFields();
         setOpenAdd(false);
+        messageApi.success(data.message);
         return data;
     };
 
     // handle delete release
     const handleFormDeleteSubmit = async (values: ParamReleaseDelete) => {
         const param = {
-            releaseId: 439,
+            releaseId: releaseIdDelete,
             deleteReason: values.deleteReason,
         };
         const url = `${API_PATHS.API}/Releases/delete-release`;
         const data = await axiosData(url, 'DELETE', param);
+        formDelete.resetFields();
+        setOpenDelete(false);
+        messageApi.success(`ID ${releaseIdDelete} was delete successfully`);
         return data;
     };
 
@@ -373,6 +382,7 @@ const CreateOrDeleteRelease = () => {
                         <h3 className="delete-new-modal__header ">Delete Release</h3>
                         <p className="delete-modal__title ">Please Enter the Reason for Deleting the Release</p>
                         <Form
+                            form={formDelete}
                             onFinish={handleFormDeleteSubmit}
                             layout="inline"
                             className="w-full"
