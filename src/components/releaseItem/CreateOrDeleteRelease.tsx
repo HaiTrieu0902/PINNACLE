@@ -1,35 +1,39 @@
 import { Button, Card, Col, DatePicker, Form, Image, Input, Modal, Row, Select } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import addIcon from '../../assets/icon/addIcon.svg';
 import addIconActive from '../../assets/icon/addIconActive.svg';
 import deleteIcon from '../../assets/icon/deleteIcon.svg';
 import deleteActive from '../../assets/icon/deleteIconActive.svg';
-import './ReleaseItem.scss';
-import TextArea from 'antd/es/input/TextArea';
-import { useAppSelector } from '../../store';
-import { ParamReleaseAdd } from '../../types/release';
-import axios from 'axios';
 import { API_PATHS } from '../../configs/api';
 import { axiosData } from '../../configs/axiosApiCusomer';
+import { useAppSelector } from '../../store';
+import { ParamReleaseAdd, ParamReleaseDelete } from '../../types/release';
+import './ReleaseItem.scss';
 type IconType = typeof addIcon | typeof deleteIcon;
 const CreateOrDeleteRelease = () => {
-    const { releaseTypeList, releasesGanttChartList, releasesGridChartList } = useAppSelector((state) => state.release);
+    const { releaseTypeList, releasesGanttChartList } = useAppSelector((state) => state.release);
+    const { user } = useAppSelector((state) => state.auth);
+    const [form] = Form.useForm();
+    const [newReleaseId, setNewReleaseId] = useState<number>(0);
     const [hoveredIcon, setHoveredIcon] = useState<IconType | null>(null);
     const [openAdd, setOpenAdd] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
 
-    const onFinish = async (values: ParamReleaseAdd) => {
+    // handle add release
+    const handleFormAddSubmit = async (values: ParamReleaseAdd) => {
         const param: ParamReleaseAdd = {
-            releaseId: 434,
+            releaseId: Number(newReleaseId),
             releaseLabel: values.releaseLabel,
             releaseTitle: values.releaseTitle,
             releaseDescription: values.releaseDescription,
             releaseComments: values.releaseComments,
-            releaseOwner: 2,
+            releaseOwner: user?.userId,
             releaseWorkflow: 'Draft',
             releaseBusinessImportance: values.releaseBusinessImportance,
-            releaseAssignedTo: 2,
-            releaseCreatedBy: 2,
+            releaseAssignedTo: user?.userId,
+            releaseCreatedBy: user?.userId,
             targetReleaseStartDate: values.targetReleaseStartDate,
             targetReleaseEndDate: values.targetReleaseEndDate,
             targetReleaseDurationDays: 0,
@@ -39,19 +43,41 @@ const CreateOrDeleteRelease = () => {
             releaseAssignedOn: '2023-06-22T04:37:30.277Z',
             releaseCreatedOn: '2023-06-22T04:37:30.277Z',
         };
-
         const url = `${API_PATHS.API}/Releases/create-release`;
         const data = await axiosData(url, 'POST', param);
+        form.resetFields();
+        setOpenAdd(false);
         return data;
     };
 
-    console.log('releasesGanttChartList', releasesGridChartList);
+    // handle delete release
+    const handleFormDeleteSubmit = async (values: ParamReleaseDelete) => {
+        const param = {
+            releaseId: 439,
+            deleteReason: values.deleteReason,
+        };
+        const url = `${API_PATHS.API}/Releases/delete-release`;
+        const data = await axiosData(url, 'DELETE', param);
+        return data;
+    };
 
-    const showModalAdd = () => {
+    // handle show modal add
+    const showModalAdd = async () => {
         setOpenAdd(true);
+        const url = `${API_PATHS.API}/Releases/get-new-release-id`;
+        const data = await axiosData(url, 'GET');
+        setNewReleaseId(Number(data.releaseId));
     };
     const handleCancelModalAdd = () => {
         setOpenAdd(false);
+    };
+
+    // handle show modal delete
+    const showModalDelete = async () => {
+        setOpenDelete(true);
+    };
+    const handleCancelModalDelete = () => {
+        setOpenDelete(false);
     };
 
     // handle hover icons
@@ -80,6 +106,7 @@ const CreateOrDeleteRelease = () => {
                     onMouseEnter={() => handleIconHover(deleteIcon)}
                     onMouseLeave={handleIconMouseLeave}
                     preview={false}
+                    onClick={showModalDelete}
                     src={hoveredIcon === deleteIcon ? deleteActive : deleteIcon}
                     width={20}
                     height={20}
@@ -87,11 +114,17 @@ const CreateOrDeleteRelease = () => {
                     style={{ cursor: 'pointer' }}
                 ></Image>
             </div>
-            <div>
+            <div className="modal-release-add">
                 <Modal width={'800px'} open={openAdd} onCancel={handleCancelModalAdd} closable={false} footer={null}>
                     <div className="flex flex-col add-new-modal">
                         <h3 className="add-new-modal__header mb-2">Create new release</h3>
-                        <Form onFinish={onFinish} layout="inline" className="w-full" id="ant-form_verify">
+                        <Form
+                            form={form}
+                            onFinish={handleFormAddSubmit}
+                            layout="inline"
+                            className="w-full"
+                            id="ant-form_verify"
+                        >
                             {/* Release sumary */}
                             <Card
                                 className="sub-title-common"
@@ -152,7 +185,7 @@ const CreateOrDeleteRelease = () => {
                                     <Col span={8}>
                                         <div className="flex gap-2 items-center">
                                             <span className="label-common">
-                                                Id : <span className="input-inline-custom">430</span>
+                                                Id : <span className="input-inline-custom">{newReleaseId}</span>
                                             </span>
                                             <span style={{ height: '30px' }}></span>
                                         </div>
@@ -187,7 +220,9 @@ const CreateOrDeleteRelease = () => {
                                         <div className="flex gap-2 items-center">
                                             <span className="label-common">
                                                 Owner :{' '}
-                                                <span className="input-inline-custom !text-[#dd5c86]">Gerry Payne</span>
+                                                <span className="input-inline-custom !text-[#dd5c86]">
+                                                    {user.fullname}
+                                                </span>
                                             </span>
                                             <span style={{ height: '30px' }}></span>
                                         </div>
@@ -316,6 +351,57 @@ const CreateOrDeleteRelease = () => {
                                             className="button-items h-10 w-20 items-center justify-center"
                                         >
                                             <span>Create</span>
+                                        </Button>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </Form>
+                    </div>
+                </Modal>
+            </div>
+
+            <div className="modal-release-delete">
+                <Modal
+                    width={'520px'}
+                    open={openDelete}
+                    onCancel={handleCancelModalDelete}
+                    closable={false}
+                    footer={null}
+                    className="delete-container-modal"
+                >
+                    <div className="flex items-center flex-col">
+                        <h3 className="delete-new-modal__header ">Delete Release</h3>
+                        <p className="delete-modal__title ">Please Enter the Reason for Deleting the Release</p>
+                        <Form
+                            onFinish={handleFormDeleteSubmit}
+                            layout="inline"
+                            className="w-full"
+                            id="ant-form_verify_delete"
+                        >
+                            <div className="w-full mt-2 delete-border-footer">
+                                <Form.Item
+                                    name="deleteReason"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'A Reason has not been entered.',
+                                        },
+                                    ]}
+                                >
+                                    <Input placeholder="Please reason" className="h-10 ml-1 w-full" />
+                                </Form.Item>
+                            </div>
+                            <Row justify={'end'} className="w-full">
+                                <Col>
+                                    <div className="flex gap-2 mt-2 mr-1 delete-footer">
+                                        <Button onClick={handleCancelModalDelete} className="h-10 w-20">
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            htmlType="submit"
+                                            className="button-items h-10 w-20 items-center justify-center"
+                                        >
+                                            <span>OK</span>
                                         </Button>
                                     </div>
                                 </Col>

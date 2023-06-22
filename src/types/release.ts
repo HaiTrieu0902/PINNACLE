@@ -119,3 +119,8 @@ export interface ParamReleaseAdd {
     releaseAssignedOn: Date | string;
     releaseCreatedOn: Date | string;
 }
+
+export interface ParamReleaseDelete {
+    releaseId: number;
+    deleteReason: string;
+}

@@ -56,3 +56,16 @@
         }
     }
 }
+
+.delete-container-modal {
+    .delete-new-modal__header {
+        color: #002060;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 24px;
+    }
+    .delete-border-footer {
+        padding-bottom: 20px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+}
