@@ -5,7 +5,6 @@ import { axiosData } from '../configs/axiosApiCusomer';
 import {
     releaseDetail,
     releaseDetailList,
-    releaseType,
     releaseTypeList,
     releasesGanttChartList,
     releasesGridChartList,

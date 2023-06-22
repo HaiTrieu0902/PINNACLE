@@ -7,15 +7,45 @@ import deleteIcon from '../../assets/icon/deleteIcon.svg';
 import deleteActive from '../../assets/icon/deleteIconActive.svg';
 import './ReleaseItem.scss';
 import TextArea from 'antd/es/input/TextArea';
+import { useAppSelector } from '../../store';
+import { ParamReleaseAdd } from '../../types/release';
+import axios from 'axios';
+import { API_PATHS } from '../../configs/api';
+import { axiosData } from '../../configs/axiosApiCusomer';
 type IconType = typeof addIcon | typeof deleteIcon;
 const CreateOrDeleteRelease = () => {
+    const { releaseTypeList, releasesGanttChartList, releasesGridChartList } = useAppSelector((state) => state.release);
     const [hoveredIcon, setHoveredIcon] = useState<IconType | null>(null);
-
     const [openAdd, setOpenAdd] = useState(false);
 
-    const onFinish = (values: any) => {
-        console.log(values);
+    const onFinish = async (values: ParamReleaseAdd) => {
+        const param: ParamReleaseAdd = {
+            releaseId: 434,
+            releaseLabel: values.releaseLabel,
+            releaseTitle: values.releaseTitle,
+            releaseDescription: values.releaseDescription,
+            releaseComments: values.releaseComments,
+            releaseOwner: 2,
+            releaseWorkflow: 'Draft',
+            releaseBusinessImportance: values.releaseBusinessImportance,
+            releaseAssignedTo: 2,
+            releaseCreatedBy: 2,
+            targetReleaseStartDate: values.targetReleaseStartDate,
+            targetReleaseEndDate: values.targetReleaseEndDate,
+            targetReleaseDurationDays: 0,
+            releaseType: values.releaseType,
+            releaseParentId: null,
+            logicalDelete: 0,
+            releaseAssignedOn: '2023-06-22T04:37:30.277Z',
+            releaseCreatedOn: '2023-06-22T04:37:30.277Z',
+        };
+
+        const url = `${API_PATHS.API}/Releases/create-release`;
+        const data = await axiosData(url, 'POST', param);
+        return data;
     };
+
+    console.log('releasesGanttChartList', releasesGridChartList);
 
     const showModalAdd = () => {
         setOpenAdd(true);
@@ -75,7 +105,7 @@ const CreateOrDeleteRelease = () => {
                                         <div className="flex gap-2 items-center">
                                             <span className="label-common">Label: </span>
                                             <Form.Item
-                                                name="label"
+                                                name="releaseLabel"
                                                 rules={[
                                                     {
                                                         required: true,
@@ -83,7 +113,10 @@ const CreateOrDeleteRelease = () => {
                                                     },
                                                 ]}
                                             >
-                                                <Input placeholder="Please enter" className="input-inline-custom" />
+                                                <Input
+                                                    placeholder="Please enter"
+                                                    className="input-inline-custom w-full"
+                                                />
                                             </Form.Item>
                                         </div>
                                     </Col>
@@ -91,7 +124,7 @@ const CreateOrDeleteRelease = () => {
                                         <div className="flex gap-2 items-center">
                                             <span className="label-common">Title :</span>
                                             <Form.Item
-                                                name="title"
+                                                name="releaseTitle"
                                                 rules={[
                                                     {
                                                         required: true,
@@ -119,7 +152,7 @@ const CreateOrDeleteRelease = () => {
                                     <Col span={8}>
                                         <div className="flex gap-2 items-center">
                                             <span className="label-common">
-                                                Id : <span className="input-inline-custom">524</span>
+                                                Id : <span className="input-inline-custom">430</span>
                                             </span>
                                             <span style={{ height: '30px' }}></span>
                                         </div>
@@ -128,7 +161,7 @@ const CreateOrDeleteRelease = () => {
                                         <div className="flex gap-2 items-center">
                                             <span className="label-common">Type :</span>
                                             <Form.Item
-                                                name="type"
+                                                name="releaseType"
                                                 rules={[
                                                     {
                                                         required: true,
@@ -140,10 +173,12 @@ const CreateOrDeleteRelease = () => {
                                                     className="select-inline-custom"
                                                     defaultValue="Select"
                                                     style={{ width: 228 }}
-                                                    options={[
-                                                        { value: 'grid', label: 'Grid View' },
-                                                        { value: 'folder', label: 'Folder View' },
-                                                    ]}
+                                                    options={releaseTypeList.releaseType
+                                                        .filter((item) => item.releaseTypeDescription !== null)
+                                                        .map((item) => ({
+                                                            value: item.releaseTypeId,
+                                                            label: item.releaseTypeDescription,
+                                                        }))}
                                                 />
                                             </Form.Item>
                                         </div>
@@ -151,7 +186,8 @@ const CreateOrDeleteRelease = () => {
                                     <Col span={6}>
                                         <div className="flex gap-2 items-center">
                                             <span className="label-common">
-                                                Owner : <span className="input-inline-custom">Gerry Payne</span>
+                                                Owner :{' '}
+                                                <span className="input-inline-custom !text-[#dd5c86]">Gerry Payne</span>
                                             </span>
                                             <span style={{ height: '30px' }}></span>
                                         </div>
@@ -171,19 +207,24 @@ const CreateOrDeleteRelease = () => {
                                     <Col span={9}>
                                         <div className="flex items-center gap-2">
                                             <span className="label-common">Start Date:</span>
-                                            <DatePicker
-                                                value={dayjs('2022-05-13', 'YYYY-MM-DD')}
-                                                format={'YYYY-MM-DD'}
-                                            />
+
+                                            <Form.Item name="targetReleaseStartDate">
+                                                <DatePicker
+                                                    defaultValue={dayjs(new Date().toISOString(), 'YYYY-MM-DD')}
+                                                    format={'DD-MM-YYYY'}
+                                                />
+                                            </Form.Item>
                                         </div>
                                     </Col>
                                     <Col span={9}>
                                         <div className="flex items-center gap-2">
                                             <span className="label-common">End Date :</span>
-                                            <DatePicker
-                                                value={dayjs('2022-05-13', 'YYYY-MM-DD')}
-                                                format={'YYYY-MM-DD'}
-                                            />
+                                            <Form.Item name="targetReleaseEndDate">
+                                                <DatePicker
+                                                    defaultValue={dayjs(new Date().toISOString(), 'YYYY-MM-DD')}
+                                                    format={'DD-MM-YYYY'}
+                                                />
+                                            </Form.Item>
                                         </div>
                                     </Col>
                                     <Col span={6}>
@@ -211,7 +252,7 @@ const CreateOrDeleteRelease = () => {
                                             <span className="label-common w-[23%]">Business Importance:</span>
                                             <Form.Item
                                                 className="w-[76%]"
-                                                name="business"
+                                                name="releaseBusinessImportance"
                                                 rules={[
                                                     {
                                                         required: true,
@@ -223,10 +264,10 @@ const CreateOrDeleteRelease = () => {
                                                     className="select-inline-custom !w-[100%]"
                                                     defaultValue="Select"
                                                     style={{ width: 150 }}
-                                                    options={[
-                                                        { value: 'grid', label: 'Grid View' },
-                                                        { value: 'folder', label: 'Folder View' },
-                                                    ]}
+                                                    options={releasesGanttChartList?.releasesGanttChart.map((item) => ({
+                                                        value: item.businessImportanceId,
+                                                        label: item.businessImportanceDescription,
+                                                    }))}
                                                 />
                                             </Form.Item>
                                         </div>
@@ -246,13 +287,18 @@ const CreateOrDeleteRelease = () => {
                                     <Col span={24}>
                                         <div className="flex flex-col">
                                             <span className="label-common">Description :</span>
-                                            <TextArea style={{ minHeight: 80, resize: 'none', color: '#6bb2d6' }} />
+                                            <Form.Item name="releaseDescription">
+                                                <TextArea style={{ minHeight: 80, resize: 'none', color: '#6bb2d6' }} />
+                                            </Form.Item>
                                         </div>
                                     </Col>
                                     <Col span={24}>
                                         <div className="flex flex-col">
                                             <span className="label-common">Comments : :</span>
-                                            <TextArea style={{ minHeight: 80, resize: 'none', color: '#6bb2d6' }} />
+
+                                            <Form.Item name="releaseComments">
+                                                <TextArea style={{ minHeight: 80, resize: 'none', color: '#6bb2d6' }} />
+                                            </Form.Item>
                                         </div>
                                     </Col>
                                 </Row>

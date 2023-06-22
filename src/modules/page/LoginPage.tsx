@@ -7,7 +7,7 @@ import { ACCESS_TOKEN_KEY } from '../../utils/constant';
 import LoginForm from '../auth/LoginForm';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../store';
-import { getAccessToken } from '../../redux/authToken';
+import { getAccessToken, getUserAuth } from '../../redux/authToken';
 import { ROUTES } from '../../configs/routes';
 const LoginPage = () => {
     const dispatch = useAppDispatch();
@@ -23,6 +23,7 @@ const LoginPage = () => {
             if (res.status === 200) {
                 Cookies.set(ACCESS_TOKEN_KEY, res.data.token);
                 dispatch(getAccessToken(res.data.token));
+                dispatch(getUserAuth(res.data.user));
                 navigate(ROUTES.home);
             }
             messageApi.open({

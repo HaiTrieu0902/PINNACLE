@@ -97,3 +97,25 @@ export interface BusinessImportant {
 export interface releasesGanttChartList {
     releasesGanttChart: BusinessImportant[];
 }
+
+// Param add release
+export interface ParamReleaseAdd {
+    releaseId: number;
+    releaseLabel: string;
+    releaseTitle: string;
+    releaseDescription: string;
+    releaseComments: string;
+    releaseOwner: number;
+    releaseWorkflow: string;
+    releaseBusinessImportance: number;
+    releaseAssignedTo: number;
+    releaseCreatedBy: number;
+    targetReleaseStartDate: Date | string;
+    targetReleaseEndDate: Date | string;
+    targetReleaseDurationDays: number;
+    releaseType: number;
+    releaseParentId: number | null;
+    logicalDelete: number;
+    releaseAssignedOn: Date | string;
+    releaseCreatedOn: Date | string;
+}

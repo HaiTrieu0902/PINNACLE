@@ -15,12 +15,44 @@
         line-height: 24px;
     }
     .sub-title-common {
-        input {
-            font-family: 'Poppins', sans-serif;
-        }
         .ant-form-item-explain-error {
             font-size: 11px;
             margin-left: 6px;
+        }
+        box-shadow: 0 5px 5px rgb(0 0 0/5%);
+        .ant-card-head {
+            border-bottom: 1px solid transparent;
+        }
+        .ant-card-body {
+            padding: 12px !important;
+        }
+        .input-inline-custom {
+            color: #5daad6;
+            font-size: 13px;
+            font-weight: 400;
+            height: 30px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: calc(100% - 60px);
+        }
+        .select-inline-custom {
+            color: #5daad6 !important;
+            font-size: 13px !important;
+        }
+        .ant-select-selection-item {
+            color: #5daad6 !important;
+            font-size: 13px !important;
+        }
+        .ant-card-small {
+            .ant-card-body {
+                padding: 6px 12px 12px 12px;
+            }
+        }
+        .label-common {
+            color: #9a9ea4;
+            font-size: 14px;
+            font-weight: 400;
         }
     }
 }

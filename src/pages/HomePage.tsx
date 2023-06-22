@@ -1,3 +1,5 @@
+import { useAppSelector } from '../store';
+
 const HomePage = () => {
     return (
         <div className="fixer-pt ml-content">
