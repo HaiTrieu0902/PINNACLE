@@ -2,7 +2,14 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { API_PATHS } from '../configs/api';
 import { axiosData } from '../configs/axiosApiCusomer';
-import { releaseDetail, releaseDetailList, releasesGridChartList } from '../types/release';
+import {
+    releaseDetail,
+    releaseDetailList,
+    releaseType,
+    releaseTypeList,
+    releasesGanttChartList,
+    releasesGridChartList,
+} from '../types/release';
 
 const params = {
     page: 0,
@@ -17,6 +24,8 @@ const params = {
 interface Release {
     releasesGridChartList: releasesGridChartList;
     releaseDetailList: releaseDetailList;
+    releaseTypeList: releaseTypeList;
+    releasesGanttChartList: releasesGanttChartList;
     conditionSorter: {
         order: string | undefined;
         field: string | undefined;
@@ -45,6 +54,9 @@ const initialState: Release = {
     releaseDetailList: {
         releaseDetail: {} as Required<releaseDetail>,
     },
+
+    releaseTypeList: { releaseType: [] },
+    releasesGanttChartList: { releasesGanttChart: [] },
     conditionSorter: {
         order: undefined,
         field: undefined,
@@ -77,6 +89,20 @@ export const getReleaseChart = createAsyncThunk('ReleaseChart/getReleaseChart', 
 // get releaseDetail
 export const getReleaseDetail = createAsyncThunk('ReleaseDetail/getReleaseDetail', async (id: number) => {
     const url = `${API_PATHS.API}/Releases/get-release-detail?id=${id}`;
+    const data = await axiosData(url, 'GET');
+    return data;
+});
+
+// get release Type
+export const getReleaseType = createAsyncThunk('ReleaseType/getReleaseType', async () => {
+    const url = `${API_PATHS.API}/Releases/get-release-type`;
+    const data = await axiosData(url, 'GET');
+    return data;
+});
+
+//get businessImportant
+export const getBusinessImportance = createAsyncThunk('BusinessImportance/getBusinessImportance', async () => {
+    const url = `${API_PATHS.API}/BusinessImportance`;
     const data = await axiosData(url, 'GET');
     return data;
 });
@@ -148,6 +174,12 @@ const releaseSlice = createSlice({
             })
             .addCase(getReleaseDetail.fulfilled, (state, action) => {
                 state.releaseDetailList = action.payload;
+            })
+            .addCase(getReleaseType.fulfilled, (state, action) => {
+                state.releaseTypeList = action.payload;
+            })
+            .addCase(getBusinessImportance.fulfilled, (state, action) => {
+                state.releasesGanttChartList = action.payload;
             });
     },
 });

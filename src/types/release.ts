@@ -78,3 +78,22 @@ export interface ReleaseScope {
 export interface releaseDetailList {
     releaseDetail: releaseDetail;
 }
+
+// release Type
+export interface releaseType {
+    releaseTypeId: number;
+    releaseTypeDescription: null | string;
+}
+export interface releaseTypeList {
+    releaseType: releaseType[];
+}
+
+// business information
+export interface BusinessImportant {
+    businessImportanceId: number;
+    businessImportanceDescription: string;
+}
+
+export interface releasesGanttChartList {
+    releasesGanttChart: BusinessImportant[];
+}

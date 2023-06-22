@@ -1,10 +1,30 @@
 import { Card, Col, DatePicker, Input, Row, Select } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import dayjs from 'dayjs';
+import { useEffect, useState } from 'react';
+import { getBusinessImportance, getReleaseType } from '../../../../redux/release.slice';
+import { useAppDispatch, useAppSelector } from '../../../../store';
 import './ReleaseDetail.scss';
-import { useAppSelector } from '../../../../store';
+
 const ReleaseDetail = () => {
-    const { releaseDetailList } = useAppSelector((state) => state.release);
+    const dispatch = useAppDispatch();
+    const { releaseDetailList, releaseTypeList, releasesGanttChartList } = useAppSelector((state) => state.release);
+    const [valueBusinessImportant, setValueBusinessImportant] = useState<number>(0);
+
+    // call API release type list
+    useEffect(() => {
+        const releaseType = dispatch(getReleaseType());
+        const businessImportant = dispatch(getBusinessImportance());
+        return () => {
+            releaseType.abort();
+            businessImportant.abort();
+        };
+    }, [dispatch]);
+
+    // change value business Importance
+    useEffect(() => {
+        setValueBusinessImportant(releaseDetailList?.releaseDetail?.releaseBusinessImportance);
+    }, [releaseDetailList?.releaseDetail?.releaseBusinessImportance]);
 
     return (
         <div className="release-detail-container">
@@ -58,12 +78,14 @@ const ReleaseDetail = () => {
                             <span className="label-common">Type :</span>
                             <Select
                                 className="select-inline-custom"
-                                defaultValue="Grid View"
+                                value={releaseDetailList?.releaseDetail?.releaseType || undefined}
                                 style={{ width: 150 }}
-                                options={[
-                                    { value: 'grid', label: 'Grid View' },
-                                    { value: 'folder', label: 'Folder View' },
-                                ]}
+                                options={releaseTypeList.releaseType
+                                    .filter((item) => item.releaseTypeDescription !== null)
+                                    .map((item) => ({
+                                        value: item.releaseTypeId,
+                                        label: item.releaseTypeDescription,
+                                    }))}
                             />
                         </div>
                     </Col>
@@ -187,12 +209,13 @@ const ReleaseDetail = () => {
                                     <span className="label-common">Business Importance:</span>
                                     <Select
                                         className="select-inline-custom !w-[70%]"
-                                        defaultValue="Grid View"
                                         style={{ width: 150 }}
-                                        options={[
-                                            { value: 'grid', label: 'Grid View' },
-                                            { value: 'folder', label: 'Folder View' },
-                                        ]}
+                                        value={valueBusinessImportant || undefined}
+                                        options={releasesGanttChartList?.releasesGanttChart.map((item) => ({
+                                            value: item.businessImportanceId,
+                                            label: item.businessImportanceDescription,
+                                        }))}
+                                        onChange={(selectedValue) => setValueBusinessImportant(selectedValue)}
                                     />
                                 </div>
                             </Col>
