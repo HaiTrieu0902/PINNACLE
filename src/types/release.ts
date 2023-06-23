@@ -134,7 +134,7 @@ export interface ParamReleaseUpdate {
 export interface ModifiedFieldRelease {
     fieldName: string;
     oldValue: string | any;
-    newValue: string;
+    newValue: string | any;
 }
 
 export interface UpdateRelease {
@@ -146,9 +146,9 @@ export interface UpdateRelease {
     releaseOwner: number | any;
     releaseWorkflow: string;
     releaseBusinessImportance: number;
-    modifiedBy: number;
+    modifiedBy: number | any;
     releaseType: number;
-    releaseParentId: number;
+    releaseParentId: number | any;
     targetReleaseStartDate: Date | string;
     targetReleaseEndDate: Date | string;
     targetReleaseDurationDays: number;

@@ -16,18 +16,23 @@ import { ParamReleaseUpdate } from '../../../../types/release';
 import './ReleaseDetail.scss';
 const ReleaseDetail = () => {
     const dispatch = useAppDispatch();
+    type ValidReleaseDetailKeys = keyof typeof releaseDetailList.releaseDetail;
     const messageApi: any = useContext(MessageContext);
     const { releaseDetailList, releaseTypeList, releasesGanttChartList, releaseId } = useAppSelector(
         (state) => state.release,
     );
-    type ValidReleaseDetailKeys = keyof typeof releaseDetailList.releaseDetail;
     const [releaseValues, setReleaseValues] = useState({
         releaseLabel: releaseDetailList?.releaseDetail?.releaseLabel || '',
         releaseTitle: releaseDetailList?.releaseDetail?.releaseTitle || '',
         releaseDescription: releaseDetailList?.releaseDetail?.releaseDescription || '',
         releaseComments: releaseDetailList.releaseDetail.releaseComments || '',
     });
-    const [valueBusinessImportant, setValueBusinessImportant] = useState<number>(0);
+    const [selectedValues, setSelectedValues] = useState({
+        releaseType: 0,
+        releaseBusinessImportance: 0,
+    });
+    const [startDate, setStartDate] = useState<dayjs.Dayjs | any>(dayjs());
+    const [endDate, setEndDate] = useState<dayjs.Dayjs | any>(dayjs());
 
     // call API release type list
     useEffect(() => {
@@ -39,19 +44,22 @@ const ReleaseDetail = () => {
         };
     }, [dispatch]);
 
-    // change value business Importance
+    // change value releaseDetail
     useEffect(() => {
-        setValueBusinessImportant(releaseDetailList?.releaseDetail?.releaseBusinessImportance);
         setReleaseValues({
             releaseLabel: releaseDetailList?.releaseDetail?.releaseLabel,
             releaseTitle: releaseDetailList?.releaseDetail?.releaseTitle,
             releaseDescription: releaseDetailList?.releaseDetail?.releaseDescription,
             releaseComments: releaseDetailList.releaseDetail.releaseComments,
         });
+        setSelectedValues({
+            releaseType: releaseDetailList?.releaseDetail?.releaseType,
+            releaseBusinessImportance: releaseDetailList?.releaseDetail?.releaseBusinessImportance,
+        });
     }, [releaseDetailList]);
 
     // handle changed value
-    const handleInputValueChange = (event: ChangeEvent<HTMLInputElement> | any) => {
+    const handleInputValueChange = (event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = event.target;
         setReleaseValues((prevValues) => ({
             ...prevValues,
@@ -60,7 +68,7 @@ const ReleaseDetail = () => {
     };
 
     // handle blur value change(API change)
-    const handleInputValueBlur = async (event: ChangeEvent<HTMLInputElement> | any) => {
+    const handleInputValueBlur = async (event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = event.target;
         setReleaseValues((prevValues) => ({
             ...prevValues,
@@ -81,12 +89,12 @@ const ReleaseDetail = () => {
                 releaseTitle: releaseValues?.releaseTitle,
                 releaseDescription: releaseValues?.releaseDescription,
                 releaseComments: releaseValues?.releaseComments,
-                releaseOwner: '2',
+                releaseOwner: releaseDetailList?.releaseDetail?.releaseOwner,
                 releaseWorkflow: 'Draft',
-                releaseBusinessImportance: 2,
-                modifiedBy: 2,
-                releaseType: 11,
-                releaseParentId: 0,
+                releaseBusinessImportance: selectedValues?.releaseBusinessImportance,
+                modifiedBy: releaseDetailList?.releaseDetail?.modifiedBy,
+                releaseType: selectedValues?.releaseType,
+                releaseParentId: releaseDetailList?.releaseDetail?.releaseParentId,
                 targetReleaseStartDate: '2023-06-12T17:00:00',
                 targetReleaseEndDate: '2023-06-23T17:00:00',
                 targetReleaseDurationDays: 12,
@@ -94,7 +102,10 @@ const ReleaseDetail = () => {
         };
 
         if (releaseDetailList?.releaseDetail?.[name as ValidReleaseDetailKeys] === value) {
-            console.log('cancel release');
+            messageApi.info(`Release ${releaseId} may be not changed value.`);
+        } else if ((name === 'releaseLabel' && value === '') || (name === 'releaseTitle' && value === '')) {
+            messageApi.warning(`A Release must have a ${name}.`);
+            dispatch(getReleaseDetail(Number(releaseId)));
         } else {
             const url = `${API_PATHS.API}/Releases/update-release`;
             const data = await axiosData(url, 'POST', param);
@@ -103,6 +114,46 @@ const ReleaseDetail = () => {
             dispatch(getReleaseDetail(Number(releaseId)));
             return data;
         }
+    };
+
+    const handleSelectChange = async (name: string, selectedValue: number) => {
+        setSelectedValues((prevValues) => ({
+            ...prevValues,
+            [name]: selectedValue,
+        }));
+
+        const param: ParamReleaseUpdate = {
+            modifiedFieldReleases: [
+                {
+                    fieldName: name,
+                    oldValue: releaseDetailList?.releaseDetail?.[name as ValidReleaseDetailKeys],
+                    newValue: selectedValue,
+                },
+            ],
+            updateRelease: {
+                releaseId: Number(releaseId),
+                releaseLabel: releaseValues?.releaseLabel,
+                releaseTitle: releaseValues?.releaseTitle,
+                releaseDescription: releaseValues?.releaseDescription,
+                releaseComments: releaseValues?.releaseComments,
+                releaseOwner: '2',
+                releaseWorkflow: 'Draft',
+                releaseBusinessImportance:
+                    name === 'releaseBusinessImportance' ? selectedValue : selectedValues?.releaseBusinessImportance,
+                modifiedBy: 2,
+                releaseType: name === 'releaseType' ? selectedValue : selectedValues?.releaseType,
+                releaseParentId: 0,
+                targetReleaseStartDate: '2023-06-12T17:00:00',
+                targetReleaseEndDate: '2023-06-23T17:00:00',
+                targetReleaseDurationDays: 12,
+            },
+        };
+        const url = `${API_PATHS.API}/Releases/update-release`;
+        const data = await axiosData(url, 'POST', param);
+        messageApi.success(`Release ${releaseId} has successfully been Updated.`);
+        dispatch(getReleaseChart());
+        dispatch(getReleaseDetail(Number(releaseId)));
+        return data;
     };
 
     return (
@@ -163,7 +214,7 @@ const ReleaseDetail = () => {
                             <span className="label-common">Type :</span>
                             <Select
                                 className="select-inline-custom"
-                                value={releaseDetailList?.releaseDetail?.releaseType || undefined}
+                                value={selectedValues.releaseType || undefined}
                                 style={{ width: 150 }}
                                 options={releaseTypeList.releaseType
                                     .filter((item) => item.releaseTypeDescription !== null)
@@ -171,6 +222,7 @@ const ReleaseDetail = () => {
                                         value: item.releaseTypeId,
                                         label: item.releaseTypeDescription,
                                     }))}
+                                onChange={(selectedValue) => handleSelectChange('releaseType', selectedValue)}
                             />
                         </div>
                     </Col>
@@ -295,12 +347,14 @@ const ReleaseDetail = () => {
                                     <Select
                                         className="select-inline-custom !w-[70%]"
                                         style={{ width: 150 }}
-                                        value={valueBusinessImportant || undefined}
+                                        value={selectedValues.releaseBusinessImportance || undefined}
                                         options={releasesGanttChartList?.releasesGanttChart.map((item) => ({
                                             value: item.businessImportanceId,
                                             label: item.businessImportanceDescription,
                                         }))}
-                                        onChange={(selectedValue) => setValueBusinessImportant(selectedValue)}
+                                        onChange={(selectedValue) =>
+                                            handleSelectChange('releaseBusinessImportance', selectedValue)
+                                        }
                                     />
                                 </div>
                             </Col>
