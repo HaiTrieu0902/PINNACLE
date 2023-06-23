@@ -1,4 +1,4 @@
-import { Card, Col, DatePicker, Input, Row, Select } from 'antd';
+import { Card, Col, DatePicker, DatePickerProps, Input, Row, Select } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import dayjs from 'dayjs';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
@@ -31,8 +31,13 @@ const ReleaseDetail = () => {
         releaseType: 0,
         releaseBusinessImportance: 0,
     });
-    const [startDate, setStartDate] = useState<dayjs.Dayjs | any>(dayjs());
-    const [endDate, setEndDate] = useState<dayjs.Dayjs | any>(dayjs());
+    const [releaseValueDates, setReleaseValueDates] = useState<{
+        targetReleaseStartDate: dayjs.Dayjs | any;
+        targetReleaseEndDate: dayjs.Dayjs | any;
+    }>({
+        targetReleaseStartDate: releaseDetailList?.releaseDetail?.targetReleaseStartDate,
+        targetReleaseEndDate: releaseDetailList?.releaseDetail?.targetReleaseEndDate,
+    });
 
     // call API release type list
     useEffect(() => {
@@ -55,6 +60,10 @@ const ReleaseDetail = () => {
         setSelectedValues({
             releaseType: releaseDetailList?.releaseDetail?.releaseType,
             releaseBusinessImportance: releaseDetailList?.releaseDetail?.releaseBusinessImportance,
+        });
+        setReleaseValueDates({
+            targetReleaseStartDate: releaseDetailList?.releaseDetail?.targetReleaseStartDate,
+            targetReleaseEndDate: releaseDetailList?.releaseDetail?.targetReleaseEndDate,
         });
     }, [releaseDetailList]);
 
@@ -156,6 +165,17 @@ const ReleaseDetail = () => {
         return data;
     };
 
+    const handleDateChange: DatePickerProps['onChange'] = (date, name) => {
+        setReleaseValueDates((prevDates) => ({
+            ...prevDates,
+            [name]: date,
+        }));
+    };
+
+    console.log('releaseValueDates', releaseValueDates);
+
+    // nó ở đây nghen bồ ơi
+
     return (
         <div className="release-detail-container">
             <Card className="sub-title-common" title="Summary" bordered={true} size="small" style={{ width: '100%' }}>
@@ -255,8 +275,11 @@ const ReleaseDetail = () => {
                                 <div className="flex flex-col gap-2">
                                     <span className="label-common">Start Date :</span>
                                     <DatePicker
+                                        name="targetReleaseStartDate"
+                                        onChange={(date) => handleDateChange(date, 'targetReleaseStartDate')}
+                                        // defaultValue={releaseValueDates.targetReleaseStartDate}
                                         value={dayjs(
-                                            releaseDetailList.releaseDetail.targetReleaseStartDate,
+                                            releaseDetailList?.releaseDetail?.targetReleaseStartDate,
                                             'YYYY-MM-DD',
                                         )}
                                         format={'YYYY-MM-DD'}
@@ -267,8 +290,11 @@ const ReleaseDetail = () => {
                                 <div className="flex flex-col gap-2">
                                     <span className="label-common">End Date :</span>
                                     <DatePicker
+                                        name="targetReleaseEndDate"
+                                        onChange={(date) => handleDateChange(date, 'targetReleaseEndDate')}
+                                        // defaultValue={releaseValueDates.targetReleaseEndDate}
                                         value={dayjs(
-                                            releaseDetailList.releaseDetail.targetReleaseEndDate,
+                                            releaseDetailList?.releaseDetail?.targetReleaseEndDate,
                                             'YYYY-MM-DD',
                                         )}
                                         format={'YYYY-MM-DD'}
