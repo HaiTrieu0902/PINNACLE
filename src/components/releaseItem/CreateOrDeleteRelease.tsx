@@ -246,7 +246,7 @@ const CreateOrDeleteRelease = () => {
                                             <span className="label-common">
                                                 Owner :{' '}
                                                 <span className="input-inline-custom !text-[#dd5c86]">
-                                                    {user.fullname}
+                                                    {user.fullname ? user.fullname : 'Gerry Payne'}
                                                 </span>
                                             </span>
                                             <span style={{ height: '30px' }}></span>

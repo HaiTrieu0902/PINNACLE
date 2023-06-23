@@ -35,9 +35,11 @@ const ReleaseDetail = () => {
         targetReleaseStartDate: dayjs.Dayjs | any;
         targetReleaseEndDate: dayjs.Dayjs | any;
     }>({
-        targetReleaseStartDate: releaseDetailList?.releaseDetail?.targetReleaseStartDate,
-        targetReleaseEndDate: releaseDetailList?.releaseDetail?.targetReleaseEndDate,
+        targetReleaseStartDate: dayjs(releaseDetailList?.releaseDetail?.targetReleaseStartDate),
+        targetReleaseEndDate: dayjs(releaseDetailList?.releaseDetail?.targetReleaseEndDate),
     });
+
+    console.log('date', releaseValueDates);
 
     // call API release type list
     useEffect(() => {
@@ -83,7 +85,6 @@ const ReleaseDetail = () => {
             ...prevValues,
             [name]: value,
         }));
-
         const param: ParamReleaseUpdate = {
             modifiedFieldReleases: [
                 {
@@ -99,14 +100,18 @@ const ReleaseDetail = () => {
                 releaseDescription: releaseValues?.releaseDescription,
                 releaseComments: releaseValues?.releaseComments,
                 releaseOwner: releaseDetailList?.releaseDetail?.releaseOwner,
-                releaseWorkflow: 'Draft',
+                releaseWorkflow: releaseDetailList?.releaseDetail?.releaseWorkflow,
                 releaseBusinessImportance: selectedValues?.releaseBusinessImportance,
-                modifiedBy: releaseDetailList?.releaseDetail?.modifiedBy,
+                modifiedBy: Number(releaseDetailList?.releaseDetail?.modifiedBy),
                 releaseType: selectedValues?.releaseType,
-                releaseParentId: releaseDetailList?.releaseDetail?.releaseParentId,
-                targetReleaseStartDate: '2023-06-12T17:00:00',
-                targetReleaseEndDate: '2023-06-23T17:00:00',
-                targetReleaseDurationDays: 12,
+                releaseParentId: releaseDetailList?.releaseDetail?.releaseParentId
+                    ? releaseDetailList?.releaseDetail?.modifiedBy
+                    : 0,
+                targetReleaseStartDate: releaseDetailList?.releaseDetail?.targetReleaseStartDate,
+                targetReleaseEndDate: releaseDetailList?.releaseDetail?.targetReleaseEndDate,
+                targetReleaseDurationDays: Number(
+                    handleDiffDate(releaseValueDates.targetReleaseStartDate, releaseValueDates.targetReleaseEndDate),
+                ),
             },
         };
 
@@ -145,16 +150,20 @@ const ReleaseDetail = () => {
                 releaseTitle: releaseValues?.releaseTitle,
                 releaseDescription: releaseValues?.releaseDescription,
                 releaseComments: releaseValues?.releaseComments,
-                releaseOwner: '2',
-                releaseWorkflow: 'Draft',
+                releaseOwner: releaseDetailList?.releaseDetail?.releaseOwner,
+                releaseWorkflow: releaseDetailList?.releaseDetail?.releaseWorkflow,
                 releaseBusinessImportance:
                     name === 'releaseBusinessImportance' ? selectedValue : selectedValues?.releaseBusinessImportance,
-                modifiedBy: 2,
+                modifiedBy: Number(releaseDetailList?.releaseDetail?.modifiedBy),
                 releaseType: name === 'releaseType' ? selectedValue : selectedValues?.releaseType,
-                releaseParentId: 0,
-                targetReleaseStartDate: '2023-06-12T17:00:00',
-                targetReleaseEndDate: '2023-06-23T17:00:00',
-                targetReleaseDurationDays: 12,
+                releaseParentId: releaseDetailList?.releaseDetail?.releaseParentId
+                    ? releaseDetailList?.releaseDetail?.modifiedBy
+                    : 0,
+                targetReleaseStartDate: releaseDetailList?.releaseDetail?.targetReleaseStartDate,
+                targetReleaseEndDate: releaseDetailList?.releaseDetail?.targetReleaseEndDate,
+                targetReleaseDurationDays: Number(
+                    handleDiffDate(releaseValueDates.targetReleaseStartDate, releaseValueDates.targetReleaseEndDate),
+                ),
             },
         };
         const url = `${API_PATHS.API}/Releases/update-release`;
@@ -172,9 +181,14 @@ const ReleaseDetail = () => {
         }));
     };
 
-    console.log('releaseValueDates', releaseValueDates);
+    const handleDiffDate = (startDate: dayjs.Dayjs, endDate: dayjs.Dayjs) => {
+        if (startDate && endDate) {
+            const startDateValue = dayjs(startDate);
+            const endDateValue = dayjs(endDate);
 
-    // nó ở đây nghen bồ ơi
+            return Number(endDateValue.diff(startDateValue, 'day') + 1);
+        }
+    };
 
     return (
         <div className="release-detail-container">
@@ -277,7 +291,6 @@ const ReleaseDetail = () => {
                                     <DatePicker
                                         name="targetReleaseStartDate"
                                         onChange={(date) => handleDateChange(date, 'targetReleaseStartDate')}
-                                        // defaultValue={releaseValueDates.targetReleaseStartDate}
                                         value={dayjs(
                                             releaseDetailList?.releaseDetail?.targetReleaseStartDate,
                                             'YYYY-MM-DD',
@@ -292,7 +305,6 @@ const ReleaseDetail = () => {
                                     <DatePicker
                                         name="targetReleaseEndDate"
                                         onChange={(date) => handleDateChange(date, 'targetReleaseEndDate')}
-                                        // defaultValue={releaseValueDates.targetReleaseEndDate}
                                         value={dayjs(
                                             releaseDetailList?.releaseDetail?.targetReleaseEndDate,
                                             'YYYY-MM-DD',
