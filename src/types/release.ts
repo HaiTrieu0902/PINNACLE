@@ -149,7 +149,7 @@ export interface UpdateRelease {
     modifiedBy: number | any;
     releaseType: number;
     releaseParentId: number | any;
-    targetReleaseStartDate: Date | string;
-    targetReleaseEndDate: Date | string;
+    targetReleaseStartDate: Date | string | any;
+    targetReleaseEndDate: Date | string | any;
     targetReleaseDurationDays: number;
 }

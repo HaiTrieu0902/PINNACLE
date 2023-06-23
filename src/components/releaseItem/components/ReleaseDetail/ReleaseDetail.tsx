@@ -130,6 +130,7 @@ const ReleaseDetail = () => {
         }
     };
 
+    // handle changes select option Update
     const handleSelectChange = async (name: string, selectedValue: number) => {
         setSelectedValues((prevValues) => ({
             ...prevValues,
@@ -174,18 +175,57 @@ const ReleaseDetail = () => {
         return data;
     };
 
-    const handleDateChange: DatePickerProps['onChange'] = (date, name) => {
+    // handle change date Update
+    const handleDateChange: DatePickerProps['onChange'] = async (date, name) => {
         setReleaseValueDates((prevDates) => ({
             ...prevDates,
             [name]: date,
         }));
+
+        const param: ParamReleaseUpdate = {
+            modifiedFieldReleases: [
+                {
+                    fieldName: name,
+                    oldValue: releaseDetailList?.releaseDetail?.[name as ValidReleaseDetailKeys]?.toLocaleString(),
+                    newValue: date?.toISOString(),
+                },
+            ],
+            updateRelease: {
+                releaseId: Number(releaseId),
+                releaseLabel: releaseValues?.releaseLabel,
+                releaseTitle: releaseValues?.releaseTitle,
+                releaseDescription: releaseValues?.releaseDescription,
+                releaseComments: releaseValues?.releaseComments,
+                releaseOwner: releaseDetailList?.releaseDetail?.releaseOwner,
+                releaseWorkflow: releaseDetailList?.releaseDetail?.releaseWorkflow,
+                releaseBusinessImportance: selectedValues?.releaseBusinessImportance,
+                modifiedBy: Number(releaseDetailList?.releaseDetail?.modifiedBy),
+                releaseType: selectedValues?.releaseType,
+                releaseParentId: releaseDetailList?.releaseDetail?.releaseParentId
+                    ? releaseDetailList?.releaseDetail?.modifiedBy
+                    : 0,
+                targetReleaseStartDate:
+                    name === 'targetReleaseStartDate' ? dayjs(date) : releaseValueDates?.targetReleaseStartDate,
+                targetReleaseEndDate:
+                    name === 'targetReleaseEndDate' ? dayjs(date) : releaseValueDates?.targetReleaseEndDate,
+                targetReleaseDurationDays: Number(
+                    handleDiffDate(releaseValueDates.targetReleaseStartDate, releaseValueDates.targetReleaseEndDate),
+                ),
+            },
+        };
+        const url = `${API_PATHS.API}/Releases/update-release`;
+        const data = await axiosData(url, 'POST', param);
+        messageApi.success(`Release ${releaseId} has successfully been Updated.`);
+        dispatch(getReleaseChart());
+        dispatch(getReleaseDetail(Number(releaseId)));
+        return data;
     };
 
+    // handle caculation date
     const handleDiffDate = (startDate: dayjs.Dayjs, endDate: dayjs.Dayjs) => {
         if (startDate && endDate) {
             const startDateValue = dayjs(startDate);
             const endDateValue = dayjs(endDate);
-
             return Number(endDateValue.diff(startDateValue, 'day') + 1);
         }
     };
@@ -291,10 +331,7 @@ const ReleaseDetail = () => {
                                     <DatePicker
                                         name="targetReleaseStartDate"
                                         onChange={(date) => handleDateChange(date, 'targetReleaseStartDate')}
-                                        value={dayjs(
-                                            releaseDetailList?.releaseDetail?.targetReleaseStartDate,
-                                            'YYYY-MM-DD',
-                                        )}
+                                        value={dayjs(releaseValueDates?.targetReleaseStartDate, 'YYYY-MM-DD')}
                                         format={'YYYY-MM-DD'}
                                     />
                                 </div>
@@ -305,10 +342,7 @@ const ReleaseDetail = () => {
                                     <DatePicker
                                         name="targetReleaseEndDate"
                                         onChange={(date) => handleDateChange(date, 'targetReleaseEndDate')}
-                                        value={dayjs(
-                                            releaseDetailList?.releaseDetail?.targetReleaseEndDate,
-                                            'YYYY-MM-DD',
-                                        )}
+                                        value={dayjs(releaseValueDates?.targetReleaseEndDate, 'YYYY-MM-DD')}
                                         format={'YYYY-MM-DD'}
                                     />
                                 </div>
