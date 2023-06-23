@@ -1,4 +1,4 @@
-import { Button, Card, Col, DatePicker, Form, Image, Input, Modal, Row, Select } from 'antd';
+import { Button, Card, Col, DatePicker, DatePickerProps, Form, Image, Input, Modal, Row, Select } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import dayjs from 'dayjs';
 import { useContext, useState } from 'react';
@@ -9,17 +9,21 @@ import deleteIcon from '../../assets/icon/deleteIcon.svg';
 import deleteActive from '../../assets/icon/deleteIconActive.svg';
 import { API_PATHS } from '../../configs/api';
 import { axiosData } from '../../configs/axiosApiCusomer';
-import { useAppSelector } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store';
 import { ParamReleaseAdd, ParamReleaseDelete } from '../../types/release';
 import './ReleaseItem.scss';
+import { getReleaseChart } from '../../redux/release.slice';
 
 type IconType = typeof addIcon | typeof deleteIcon;
 const CreateOrDeleteRelease = () => {
+    const dispatch = useAppDispatch();
     const messageApi: any = useContext(MessageContext);
-    const { releaseTypeList, releasesGanttChartList, releaseIdDelete } = useAppSelector((state) => state.release);
+    const { releaseTypeList, releasesGanttChartList, releaseId } = useAppSelector((state) => state.release);
     const { user } = useAppSelector((state) => state.auth);
     const [form] = Form.useForm();
     const [formDelete] = Form.useForm();
+    const [startDate, setStartDate] = useState<dayjs.Dayjs | any>(dayjs());
+    const [endDate, setEndDate] = useState<dayjs.Dayjs | any>(dayjs());
     const [newReleaseId, setNewReleaseId] = useState<number>(0);
     const [hoveredIcon, setHoveredIcon] = useState<IconType | null>(null);
     const [openAdd, setOpenAdd] = useState(false);
@@ -27,7 +31,6 @@ const CreateOrDeleteRelease = () => {
 
     // handle add release
     const handleFormAddSubmit = async (values: ParamReleaseAdd) => {
-        const diff = values.targetReleaseEndDate.diff(values.targetReleaseStartDate, 'days');
         const param: ParamReleaseAdd = {
             releaseId: Number(newReleaseId),
             releaseLabel: values.releaseLabel,
@@ -41,7 +44,7 @@ const CreateOrDeleteRelease = () => {
             releaseCreatedBy: user?.userId,
             targetReleaseStartDate: values.targetReleaseStartDate,
             targetReleaseEndDate: values.targetReleaseEndDate,
-            targetReleaseDurationDays: Number(diff),
+            targetReleaseDurationDays: Number(endDate.diff(startDate, 'day')) + 1,
             releaseType: values.releaseType,
             releaseParentId: null,
             logicalDelete: 0,
@@ -51,22 +54,26 @@ const CreateOrDeleteRelease = () => {
         const url = `${API_PATHS.API}/Releases/create-release`;
         const data = await axiosData(url, 'POST', param);
         form.resetFields();
+        dispatch(getReleaseChart());
         setOpenAdd(false);
         messageApi.success(data.message);
         return data;
     };
 
+    // console.log('duration', duration);
+
     // handle delete release
     const handleFormDeleteSubmit = async (values: ParamReleaseDelete) => {
         const param = {
-            releaseId: releaseIdDelete,
+            releaseId: releaseId,
             deleteReason: values.deleteReason,
         };
         const url = `${API_PATHS.API}/Releases/delete-release`;
         const data = await axiosData(url, 'DELETE', param);
         formDelete.resetFields();
+        dispatch(getReleaseChart());
         setOpenDelete(false);
-        messageApi.success(`ID ${releaseIdDelete} was delete successfully`);
+        messageApi.success(`ID ${releaseId} was delete successfully`);
         return data;
     };
 
@@ -95,6 +102,15 @@ const CreateOrDeleteRelease = () => {
     };
     const handleIconMouseLeave = () => {
         setHoveredIcon(null);
+    };
+
+    // handle change date
+    const handleDateChange: DatePickerProps['onChange'] = (date, name) => {
+        if (name === 'targetReleaseStartDate') {
+            setStartDate(date);
+        } else if (name === 'targetReleaseEndDate') {
+            setEndDate(date);
+        }
     };
 
     return (
@@ -254,7 +270,11 @@ const CreateOrDeleteRelease = () => {
 
                                             <Form.Item name="targetReleaseStartDate">
                                                 <DatePicker
-                                                    defaultValue={dayjs(new Date().toISOString(), 'YYYY-MM-DD')}
+                                                    name="targetReleaseStartDate"
+                                                    onChange={(date, name) =>
+                                                        handleDateChange(date, 'targetReleaseStartDate')
+                                                    }
+                                                    defaultValue={startDate}
                                                     format={'DD-MM-YYYY'}
                                                 />
                                             </Form.Item>
@@ -265,7 +285,11 @@ const CreateOrDeleteRelease = () => {
                                             <span className="label-common">End Date :</span>
                                             <Form.Item name="targetReleaseEndDate">
                                                 <DatePicker
-                                                    defaultValue={dayjs(new Date().toISOString(), 'YYYY-MM-DD')}
+                                                    name="targetReleaseEndDate"
+                                                    onChange={(date, name) =>
+                                                        handleDateChange(date, 'targetReleaseEndDate')
+                                                    }
+                                                    defaultValue={endDate}
                                                     format={'DD-MM-YYYY'}
                                                 />
                                             </Form.Item>
@@ -274,7 +298,10 @@ const CreateOrDeleteRelease = () => {
                                     <Col span={6}>
                                         <div className="flex gap-3 mt-1 items-center ml-9">
                                             <span className="label-common">
-                                                Duration: <span className="input-inline-custom">1</span>
+                                                Duration:{' '}
+                                                <span className="input-inline-custom">
+                                                    {Number(endDate.diff(startDate, 'day')) + 1}
+                                                </span>
                                             </span>
                                             <span className="label-common">Days</span>
                                         </div>

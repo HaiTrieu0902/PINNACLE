@@ -25,7 +25,7 @@ interface Release {
     releaseDetailList: releaseDetailList;
     releaseTypeList: releaseTypeList;
     releasesGanttChartList: releasesGanttChartList;
-    releaseIdDelete: number | null;
+    releaseId: number | null;
     conditionSorter: {
         order: string | undefined;
         field: string | undefined;
@@ -53,7 +53,7 @@ const initialState: Release = {
     releaseDetailList: {
         releaseDetail: {} as Required<releaseDetail>,
     },
-    releaseIdDelete: null,
+    releaseId: null,
     releaseTypeList: { releaseType: [] },
     releasesGanttChartList: { releasesGanttChart: [] },
     conditionSorter: {
@@ -164,8 +164,8 @@ const releaseSlice = createSlice({
             };
             state.releasesGridChartList.releasesGridChart.sort(sortByFolderNameShow);
         },
-        getReleaseIdDelete: (state, action: PayloadAction<number | null>) => {
-            state.releaseIdDelete = action.payload;
+        getreleaseId: (state, action: PayloadAction<number | null>) => {
+            state.releaseId = action.payload;
         },
     },
     extraReducers(builder) {
@@ -186,7 +186,7 @@ const releaseSlice = createSlice({
     },
 });
 
-export const { filterReleasesGridCharTable, changeValueKeySearch, arrangeReleasesGridCharTable, getReleaseIdDelete } =
+export const { filterReleasesGridCharTable, changeValueKeySearch, arrangeReleasesGridCharTable, getreleaseId } =
     releaseSlice.actions;
 
 export default releaseSlice.reducer;

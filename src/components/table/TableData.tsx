@@ -1,6 +1,6 @@
 import { Collapse, Table } from 'antd';
 import { useEffect, useState } from 'react';
-import { getReleaseChart, getReleaseDetail, getReleaseIdDelete } from '../../redux/release.slice';
+import { getReleaseChart, getReleaseDetail, getreleaseId } from '../../redux/release.slice';
 import { useAppDispatch, useAppSelector } from '../../store';
 import './table.scss';
 import { columnsTableData } from '../../utils/releaseTable';
@@ -27,7 +27,7 @@ const TableData: React.FC = () => {
     useEffect(() => {
         if (Number(selectedRow) != 0) {
             dispatch(getReleaseDetail(Number(selectedRow)));
-            dispatch(getReleaseIdDelete(Number(selectedRow)));
+            dispatch(getreleaseId(Number(selectedRow)));
         }
     }, [dispatch, selectedRow]);
 

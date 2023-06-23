@@ -124,3 +124,32 @@ export interface ParamReleaseDelete {
     releaseId: number;
     deleteReason: string;
 }
+
+// update release
+export interface ParamReleaseUpdate {
+    updateRelease: UpdateRelease;
+    modifiedFieldReleases: ModifiedFieldRelease[];
+}
+
+export interface ModifiedFieldRelease {
+    fieldName: string;
+    oldValue: string | any;
+    newValue: string;
+}
+
+export interface UpdateRelease {
+    releaseId: number;
+    releaseLabel: string;
+    releaseTitle: string;
+    releaseDescription: string;
+    releaseComments: string;
+    releaseOwner: number | any;
+    releaseWorkflow: string;
+    releaseBusinessImportance: number;
+    modifiedBy: number;
+    releaseType: number;
+    releaseParentId: number;
+    targetReleaseStartDate: Date | string;
+    targetReleaseEndDate: Date | string;
+    targetReleaseDurationDays: number;
+}
