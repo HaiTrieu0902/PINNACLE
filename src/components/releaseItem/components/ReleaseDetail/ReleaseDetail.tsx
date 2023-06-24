@@ -12,7 +12,7 @@ import {
     getReleaseType,
 } from '../../../../redux/release.slice';
 import { useAppDispatch, useAppSelector } from '../../../../store';
-import { ParamReleaseUpdate } from '../../../../types/release';
+import { ParamReleaseUpdate, UpdateRelease } from '../../../../types/release';
 import './ReleaseDetail.scss';
 const ReleaseDetail = () => {
     const dispatch = useAppDispatch();
@@ -38,8 +38,6 @@ const ReleaseDetail = () => {
         targetReleaseStartDate: dayjs(releaseDetailList?.releaseDetail?.targetReleaseStartDate),
         targetReleaseEndDate: dayjs(releaseDetailList?.releaseDetail?.targetReleaseEndDate),
     });
-
-    console.log('date', releaseValueDates);
 
     // call API release type list
     useEffect(() => {
@@ -69,6 +67,47 @@ const ReleaseDetail = () => {
         });
     }, [releaseDetailList]);
 
+    // handle caculation date
+    const handleDiffDate = (startDate: dayjs.Dayjs, endDate: dayjs.Dayjs) => {
+        if (startDate && endDate) {
+            const startDateValue = dayjs(startDate);
+            const endDateValue = dayjs(endDate);
+            return Number(endDateValue.diff(startDateValue, 'days') + 1);
+        }
+    };
+
+    // Param components
+    const commonParams = {
+        releaseId: Number(releaseId),
+        releaseLabel: releaseValues?.releaseLabel,
+        releaseTitle: releaseValues?.releaseTitle,
+        releaseDescription: releaseValues?.releaseDescription,
+        releaseComments: releaseValues?.releaseComments,
+        releaseOwner: releaseDetailList?.releaseDetail?.releaseOwner,
+        releaseBusinessImportance: selectedValues?.releaseBusinessImportance,
+        releaseType: selectedValues?.releaseType,
+        releaseWorkflow: releaseDetailList?.releaseDetail?.releaseWorkflow,
+        modifiedBy: Number(releaseDetailList?.releaseDetail?.modifiedBy),
+        releaseParentId: releaseDetailList?.releaseDetail?.releaseParentId
+            ? releaseDetailList?.releaseDetail?.modifiedBy
+            : 0,
+        targetReleaseStartDate: releaseValueDates?.targetReleaseStartDate,
+        targetReleaseEndDate: releaseValueDates?.targetReleaseEndDate,
+        targetReleaseDurationDays: Number(
+            handleDiffDate(releaseValueDates.targetReleaseStartDate, releaseValueDates.targetReleaseEndDate),
+        ),
+    };
+
+    // Call API Update components
+    const handleReleaseUpdate = async (param: ParamReleaseUpdate) => {
+        const url = `${API_PATHS.API}/Releases/update-release`;
+        const data = await axiosData(url, 'POST', param);
+        messageApi.success(`Release ${releaseId} has successfully been Updated.`);
+        dispatch(getReleaseChart());
+        dispatch(getReleaseDetail(Number(releaseId)));
+        return data;
+    };
+
     // handle changed value
     const handleInputValueChange = (event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = event.target;
@@ -85,48 +124,29 @@ const ReleaseDetail = () => {
             ...prevValues,
             [name]: value,
         }));
-        const param: ParamReleaseUpdate = {
-            modifiedFieldReleases: [
-                {
-                    fieldName: name,
-                    oldValue: releaseDetailList?.releaseDetail?.[name as ValidReleaseDetailKeys],
-                    newValue: value,
-                },
-            ],
-            updateRelease: {
-                releaseId: Number(releaseId),
-                releaseLabel: releaseValues?.releaseLabel,
-                releaseTitle: releaseValues?.releaseTitle,
-                releaseDescription: releaseValues?.releaseDescription,
-                releaseComments: releaseValues?.releaseComments,
-                releaseOwner: releaseDetailList?.releaseDetail?.releaseOwner,
-                releaseWorkflow: releaseDetailList?.releaseDetail?.releaseWorkflow,
-                releaseBusinessImportance: selectedValues?.releaseBusinessImportance,
-                modifiedBy: Number(releaseDetailList?.releaseDetail?.modifiedBy),
-                releaseType: selectedValues?.releaseType,
-                releaseParentId: releaseDetailList?.releaseDetail?.releaseParentId
-                    ? releaseDetailList?.releaseDetail?.modifiedBy
-                    : 0,
-                targetReleaseStartDate: releaseDetailList?.releaseDetail?.targetReleaseStartDate,
-                targetReleaseEndDate: releaseDetailList?.releaseDetail?.targetReleaseEndDate,
-                targetReleaseDurationDays: Number(
-                    handleDiffDate(releaseValueDates.targetReleaseStartDate, releaseValueDates.targetReleaseEndDate),
-                ),
-            },
-        };
-
         if (releaseDetailList?.releaseDetail?.[name as ValidReleaseDetailKeys] === value) {
             messageApi.info(`Release ${releaseId} may be not changed value.`);
         } else if ((name === 'releaseLabel' && value === '') || (name === 'releaseTitle' && value === '')) {
             messageApi.warning(`A Release must have a ${name}.`);
             dispatch(getReleaseDetail(Number(releaseId)));
         } else {
-            const url = `${API_PATHS.API}/Releases/update-release`;
-            const data = await axiosData(url, 'POST', param);
-            messageApi.success(`Release ${releaseId} has successfully been Updated.`);
-            dispatch(getReleaseChart());
-            dispatch(getReleaseDetail(Number(releaseId)));
-            return data;
+            const param: ParamReleaseUpdate = {
+                modifiedFieldReleases: [
+                    {
+                        fieldName: name,
+                        oldValue: releaseDetailList?.releaseDetail?.[name as ValidReleaseDetailKeys],
+                        newValue: value,
+                    },
+                ],
+                updateRelease: {
+                    ...commonParams,
+                    releaseLabel: releaseValues?.releaseLabel,
+                    releaseTitle: releaseValues?.releaseTitle,
+                    releaseDescription: releaseValues?.releaseDescription,
+                    releaseComments: releaseValues?.releaseComments,
+                },
+            };
+            await handleReleaseUpdate(param);
         }
     };
 
@@ -136,7 +156,6 @@ const ReleaseDetail = () => {
             ...prevValues,
             [name]: selectedValue,
         }));
-
         const param: ParamReleaseUpdate = {
             modifiedFieldReleases: [
                 {
@@ -146,37 +165,17 @@ const ReleaseDetail = () => {
                 },
             ],
             updateRelease: {
-                releaseId: Number(releaseId),
-                releaseLabel: releaseValues?.releaseLabel,
-                releaseTitle: releaseValues?.releaseTitle,
-                releaseDescription: releaseValues?.releaseDescription,
-                releaseComments: releaseValues?.releaseComments,
-                releaseOwner: releaseDetailList?.releaseDetail?.releaseOwner,
-                releaseWorkflow: releaseDetailList?.releaseDetail?.releaseWorkflow,
+                ...commonParams,
                 releaseBusinessImportance:
                     name === 'releaseBusinessImportance' ? selectedValue : selectedValues?.releaseBusinessImportance,
-                modifiedBy: Number(releaseDetailList?.releaseDetail?.modifiedBy),
                 releaseType: name === 'releaseType' ? selectedValue : selectedValues?.releaseType,
-                releaseParentId: releaseDetailList?.releaseDetail?.releaseParentId
-                    ? releaseDetailList?.releaseDetail?.modifiedBy
-                    : 0,
-                targetReleaseStartDate: releaseDetailList?.releaseDetail?.targetReleaseStartDate,
-                targetReleaseEndDate: releaseDetailList?.releaseDetail?.targetReleaseEndDate,
-                targetReleaseDurationDays: Number(
-                    handleDiffDate(releaseValueDates.targetReleaseStartDate, releaseValueDates.targetReleaseEndDate),
-                ),
             },
         };
-        const url = `${API_PATHS.API}/Releases/update-release`;
-        const data = await axiosData(url, 'POST', param);
-        messageApi.success(`Release ${releaseId} has successfully been Updated.`);
-        dispatch(getReleaseChart());
-        dispatch(getReleaseDetail(Number(releaseId)));
-        return data;
+        await handleReleaseUpdate(param);
     };
 
     // handle change date Update
-    const handleDateChange: DatePickerProps['onChange'] = async (date, name) => {
+    const handleDateChange: DatePickerProps['onChange'] = async (date: any, name) => {
         setReleaseValueDates((prevDates) => ({
             ...prevDates,
             [name]: date,
@@ -187,47 +186,18 @@ const ReleaseDetail = () => {
                 {
                     fieldName: name,
                     oldValue: releaseDetailList?.releaseDetail?.[name as ValidReleaseDetailKeys]?.toLocaleString(),
-                    newValue: date?.toISOString(),
+                    newValue: date?.toLocaleString(),
                 },
             ],
             updateRelease: {
-                releaseId: Number(releaseId),
-                releaseLabel: releaseValues?.releaseLabel,
-                releaseTitle: releaseValues?.releaseTitle,
-                releaseDescription: releaseValues?.releaseDescription,
-                releaseComments: releaseValues?.releaseComments,
-                releaseOwner: releaseDetailList?.releaseDetail?.releaseOwner,
-                releaseWorkflow: releaseDetailList?.releaseDetail?.releaseWorkflow,
-                releaseBusinessImportance: selectedValues?.releaseBusinessImportance,
-                modifiedBy: Number(releaseDetailList?.releaseDetail?.modifiedBy),
-                releaseType: selectedValues?.releaseType,
-                releaseParentId: releaseDetailList?.releaseDetail?.releaseParentId
-                    ? releaseDetailList?.releaseDetail?.modifiedBy
-                    : 0,
+                ...commonParams,
                 targetReleaseStartDate:
                     name === 'targetReleaseStartDate' ? dayjs(date) : releaseValueDates?.targetReleaseStartDate,
                 targetReleaseEndDate:
                     name === 'targetReleaseEndDate' ? dayjs(date) : releaseValueDates?.targetReleaseEndDate,
-                targetReleaseDurationDays: Number(
-                    handleDiffDate(releaseValueDates.targetReleaseStartDate, releaseValueDates.targetReleaseEndDate),
-                ),
             },
         };
-        const url = `${API_PATHS.API}/Releases/update-release`;
-        const data = await axiosData(url, 'POST', param);
-        messageApi.success(`Release ${releaseId} has successfully been Updated.`);
-        dispatch(getReleaseChart());
-        dispatch(getReleaseDetail(Number(releaseId)));
-        return data;
-    };
-
-    // handle caculation date
-    const handleDiffDate = (startDate: dayjs.Dayjs, endDate: dayjs.Dayjs) => {
-        if (startDate && endDate) {
-            const startDateValue = dayjs(startDate);
-            const endDateValue = dayjs(endDate);
-            return Number(endDateValue.diff(startDateValue, 'day') + 1);
-        }
+        await handleReleaseUpdate(param);
     };
 
     return (
@@ -332,7 +302,7 @@ const ReleaseDetail = () => {
                                         name="targetReleaseStartDate"
                                         onChange={(date) => handleDateChange(date, 'targetReleaseStartDate')}
                                         value={dayjs(releaseValueDates?.targetReleaseStartDate, 'YYYY-MM-DD')}
-                                        format={'YYYY-MM-DD'}
+                                        format={'DD-MM-YYYY'}
                                     />
                                 </div>
                             </Col>
@@ -343,7 +313,7 @@ const ReleaseDetail = () => {
                                         name="targetReleaseEndDate"
                                         onChange={(date) => handleDateChange(date, 'targetReleaseEndDate')}
                                         value={dayjs(releaseValueDates?.targetReleaseEndDate, 'YYYY-MM-DD')}
-                                        format={'YYYY-MM-DD'}
+                                        format={'DD-MM-YYYY'}
                                     />
                                 </div>
                             </Col>
@@ -352,7 +322,8 @@ const ReleaseDetail = () => {
                                     <span className="label-common">
                                         Duration :{' '}
                                         <span className="input-inline-custom">
-                                            {releaseDetailList.releaseDetail.duration}
+                                            {Math.ceil(Number(releaseDetailList?.releaseDetail?.duration)) ||
+                                                releaseDetailList?.releaseDetail?.duration}
                                         </span>
                                     </span>
                                     <span className="label-common">Days</span>
