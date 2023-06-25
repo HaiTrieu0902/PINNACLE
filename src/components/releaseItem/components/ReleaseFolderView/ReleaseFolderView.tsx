@@ -7,13 +7,13 @@ const ReleaseFolderView = () => {
         <div className="release-card-body">
             <div className="release-folder-view">
                 <div className="release-folder-view__header">
-                    <SearchInput
+                    {/* <SearchInput
                         width="100%"
                         onSearch={() => {
                             return;
                         }}
                     />
-                    <Button className="button-folder-view">Create Root Folder</Button>
+                    <Button className="button-folder-view">Create Root Folder</Button> */}
                 </div>
                 <div className="release-folder-view__tree-content">
                     <TreeFolder />

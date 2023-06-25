@@ -28,3 +28,20 @@
         }
     }
 }
+
+.dropdown-title_active {
+    clear: both;
+    color: rgba(0, 0, 0, 0.85) !important;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 22px;
+    margin: 0;
+    padding: 5px 12px;
+    transition: all 0.3s;
+}
+
+.dropdown-title {
+    color: rgba(0, 0, 0, 0.25) !important;
+    cursor: not-allowed !important;
+}

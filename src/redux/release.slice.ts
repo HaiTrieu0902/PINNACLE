@@ -6,6 +6,7 @@ import {
     releaseDetail,
     releaseDetailList,
     releaseTypeList,
+    releasesFolderChartList,
     releasesGanttChartList,
     releasesGridChartList,
 } from '../types/release';
@@ -25,6 +26,7 @@ interface Release {
     releaseDetailList: releaseDetailList;
     releaseTypeList: releaseTypeList;
     releasesGanttChartList: releasesGanttChartList;
+    releasesFolderChartList: releasesFolderChartList;
     releaseId: number | null;
     conditionSorter: {
         order: string | undefined;
@@ -56,6 +58,7 @@ const initialState: Release = {
     releaseId: null,
     releaseTypeList: { releaseType: [] },
     releasesGanttChartList: { releasesGanttChart: [] },
+    releasesFolderChartList: {} as Required<releasesFolderChartList>,
     conditionSorter: {
         order: undefined,
         field: undefined,
@@ -102,6 +105,13 @@ export const getReleaseType = createAsyncThunk('ReleaseType/getReleaseType', asy
 //get businessImportant
 export const getBusinessImportance = createAsyncThunk('BusinessImportance/getBusinessImportance', async () => {
     const url = `${API_PATHS.API}/BusinessImportance`;
+    const data = await axiosData(url, 'GET');
+    return data;
+});
+
+//  get-release-folder-chart
+export const getReleaseFolderChart = createAsyncThunk('ReleaseFolderChart/getReleaseFolderChart', async () => {
+    const url = `${API_PATHS.API}/ReleaseRegisters/get-release-folder-chart?searchString=`;
     const data = await axiosData(url, 'GET');
     return data;
 });

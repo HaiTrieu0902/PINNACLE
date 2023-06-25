@@ -153,3 +153,22 @@ export interface UpdateRelease {
     targetReleaseEndDate: Date | string | any;
     targetReleaseDurationDays: number;
 }
+
+// release grid Folder view
+export interface releasesFolderChartList {
+    releasesFolderChart: ReleasesFolderChart[];
+    lastestReleaseId: number;
+}
+
+export interface ReleasesFolderChart {
+    key: string;
+    title: string;
+    id: number;
+    isChild: boolean;
+    parentId: null | string;
+    description: string;
+    expandTypeOptional: number;
+    expandedImageKey: number;
+    isHighlighted: boolean;
+    children: ReleasesFolderChart[];
+}
