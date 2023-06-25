@@ -1,0 +1,30 @@
+.release-card-body {
+    .release-folder-view {
+        .release-folder-view__header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            margin-top: 4px;
+            gap: 15px;
+
+            .button-folder-view {
+                display: flex;
+                background-color: #002060 !important;
+                color: #ffffff;
+                align-items: center;
+                font-size: 12px;
+                font-weight: 600;
+
+                &:hover {
+                    background-color: #002060 !important;
+                    color: #ffffff !important;
+                }
+            }
+        }
+
+        .release-folder-view__tree-content {
+            height: 75.5vh;
+            overflow: auto;
+        }
+    }
+}
