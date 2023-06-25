@@ -1,7 +1,5 @@
 import { SearchOutlined } from '@ant-design/icons';
 import { Input } from 'antd';
-import { useAppDispatch } from '../../store';
-import { changeValueKeySearch } from '../../redux/release.slice';
 
 interface SearchInputProps {
     width: string;
@@ -9,11 +7,9 @@ interface SearchInputProps {
 }
 
 const SearchInput = ({ width, onSearch }: SearchInputProps) => {
-    const dispatch = useAppDispatch();
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
         onSearch(value);
-        dispatch(changeValueKeySearch(value));
     };
     return (
         <Input

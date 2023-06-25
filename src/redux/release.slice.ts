@@ -110,11 +110,14 @@ export const getBusinessImportance = createAsyncThunk('BusinessImportance/getBus
 });
 
 //  get-release-folder-chart
-export const getReleaseFolderChart = createAsyncThunk('ReleaseFolderChart/getReleaseFolderChart', async () => {
-    const url = `${API_PATHS.API}/ReleaseRegisters/get-release-folder-chart?searchString=`;
-    const data = await axiosData(url, 'GET');
-    return data;
-});
+export const getReleaseFolderChart = createAsyncThunk(
+    'ReleaseFolderChart/getReleaseFolderChart',
+    async (searchString: string) => {
+        const url = `${API_PATHS.API}/ReleaseRegisters/get-release-folder-chart?searchString=${searchString}`;
+        const data = await axiosData(url, 'POST', searchString);
+        return data;
+    },
+);
 
 const releaseSlice = createSlice({
     name: 'release',
@@ -192,6 +195,9 @@ const releaseSlice = createSlice({
             })
             .addCase(getBusinessImportance.fulfilled, (state, action) => {
                 state.releasesGanttChartList = action.payload;
+            })
+            .addCase(getReleaseFolderChart.fulfilled, (state, action) => {
+                state.releasesFolderChartList = action.payload;
             });
     },
 });

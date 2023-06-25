@@ -1,7 +1,7 @@
 import { Button } from 'antd';
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
-import { useState } from 'react';
-import { arrangeReleasesGridCharTable } from '../../../../redux/release.slice';
+import { useState, useEffect } from 'react';
+import { arrangeReleasesGridCharTable, changeValueKeySearch } from '../../../../redux/release.slice';
 import { useAppDispatch } from '../../../../store';
 import SearchInput from '../../../Search/SearchInput';
 import TableData from '../../../Table/TableData';
@@ -19,6 +19,10 @@ const ReleaseGridView = () => {
     const handleOnSearchGridView = (value: string) => {
         setSearchValue(value);
     };
+
+    useEffect(() => {
+        dispatch(changeValueKeySearch(searchValue));
+    }, [searchValue, dispatch]);
 
     return (
         <div className="release-card-body">
