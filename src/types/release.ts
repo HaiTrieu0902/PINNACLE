@@ -18,12 +18,6 @@ export interface folderGrid {
 
 export interface releasesGridChartList {
     lastestReleaseId: number;
-    // releasesGridChart: [
-    //     {
-    //         folderGrid: folderGrid;
-    //         releaseGridDtos: releaseGridDtos[];
-    //     },
-    // ];
     releasesGridChart: {
         folderGrid: folderGrid;
         releaseGridDtos: releaseGridDtos[];
@@ -171,4 +165,12 @@ export interface ReleasesFolderChart {
     expandedImageKey: number;
     isHighlighted: boolean;
     children: ReleasesFolderChart[];
+}
+
+// release Grid Folder
+export interface ParamReleaseFolderView {
+    parentFolderId: number;
+    folderName: string;
+    entityType: number;
+    isSubFolder: boolean;
 }

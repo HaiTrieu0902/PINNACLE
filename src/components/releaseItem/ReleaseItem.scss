@@ -53,6 +53,15 @@
             color: #9a9ea4;
             font-size: 14px;
             font-weight: 400;
+
+            .label-required {
+                font-weight: 400;
+                font-size: 16px;
+                line-height: 14px;
+                margin-top: 4px;
+                margin-right: 3px;
+                color: #ff4d4f;
+            }
         }
     }
 }

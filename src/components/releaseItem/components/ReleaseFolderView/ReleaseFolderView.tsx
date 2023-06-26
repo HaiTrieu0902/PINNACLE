@@ -1,12 +1,18 @@
 import { Button, Col, Form, Input, Modal, Row } from 'antd';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { getReleaseFolderChart } from '../../../../redux/release.slice';
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import SearchInput from '../../../Search/SearchInput';
 import './ReleaseFolderView.scss';
 import TreeFolder from './TreeFolder';
+import { ParamReleaseFolderView } from '../../../../types/release';
+import { API_PATHS } from '../../../../configs/api';
+import { axiosData } from '../../../../configs/axiosApiCusomer';
+import { MessageContext } from '../../../../App';
 const ReleaseFolderView = () => {
     const dispatch = useAppDispatch();
+    const messageApi: any = useContext(MessageContext);
+    const [form] = Form.useForm();
     const { releasesFolderChartList } = useAppSelector((state) => state.release);
     const [searchValue, setSearchValue] = useState('');
     const [openCreateFolder, setOpenCreateFolder] = useState(false);
@@ -32,8 +38,20 @@ const ReleaseFolderView = () => {
     };
 
     // handle submit create folder
-    const handleSubmitCreateFolder = async (values: any) => {
-        console.log('value', values);
+    const handleSubmitCreateFolder = async (values: ParamReleaseFolderView) => {
+        const param: ParamReleaseFolderView = {
+            parentFolderId: 0,
+            folderName: values.folderName,
+            entityType: 2,
+            isSubFolder: false,
+        };
+        const url = `${API_PATHS.API}/Common/create-folder`;
+        const data = await axiosData(url, 'POST', param);
+        form.resetFields();
+        setOpenCreateFolder(false);
+        dispatch(getReleaseFolderChart(searchValue));
+        messageApi.success('Create Folder SuccessFully');
+        return data;
     };
 
     return (
@@ -61,19 +79,23 @@ const ReleaseFolderView = () => {
                         <h3 className="release-modal__header">New Release Folder</h3>
                         <p className="release-modal-title">Please Enter the name of the new folder</p>
                         <Form
-                            // form={formDelete}
+                            form={form}
                             onFinish={handleSubmitCreateFolder}
                             layout="inline"
                             className="w-full"
-                            id="ant-form_verify_delete"
+                            id="ant-form_verify_create_folder"
                         >
                             <div className="w-full mt-2 release-border-footer">
                                 <Form.Item
-                                    name="nameFolder"
+                                    name="folderName"
                                     rules={[
                                         {
                                             required: true,
                                             message: 'Folder name has not been entered.',
+                                        },
+                                        {
+                                            max: 300,
+                                            message: 'Folder name cannot be longer than 300 characters',
                                         },
                                     ]}
                                 >

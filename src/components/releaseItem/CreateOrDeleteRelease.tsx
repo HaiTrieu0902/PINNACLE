@@ -159,7 +159,10 @@ const CreateOrDeleteRelease = () => {
                                 <Row gutter={[16, 16]}>
                                     <Col span={8}>
                                         <div className="flex gap-2 items-center">
-                                            <span className="label-common">Label: </span>
+                                            <span className="label-common flex items-center">
+                                                <span className="label-required">*</span>
+                                                <span>Label: </span>
+                                            </span>
                                             <Form.Item
                                                 name="releaseLabel"
                                                 rules={[
@@ -178,7 +181,10 @@ const CreateOrDeleteRelease = () => {
                                     </Col>
                                     <Col span={10}>
                                         <div className="flex gap-2 items-center">
-                                            <span className="label-common">Title :</span>
+                                            <span className="label-common flex items-center">
+                                                <span className="label-required">*</span>
+                                                <span>Title: </span>
+                                            </span>
                                             <Form.Item
                                                 name="releaseTitle"
                                                 rules={[
@@ -190,7 +196,7 @@ const CreateOrDeleteRelease = () => {
                                             >
                                                 <Input
                                                     placeholder="Please enter"
-                                                    className="input-inline-custom !w-[228px] ml-1"
+                                                    className="input-inline-custom !w-[200px] ml-1"
                                                 />
                                             </Form.Item>
                                         </div>
@@ -215,7 +221,10 @@ const CreateOrDeleteRelease = () => {
                                     </Col>
                                     <Col span={10}>
                                         <div className="flex gap-2 items-center">
-                                            <span className="label-common">Type :</span>
+                                            <span className="label-common flex items-center">
+                                                <span className="label-required">*</span>
+                                                <span>Type: </span>
+                                            </span>
                                             <Form.Item
                                                 name="releaseType"
                                                 rules={[
@@ -228,7 +237,7 @@ const CreateOrDeleteRelease = () => {
                                                 <Select
                                                     className="select-inline-custom"
                                                     defaultValue="Select"
-                                                    style={{ width: 228 }}
+                                                    style={{ width: 198 }}
                                                     options={releaseTypeList.releaseType
                                                         .filter((item) => item.releaseTypeDescription !== null)
                                                         .map((item) => ({
@@ -318,9 +327,12 @@ const CreateOrDeleteRelease = () => {
                                 <Row gutter={[10, 10]}>
                                     <Col span={24}>
                                         <div className="flex items-center">
-                                            <span className="label-common w-[23%]">Business Importance:</span>
+                                            <span className="label-common w-[26%] flex items-center">
+                                                <span className="label-required">*</span>
+                                                <span>Business Importance: </span>
+                                            </span>
                                             <Form.Item
-                                                className="w-[76%]"
+                                                className="w-[73%]"
                                                 name="releaseBusinessImportance"
                                                 rules={[
                                                     {
@@ -332,7 +344,6 @@ const CreateOrDeleteRelease = () => {
                                                 <Select
                                                     className="select-inline-custom !w-[100%]"
                                                     defaultValue="Select"
-                                                    style={{ width: 150 }}
                                                     options={releasesGanttChartList?.releasesGanttChart.map((item) => ({
                                                         value: item.businessImportanceId,
                                                         label: item.businessImportanceDescription,

@@ -32,6 +32,7 @@
 .dropdown-title {
     color: rgba(0, 0, 0, 0.25) !important;
     cursor: not-allowed !important;
+    user-select: none !important;
 }
 
 .dropdown-title_active {
@@ -45,6 +46,7 @@
     padding: 5px 12px;
     transition: all 0.3s;
     cursor: pointer !important;
+    user-select: none;
 }
 
 .release-folder-view_modal {

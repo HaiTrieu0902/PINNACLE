@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Dropdown, Space, Tree } from 'antd';
+import { Button, Col, Dropdown, Form, Input, Modal, Row, Space, Tree } from 'antd';
 import React, { useState } from 'react';
+import box from '../../../../assets/box.svg';
 import folder from '../../../../assets/folder.svg';
 import plant from '../../../../assets/plant.svg';
-import box from '../../../../assets/box.svg';
-import { ReleasesFolderChart, releasesFolderChartList } from '../../../../types/release';
+import { ParamReleaseFolderView, ReleasesFolderChart, releasesFolderChartList } from '../../../../types/release';
 import './ReleaseFolderView.scss';
+import { MessageContext } from '../../../../App';
+import { useContext } from 'react';
 
 interface TreeFolderProps {
     releasesFolderChartList: releasesFolderChartList;
@@ -28,16 +30,14 @@ const DropdownTitle = ({ title, valueKey, children }: any) => {
         {
             key: '1',
             label: 'Create Folder',
-            className: `dropdown-title ${
-                valueKey?.substring(0, 2) === 'fd' && children?.length > 0 && 'dropdown-title_active'
-            }`,
+            className: `dropdown-title ${valueKey?.substring(0, 2) === 'fd' && 'dropdown-title_active'}`,
+            disabled: valueKey?.substring(0, 2) !== 'fd',
         },
         {
             key: '2',
             label: 'Rename Folder',
-            className: `dropdown-title ${
-                valueKey?.substring(0, 2) === 'fd' && children?.length > 0 && 'dropdown-title_active'
-            }`,
+            className: `dropdown-title ${valueKey?.substring(0, 2) === 'fd' && 'dropdown-title_active'}`,
+            disabled: valueKey?.substring(0, 2) !== 'fd',
         },
         {
             key: '3',
@@ -45,6 +45,7 @@ const DropdownTitle = ({ title, valueKey, children }: any) => {
             className: `dropdown-title ${
                 valueKey?.substring(0, 2) === 'fd' && children?.length === 0 && 'dropdown-title_active'
             }`,
+            disabled: children?.length > 0 || (valueKey?.substring(0, 2) !== 'fd' && true),
         },
         {
             key: '4',
@@ -55,6 +56,7 @@ const DropdownTitle = ({ title, valueKey, children }: any) => {
             key: '5',
             label: 'Paste',
             className: 'dropdown-title',
+            disabled: true,
         },
         {
             key: '6',
@@ -62,6 +64,7 @@ const DropdownTitle = ({ title, valueKey, children }: any) => {
             className: `dropdown-title ${
                 valueKey?.substring(0, 2) !== 'fd' && children?.length === 0 && 'dropdown-title_active'
             }`,
+            disabled: valueKey?.substring(0, 2) === 'fd' || (children?.length > 0 && true),
         },
     ];
 
@@ -94,12 +97,13 @@ const generateTreeData = (data: ReleasesFolderChart[]): ReleasesFolderChart[] =>
 };
 
 const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
+    const messageApi: any = useContext(MessageContext);
+    const [form] = Form.useForm();
     const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
     const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
     const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
     const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
-
-    console.log('releasesFolderChartList', releasesFolderChartList);
+    const [openCreateFolder, setOpenCreateFolder] = useState(false);
 
     const onExpand = (expandedKeysValue: React.Key[]) => {
         console.log('onExpand', expandedKeysValue);
@@ -108,11 +112,28 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
     };
 
     const onSelect = (selectedKeysValue: React.Key[], info: object | any) => {
-        console.log('onSelect', info);
+        console.log('onSelect', info?.node?.id);
         setSelectedKeys(selectedKeysValue);
     };
 
+    // handle show/hidden modal create folder
+    const showModalCreateFolder = async () => {
+        setOpenCreateFolder(true);
+    };
+    const handleCancelModalCreateFolder = () => {
+        setOpenCreateFolder(false);
+    };
+
     const treeData = generateTreeData(releasesFolderChartList?.releasesFolderChart || []);
+
+    const handleSubmitCreateFolder = async (values: ParamReleaseFolderView) => {
+        const param: ParamReleaseFolderView = {
+            parentFolderId: 0,
+            folderName: values.folderName,
+            entityType: 2,
+            isSubFolder: false,
+        };
+    };
 
     return (
         <div>
@@ -124,6 +145,63 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
                 onSelect={onSelect}
                 treeData={treeData}
             />
+
+            <div className="">
+                <div className="release-folder_modal_container">
+                    <Modal
+                        width={'520px'}
+                        // open={openCreateFolder}
+                        // onCancel={handleCancelModalCreateFolder}
+                        footer={null}
+                        className="release-folder-view_modal"
+                    >
+                        <div className="flex items-center flex-col">
+                            <h3 className="release-modal__header">New Release Folder</h3>
+                            <p className="release-modal-title">Please Enter the name of the new folder</p>
+                            <Form
+                                form={form}
+                                onFinish={handleSubmitCreateFolder}
+                                layout="inline"
+                                className="w-full"
+                                id="ant-form_verify_create_folder"
+                            >
+                                <div className="w-full mt-2 release-border-footer">
+                                    <Form.Item
+                                        name="folderName"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Folder name has not been entered.',
+                                            },
+                                            {
+                                                max: 300,
+                                                message: 'Folder name cannot be longer than 300 characters',
+                                            },
+                                        ]}
+                                    >
+                                        <Input placeholder="Please root folder" className="h-10 ml-1 w-full" />
+                                    </Form.Item>
+                                </div>
+                                <Row justify={'end'} className="w-full">
+                                    <Col>
+                                        <div className="flex gap-2 mt-2 mr-1 delete-footer">
+                                            <Button onClick={handleCancelModalCreateFolder} className="h-10 w-20">
+                                                Cancel
+                                            </Button>
+                                            <Button
+                                                htmlType="submit"
+                                                className="button-items h-10 w-20 items-center justify-center"
+                                            >
+                                                <span>OK</span>
+                                            </Button>
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </Form>
+                        </div>
+                    </Modal>
+                </div>
+            </div>
         </div>
     );
 };
