@@ -1,107 +1,135 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Col, Dropdown, Form, Input, Modal, Row, Space, Tree } from 'antd';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { MessageContext } from '../../../../App';
 import box from '../../../../assets/box.svg';
 import folder from '../../../../assets/folder.svg';
 import plant from '../../../../assets/plant.svg';
+import { API_PATHS } from '../../../../configs/api';
+import { axiosData } from '../../../../configs/axiosApiCusomer';
+import { getReleaseFolderChart } from '../../../../redux/release.slice';
+import { useAppDispatch } from '../../../../store';
 import { ParamReleaseFolderView, ReleasesFolderChart, releasesFolderChartList } from '../../../../types/release';
 import './ReleaseFolderView.scss';
-import { MessageContext } from '../../../../App';
-import { useContext } from 'react';
 
 interface TreeFolderProps {
     releasesFolderChartList: releasesFolderChartList;
 }
 
-const DropdownTitle = ({ title, valueKey, children }: any) => {
-    const handleChangedIcon = () => {
-        if (valueKey?.substring(0, 2) === 'fd') {
-            return folder;
-        } else {
-            if (children?.length === 0) {
-                return plant;
+const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
+    const DropdownTitle = ({ title, valueKey, children, parentId }: any) => {
+        const handleChangedIcon = () => {
+            if (valueKey?.substring(0, 2) === 'fd') {
+                return folder;
             } else {
-                return box;
+                if (children?.length === 0) {
+                    return plant;
+                } else {
+                    return box;
+                }
             }
-        }
+        };
+
+        const items = [
+            {
+                key: '1',
+                label: 'Create Folder',
+                className: `dropdown-title ${valueKey?.substring(0, 2) === 'fd' && 'dropdown-title_active'}`,
+                disabled: valueKey?.substring(0, 2) !== 'fd',
+                onClick: showModalCreateFolder,
+            },
+            {
+                key: '2',
+                label: 'Rename Folder',
+                className: `dropdown-title ${valueKey?.substring(0, 2) === 'fd' && 'dropdown-title_active'}`,
+                disabled: valueKey?.substring(0, 2) !== 'fd',
+            },
+            {
+                key: '3',
+                label: 'Delete Folder',
+                className: `dropdown-title ${
+                    valueKey?.substring(0, 2) === 'fd' && children?.length === 0 && 'dropdown-title_active'
+                }`,
+                disabled: children?.length > 0 || (valueKey?.substring(0, 2) !== 'fd' && true),
+            },
+            {
+                key: '4',
+                label: 'Cut',
+                className: 'dropdown-title_active',
+            },
+            {
+                key: '5',
+                label: 'Paste',
+                className: 'dropdown-title',
+                disabled: true,
+            },
+            {
+                key: '6',
+                label: 'Detach Parent',
+                className: `dropdown-title ${
+                    valueKey?.substring(0, 2) !== 'fd' &&
+                    children?.length === 0 &&
+                    parentId &&
+                    parentId?.substring(0, 2) !== 'fd' &&
+                    'dropdown-title_active'
+                }`,
+                disabled:
+                    valueKey?.substring(0, 2) === 'fd' ||
+                    children?.length > 0 ||
+                    parentId?.substring(0, 2) === 'fd' ||
+                    !parentId,
+            },
+        ];
+
+        return (
+            <Dropdown menu={{ items }} trigger={['contextMenu']}>
+                <Space>
+                    <div className="flex items-start mt-[2px]">
+                        <img className="mr-2" src={handleChangedIcon()} alt="" />
+                        <p className="text-[13px] -mt-[2px]">{title}</p>
+                    </div>
+                </Space>
+            </Dropdown>
+        );
     };
 
-    const items = [
-        {
-            key: '1',
-            label: 'Create Folder',
-            className: `dropdown-title ${valueKey?.substring(0, 2) === 'fd' && 'dropdown-title_active'}`,
-            disabled: valueKey?.substring(0, 2) !== 'fd',
-        },
-        {
-            key: '2',
-            label: 'Rename Folder',
-            className: `dropdown-title ${valueKey?.substring(0, 2) === 'fd' && 'dropdown-title_active'}`,
-            disabled: valueKey?.substring(0, 2) !== 'fd',
-        },
-        {
-            key: '3',
-            label: 'Delete Folder',
-            className: `dropdown-title ${
-                valueKey?.substring(0, 2) === 'fd' && children?.length === 0 && 'dropdown-title_active'
-            }`,
-            disabled: children?.length > 0 || (valueKey?.substring(0, 2) !== 'fd' && true),
-        },
-        {
-            key: '4',
-            label: 'Cut',
-            className: 'dropdown-title_active',
-        },
-        {
-            key: '5',
-            label: 'Paste',
-            className: 'dropdown-title',
-            disabled: true,
-        },
-        {
-            key: '6',
-            label: 'Detach Parent',
-            className: `dropdown-title ${
-                valueKey?.substring(0, 2) !== 'fd' && children?.length === 0 && 'dropdown-title_active'
-            }`,
-            disabled: valueKey?.substring(0, 2) === 'fd' || (children?.length > 0 && true),
-        },
-    ];
-
-    return (
-        <Dropdown menu={{ items }} trigger={['contextMenu']}>
-            <Space>
-                <div className="flex items-start mt-[2px]">
-                    <img className="mr-2" src={handleChangedIcon()} alt="" />
-                    <p className="text-[13px] -mt-[2px]">{title}</p>
-                </div>
-            </Space>
-        </Dropdown>
-    );
-};
-
-const generateTreeData = (data: ReleasesFolderChart[]): ReleasesFolderChart[] => {
-    return data.map((node: any) => {
-        if (node.children) {
+    const generateTreeData = (data: ReleasesFolderChart[]): ReleasesFolderChart[] => {
+        return data.map((node: any) => {
+            if (node.children) {
+                return {
+                    ...node,
+                    title: (
+                        <DropdownTitle
+                            node={node}
+                            title={node?.title}
+                            valueKey={node?.key}
+                            children={node?.children}
+                            parentId={node?.parentId}
+                        />
+                    ),
+                    children: generateTreeData(node.children),
+                };
+            }
             return {
                 ...node,
-                title: <DropdownTitle node={node} title={node.title} valueKey={node.key} children={node.children} />,
-                children: generateTreeData(node.children),
+                title: (
+                    <DropdownTitle
+                        title={node?.title}
+                        valueKey={node?.key}
+                        children={node?.children}
+                        parentId={node?.parentId}
+                    />
+                ),
             };
-        }
-        return {
-            ...node,
-            title: <DropdownTitle node={node} valueKey={node.key} children={node.children} />,
-        };
-    });
-};
+        });
+    };
 
-const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
+    const dispatch = useAppDispatch();
     const messageApi: any = useContext(MessageContext);
     const [form] = Form.useForm();
     const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
-    const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
     const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
+    const [parentFolderId, setParentFolderId] = useState<number>(0);
     const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
     const [openCreateFolder, setOpenCreateFolder] = useState(false);
 
@@ -112,6 +140,7 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
     };
 
     const onSelect = (selectedKeysValue: React.Key[], info: object | any) => {
+        setParentFolderId(info?.node?.id);
         console.log('onSelect', info?.node?.id);
         setSelectedKeys(selectedKeysValue);
     };
@@ -122,26 +151,35 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
     };
     const handleCancelModalCreateFolder = () => {
         setOpenCreateFolder(false);
+        form.resetFields();
     };
 
     const treeData = generateTreeData(releasesFolderChartList?.releasesFolderChart || []);
 
+    console.log(releasesFolderChartList?.releasesFolderChart);
+
     const handleSubmitCreateFolder = async (values: ParamReleaseFolderView) => {
         const param: ParamReleaseFolderView = {
-            parentFolderId: 0,
+            parentFolderId: parentFolderId,
             folderName: values.folderName,
             entityType: 2,
-            isSubFolder: false,
+            isSubFolder: true,
         };
+        const url = `${API_PATHS.API}/Common/create-folder`;
+        const data = await axiosData(url, 'POST', param);
+        form.resetFields();
+        setOpenCreateFolder(false);
+        dispatch(getReleaseFolderChart(''));
+        messageApi.success('Create Folder SuccessFully');
+        return data;
     };
 
     return (
         <div>
             <Tree
                 onExpand={onExpand}
-                // expandedKeys={expandedKeys}
+                expandedKeys={expandedKeys}
                 autoExpandParent={autoExpandParent}
-                checkedKeys={checkedKeys}
                 onSelect={onSelect}
                 treeData={treeData}
             />
@@ -150,8 +188,8 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
                 <div className="release-folder_modal_container">
                     <Modal
                         width={'520px'}
-                        // open={openCreateFolder}
-                        // onCancel={handleCancelModalCreateFolder}
+                        open={openCreateFolder}
+                        onCancel={handleCancelModalCreateFolder}
                         footer={null}
                         className="release-folder-view_modal"
                     >

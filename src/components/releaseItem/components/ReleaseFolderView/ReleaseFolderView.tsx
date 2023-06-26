@@ -1,14 +1,14 @@
 import { Button, Col, Form, Input, Modal, Row } from 'antd';
 import { useContext, useEffect, useState } from 'react';
+import { MessageContext } from '../../../../App';
+import { API_PATHS } from '../../../../configs/api';
+import { axiosData } from '../../../../configs/axiosApiCusomer';
 import { getReleaseFolderChart } from '../../../../redux/release.slice';
 import { useAppDispatch, useAppSelector } from '../../../../store';
+import { ParamReleaseFolderView } from '../../../../types/release';
 import SearchInput from '../../../Search/SearchInput';
 import './ReleaseFolderView.scss';
 import TreeFolder from './TreeFolder';
-import { ParamReleaseFolderView } from '../../../../types/release';
-import { API_PATHS } from '../../../../configs/api';
-import { axiosData } from '../../../../configs/axiosApiCusomer';
-import { MessageContext } from '../../../../App';
 const ReleaseFolderView = () => {
     const dispatch = useAppDispatch();
     const messageApi: any = useContext(MessageContext);
