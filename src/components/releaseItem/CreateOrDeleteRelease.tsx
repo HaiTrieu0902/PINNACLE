@@ -60,8 +60,6 @@ const CreateOrDeleteRelease = () => {
         return data;
     };
 
-    // console.log('duration', duration);
-
     // handle delete release
     const handleFormDeleteSubmit = async (values: ParamReleaseDelete) => {
         const param = {
@@ -401,7 +399,6 @@ const CreateOrDeleteRelease = () => {
                     width={'520px'}
                     open={openDelete}
                     onCancel={handleCancelModalDelete}
-                    closable={false}
                     footer={null}
                     className="delete-container-modal"
                 >
@@ -425,7 +422,7 @@ const CreateOrDeleteRelease = () => {
                                         },
                                     ]}
                                 >
-                                    <Input placeholder="Please reason" className="h-10 ml-1 w-full" />
+                                    <Input placeholder="Please enter reason" className="h-10 ml-1 w-full" />
                                 </Form.Item>
                             </div>
                             <Row justify={'end'} className="w-full">

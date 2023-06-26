@@ -12,21 +12,39 @@ interface TreeFolderProps {
 }
 
 const DropdownTitle = ({ title, valueKey, children }: any) => {
+    const handleChangedIcon = () => {
+        if (valueKey?.substring(0, 2) === 'fd') {
+            return folder;
+        } else {
+            if (children?.length === 0) {
+                return plant;
+            } else {
+                return box;
+            }
+        }
+    };
+
     const items = [
         {
             key: '1',
             label: 'Create Folder',
-            className: 'dropdown-title_active',
+            className: `dropdown-title ${
+                valueKey?.substring(0, 2) === 'fd' && children?.length > 0 && 'dropdown-title_active'
+            }`,
         },
         {
             key: '2',
             label: 'Rename Folder',
-            className: 'dropdown-title_active',
+            className: `dropdown-title ${
+                valueKey?.substring(0, 2) === 'fd' && children?.length > 0 && 'dropdown-title_active'
+            }`,
         },
         {
             key: '3',
             label: 'Delete Folder',
-            className: 'dropdown-title',
+            className: `dropdown-title ${
+                valueKey?.substring(0, 2) === 'fd' && children?.length === 0 && 'dropdown-title_active'
+            }`,
         },
         {
             key: '4',
@@ -41,21 +59,11 @@ const DropdownTitle = ({ title, valueKey, children }: any) => {
         {
             key: '6',
             label: 'Detach Parent',
-            className: 'dropdown-title',
+            className: `dropdown-title ${
+                valueKey?.substring(0, 2) !== 'fd' && children?.length === 0 && 'dropdown-title_active'
+            }`,
         },
     ];
-
-    const handleChangedIcon = () => {
-        if (valueKey?.substring(0, 2) === 'fd') {
-            return folder;
-        } else {
-            if (children?.length === 0) {
-                return plant;
-            } else {
-                return box;
-            }
-        }
-    };
 
     return (
         <Dropdown menu={{ items }} trigger={['contextMenu']}>

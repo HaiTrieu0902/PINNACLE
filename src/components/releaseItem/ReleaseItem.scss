@@ -24,7 +24,7 @@
             border-bottom: 1px solid transparent;
         }
         .ant-card-body {
-            padding: 12px !important;
+            margin: 12px !important;
         }
         .input-inline-custom {
             color: #5daad6;
@@ -58,6 +58,9 @@
 }
 
 .delete-container-modal {
+    .ant-modal-content {
+        border-radius: 20px;
+    }
     .delete-new-modal__header {
         color: #002060;
         font-size: 16px;
@@ -65,7 +68,7 @@
         line-height: 24px;
     }
     .delete-border-footer {
-        padding-bottom: 20px;
+        padding-bottom: 40px;
         border-bottom: 1px solid #f0f0f0;
     }
 }

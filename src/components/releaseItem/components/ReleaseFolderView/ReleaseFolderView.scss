@@ -29,6 +29,11 @@
     }
 }
 
+.dropdown-title {
+    color: rgba(0, 0, 0, 0.25) !important;
+    cursor: not-allowed !important;
+}
+
 .dropdown-title_active {
     clear: both;
     color: rgba(0, 0, 0, 0.85) !important;
@@ -39,9 +44,21 @@
     margin: 0;
     padding: 5px 12px;
     transition: all 0.3s;
+    cursor: pointer !important;
 }
 
-.dropdown-title {
-    color: rgba(0, 0, 0, 0.25) !important;
-    cursor: not-allowed !important;
+.release-folder-view_modal {
+    .ant-modal-content {
+        border-radius: 20px;
+    }
+    .release-modal__header {
+        color: #002060;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 24px;
+    }
+    .release-border-footer {
+        padding-bottom: 40px;
+        border-bottom: 1px solid #f0f0f0;
+    }
 }
