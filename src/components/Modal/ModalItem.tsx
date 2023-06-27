@@ -2,13 +2,14 @@ import { Button, Divider, Modal, Row } from 'antd';
 import SearchInput from '../Search/SearchInput';
 import './ModalItem.scss';
 import { useEffect, useState } from 'react';
+import { UserSelects } from '../../types/auth';
 
 interface ModalItemProps {
     isActive?: boolean;
     title?: string;
     subTitle?: string;
     onCancel: (value: boolean) => void;
-    data?: [];
+    data?: UserSelects[];
 }
 
 const ModalItem = ({ isActive, data, onCancel, title, subTitle }: ModalItemProps) => {
@@ -46,54 +47,16 @@ const ModalItem = ({ isActive, data, onCancel, title, subTitle }: ModalItemProps
                     <p className="mb-3 mt-3 sub-title-common">{subTitle}</p>
 
                     <div className="list-select-user">
-                        <div>
-                            <div className="mb-2 select-user">
-                                <img src="http://pinnacle-portal.server2div3.pgtest.co/icons/user.svg" alt="" />
-                                <span className="mb-1 select-title">Ian Charlton</span>
-                            </div>
-                        </div>
-                        <div>
-                            <div className="mb-2 select-user">
-                                <img src="http://pinnacle-portal.server2div3.pgtest.co/icons/user.svg" alt="" />
-                                <span className="mb-1 select-title">Gerry Payne</span>
-                            </div>
-                        </div>
-                        <div>
-                            <div className="mb-2 select-user">
-                                <img src="http://pinnacle-portal.server2div3.pgtest.co/icons/user.svg" alt="" />
-                                <span className="mb-1 select-title">Ian Charlton</span>
-                            </div>
-                        </div>
-                        <div>
-                            <div className="mb-2 select-user">
-                                <img src="http://pinnacle-portal.server2div3.pgtest.co/icons/user.svg" alt="" />
-                                <span className="mb-1 select-title">Gerry Payne</span>
-                            </div>
-                        </div>
-                        <div>
-                            <div className="mb-2 select-user">
-                                <img src="http://pinnacle-portal.server2div3.pgtest.co/icons/user.svg" alt="" />
-                                <span className="mb-1 select-title">Ian Charlton</span>
-                            </div>
-                        </div>
-                        <div>
-                            <div className="mb-2 select-user">
-                                <img src="http://pinnacle-portal.server2div3.pgtest.co/icons/user.svg" alt="" />
-                                <span className="mb-1 select-title">Gerry Payne</span>
-                            </div>
-                        </div>
-                        <div>
-                            <div className="mb-2 select-user">
-                                <img src="http://pinnacle-portal.server2div3.pgtest.co/icons/user.svg" alt="" />
-                                <span className="mb-1 select-title">Ian Charlton</span>
-                            </div>
-                        </div>
-                        <div>
-                            <div className="mb-2 select-user">
-                                <img src="http://pinnacle-portal.server2div3.pgtest.co/icons/user.svg" alt="" />
-                                <span className="mb-1 select-title">Gerry Payne</span>
-                            </div>
-                        </div>
+                        {data?.map((item) => {
+                            return (
+                                <div key={item.userId}>
+                                    <div className="mb-2 select-user">
+                                        <img src="http://pinnacle-portal.server2div3.pgtest.co/icons/user.svg" alt="" />
+                                        <span className="mb-1 select-title">{item?.userName}</span>
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
 
                     <Row justify={'end'} className="w-full">

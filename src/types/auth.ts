@@ -21,3 +21,15 @@ export interface User {
     roleTitle: string | null;
     administrator: string | null;
 }
+
+// User selected
+export interface UserSelects {
+    userId: number;
+    userName: string;
+    isAdmin: boolean;
+}
+
+// user selected List
+export interface UserSelectList {
+    userSelects: UserSelects[];
+}

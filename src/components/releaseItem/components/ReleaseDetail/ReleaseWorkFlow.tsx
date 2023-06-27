@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from '../../../../store';
 import { workflowAction } from '../../../../types/release';
 import './ReleaseDetail.scss';
 import ModalItem from '../../../Modal/ModalItem';
+import { getUserSelects } from '../../../../redux/authToken';
 interface ReleaseWorkFlowProps {
     workflowActionList: workflowAction[];
     releaseId: number | null;
@@ -18,7 +19,7 @@ const ReleaseWorkFlow = ({ workflowActionList, releaseId }: ReleaseWorkFlowProps
     const messageApi: any = useContext(MessageContext);
     const dispatch = useAppDispatch();
     const [form] = useForm();
-    const { user } = useAppSelector((state) => state.auth);
+    const { user, userSelectList } = useAppSelector((state) => state.auth);
     const { releaseDetailList } = useAppSelector((state) => state.release);
     const [selectedValue, setSelectedValue] = useState<string | number>('');
     const [openReleaseRework, setOpenReleaseRework] = useState(false);
@@ -37,8 +38,6 @@ const ReleaseWorkFlow = ({ workflowActionList, releaseId }: ReleaseWorkFlowProps
     const onCancel = (value: boolean) => {
         setIsActive(value);
     };
-
-    console.log(' cách hoa úa tàn', selectedValue);
 
     // Update WorkFlow
     useEffect(() => {
@@ -87,6 +86,13 @@ const ReleaseWorkFlow = ({ workflowActionList, releaseId }: ReleaseWorkFlowProps
         return data;
     };
 
+    // call aPI userSelects
+    useEffect(() => {
+        const userSelects = dispatch(getUserSelects());
+        return () => {
+            userSelects.abort();
+        };
+    }, [dispatch]);
     return (
         <React.Fragment>
             <Card
@@ -283,6 +289,7 @@ const ReleaseWorkFlow = ({ workflowActionList, releaseId }: ReleaseWorkFlowProps
                         onCancel={onCancel}
                         title="Reassign"
                         subTitle="Please select a User to Reassign the Release to"
+                        data={userSelectList.userSelects}
                     />
                 )}
 
@@ -293,6 +300,7 @@ const ReleaseWorkFlow = ({ workflowActionList, releaseId }: ReleaseWorkFlowProps
                         onCancel={onCancel}
                         title="Escalate"
                         subTitle="Please identify and select the individual to Escalate this Release to"
+                        data={userSelectList.userSelects}
                     />
                 )}
             </div>

@@ -1,7 +1,9 @@
-import { AsyncThunk, PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { AsyncThunk, PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
 import { ACCESS_TOKEN_KEY } from '../utils/constant';
-import { User } from '../types/auth';
+import { User, UserSelectList } from '../types/auth';
+import { API_PATHS } from '../configs/api';
+import { axiosData } from '../configs/axiosApiCusomer';
 
 type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
 type PendingAction = ReturnType<GenericAsyncThunk['pending']>;
@@ -11,12 +13,21 @@ type FulfilledAction = ReturnType<GenericAsyncThunk['fulfilled']>;
 interface Auth {
     token: string | null;
     user: User;
+    userSelectList: UserSelectList;
 }
 
 const initialState: Auth = {
     token: null,
     user: {} as Required<User>,
+    userSelectList: {} as Required<UserSelectList>,
 };
+
+// get User Select
+export const getUserSelects = createAsyncThunk('UserSelects/getUserSelects', async () => {
+    const url = `${API_PATHS.API}/Users/get-user-select`;
+    const data = await axiosData(url, 'GET');
+    return data;
+});
 
 const authSlice = createSlice({
     name: 'auth',
@@ -32,6 +43,11 @@ const authSlice = createSlice({
             Cookies.remove(ACCESS_TOKEN_KEY);
             state.token = null;
         },
+    },
+    extraReducers(builder) {
+        builder.addCase(getUserSelects.fulfilled, (state, action) => {
+            state.userSelectList = action.payload;
+        });
     },
 });
 
