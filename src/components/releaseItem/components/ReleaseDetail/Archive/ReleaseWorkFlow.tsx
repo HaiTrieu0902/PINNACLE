@@ -2,15 +2,15 @@ import { Button, Card, Col, Divider, Form, Input, Modal, Popover, Row } from 'an
 import { useForm } from 'antd/es/form/Form';
 import moment from 'moment';
 import React, { useContext, useEffect, useState } from 'react';
-import { MessageContext } from '../../../../App';
-import { API_PATHS } from '../../../../configs/api';
-import { axiosData } from '../../../../configs/axiosApiCusomer';
-import { getReleaseDetail } from '../../../../redux/release.slice';
-import { useAppDispatch, useAppSelector } from '../../../../store';
-import { workflowAction } from '../../../../types/release';
-import './ReleaseDetail.scss';
-import ModalItem from '../../../Modal/ModalItem';
-import { getUserSelects } from '../../../../redux/authToken';
+import { MessageContext } from '../../../../../App';
+import { API_PATHS } from '../../../../../configs/api';
+import { axiosData } from '../../../../../configs/axiosApiCusomer';
+import { getUserSelects } from '../../../../../redux/authToken';
+import { getReleaseDetail } from '../../../../../redux/release.slice';
+import { useAppDispatch, useAppSelector } from '../../../../../store';
+import { workflowAction } from '../../../../../types/release';
+import ModalItem from '../../../../Modal/ModalItem';
+import '../ReleaseDetail.scss';
 interface ReleaseWorkFlowProps {
     workflowActionList: workflowAction[];
     releaseId: number | null;

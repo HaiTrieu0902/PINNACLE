@@ -15,7 +15,7 @@ import {
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import { ParamReleaseUpdate } from '../../../../types/release';
 import './ReleaseDetail.scss';
-import ReleaseWorkFlow from './ReleaseWorkFlow';
+import ReleaseWorkFlow from './Archive/ReleaseWorkFlow';
 const ReleaseDetail = () => {
     const dispatch = useAppDispatch();
     type ValidReleaseDetailKeys = keyof typeof releaseDetailList.releaseDetail;
