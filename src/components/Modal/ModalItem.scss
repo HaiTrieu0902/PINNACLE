@@ -1,0 +1,30 @@
+.release-workflow_modal {
+    .sub-title-common {
+        color: #000;
+        font-size: 13.5px;
+        font-weight: 500;
+        margin-bottom: 10px;
+    }
+    .list-select-user {
+        height: 330px;
+        overflow: hidden;
+        overflow-y: auto;
+
+        .select-user {
+            cursor: pointer;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 12px;
+            .select-title {
+                font-size: 14px;
+                color: rgb(20, 19, 19);
+                font-weight: 400;
+                margin-top: 6px;
+                &:hover {
+                    color: #5daad6;
+                }
+            }
+        }
+    }
+}

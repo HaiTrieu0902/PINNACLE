@@ -1,4 +1,5 @@
 import { Button, Card, Col, Divider, Form, Input, Modal, Popover, Row } from 'antd';
+import { useForm } from 'antd/es/form/Form';
 import moment from 'moment';
 import React, { useContext, useEffect, useState } from 'react';
 import { MessageContext } from '../../../../App';
@@ -8,8 +9,7 @@ import { getReleaseDetail } from '../../../../redux/release.slice';
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import { workflowAction } from '../../../../types/release';
 import './ReleaseDetail.scss';
-import ReactDOM from 'react-dom';
-import { useForm } from 'antd/es/form/Form';
+import ModalItem from '../../../Modal/ModalItem';
 interface ReleaseWorkFlowProps {
     workflowActionList: workflowAction[];
     releaseId: number | null;
@@ -22,6 +22,7 @@ const ReleaseWorkFlow = ({ workflowActionList, releaseId }: ReleaseWorkFlowProps
     const { releaseDetailList } = useAppSelector((state) => state.release);
     const [selectedValue, setSelectedValue] = useState<string | number>('');
     const [openReleaseRework, setOpenReleaseRework] = useState(false);
+    const [isActive, setIsActive] = useState<boolean>(false);
 
     const handleSelectValue = (value: string | number) => {
         setSelectedValue(value);
@@ -29,7 +30,15 @@ const ReleaseWorkFlow = ({ workflowActionList, releaseId }: ReleaseWorkFlowProps
         if (value === 3) {
             setOpenReleaseRework(true);
         }
+        if (value === 5 || value === 6) {
+            setIsActive(true);
+        }
     };
+    const onCancel = (value: boolean) => {
+        setIsActive(value);
+    };
+
+    console.log(' cách hoa úa tàn', selectedValue);
 
     // Update WorkFlow
     useEffect(() => {
@@ -202,6 +211,7 @@ const ReleaseWorkFlow = ({ workflowActionList, releaseId }: ReleaseWorkFlowProps
             </Card>
 
             <div>
+                {/* Modal RelaseWork */}
                 <Modal
                     style={{ zIndex: '9999' }}
                     width={'520px'}
@@ -264,6 +274,27 @@ const ReleaseWorkFlow = ({ workflowActionList, releaseId }: ReleaseWorkFlowProps
                         </Form>
                     </div>
                 </Modal>
+
+                {/* Modal Reassign */}
+
+                {selectedValue === 5 && (
+                    <ModalItem
+                        isActive={isActive}
+                        onCancel={onCancel}
+                        title="Reassign"
+                        subTitle="Please select a User to Reassign the Release to"
+                    />
+                )}
+
+                {/* Modal Escalate */}
+                {selectedValue === 6 && (
+                    <ModalItem
+                        isActive={isActive}
+                        onCancel={onCancel}
+                        title="Escalate"
+                        subTitle="Please identify and select the individual to Escalate this Release to"
+                    />
+                )}
             </div>
         </React.Fragment>
     );
