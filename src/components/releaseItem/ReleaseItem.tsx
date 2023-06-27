@@ -14,9 +14,6 @@ const ReleaseItem = () => {
     const handleChangeSelect = (value: string) => {
         setFormItem(value);
     };
-
-    // call API release type list
-
     return (
         <div className="flex justify-between p-2">
             <ContainerItem className="release-register" width="49.5%">

@@ -9,7 +9,9 @@ import {
     releasesFolderChartList,
     releasesGanttChartList,
     releasesGridChartList,
+    workflowAction,
 } from '../types/release';
+import { getreleaseWorkflow } from './dashbroad.slice';
 
 const params = {
     page: 0,
@@ -27,6 +29,7 @@ interface Release {
     releaseTypeList: releaseTypeList;
     releasesGanttChartList: releasesGanttChartList;
     releasesFolderChartList: releasesFolderChartList;
+    workflowActionList: workflowAction[];
     releaseId: number | null;
     conditionSorter: {
         order: string | undefined;
@@ -58,6 +61,7 @@ const initialState: Release = {
     releaseId: null,
     releaseTypeList: { releaseType: [] },
     releasesGanttChartList: { releasesGanttChart: [] },
+    workflowActionList: [],
     releasesFolderChartList: {} as Required<releasesFolderChartList>,
     conditionSorter: {
         order: undefined,
@@ -118,6 +122,13 @@ export const getReleaseFolderChart = createAsyncThunk(
         return data;
     },
 );
+
+// get-release-workflow
+export const getRelaseWorkFlow = createAsyncThunk('RelaseWorkFlow/getRelaseWorkFlow', async () => {
+    const url = `${API_PATHS.API}/Releases/get-release-workflow`;
+    const data = await axiosData(url, 'GET');
+    return data?.workflowAction || data;
+});
 
 const releaseSlice = createSlice({
     name: 'release',
@@ -198,6 +209,9 @@ const releaseSlice = createSlice({
             })
             .addCase(getReleaseFolderChart.fulfilled, (state, action) => {
                 state.releasesFolderChartList = action.payload;
+            })
+            .addCase(getRelaseWorkFlow.fulfilled, (state, action) => {
+                state.workflowActionList = action.payload;
             });
     },
 });

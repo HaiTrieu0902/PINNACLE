@@ -3,10 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import logoV1 from '../../assets/logoV1.svg';
 import { ROUTES } from '../../configs/routes';
 import './Header.scss';
-import { useAppDispatch } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store';
 import { logout } from '../../redux/authToken';
 const Header = () => {
     const dispatch = useAppDispatch();
+    const { user } = useAppSelector((state) => state.auth);
     const navigate = useNavigate();
     const logOut = () => {
         dispatch(logout());
@@ -24,7 +25,7 @@ const Header = () => {
                     <Button className="header__logout__button" onClick={logOut}>
                         <span>Logout</span>
                     </Button>
-                    <div className="title-sign-in">Gerry Payne</div>
+                    <div className="title-sign-in">{user.fullname}</div>
                 </div>
             </div>
         </header>

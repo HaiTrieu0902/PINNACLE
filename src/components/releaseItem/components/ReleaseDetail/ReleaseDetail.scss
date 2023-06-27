@@ -55,3 +55,18 @@
         }
     }
 }
+
+.divider-item {
+    border: 1px solid #e6e6e6;
+    height: 100%;
+}
+
+.ant-popover-inner-content {
+    min-width: 200px;
+    .workflow-popup {
+        cursor: pointer;
+    }
+    .workflow-popup:hover {
+        color: #5daad6;
+    }
+}

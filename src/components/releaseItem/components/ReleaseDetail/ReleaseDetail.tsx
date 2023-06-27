@@ -7,20 +7,21 @@ import { API_PATHS } from '../../../../configs/api';
 import { axiosData } from '../../../../configs/axiosApiCusomer';
 import {
     getBusinessImportance,
+    getRelaseWorkFlow,
     getReleaseChart,
     getReleaseDetail,
     getReleaseType,
 } from '../../../../redux/release.slice';
 import { useAppDispatch, useAppSelector } from '../../../../store';
-import { ParamReleaseUpdate, UpdateRelease } from '../../../../types/release';
+import { ParamReleaseUpdate } from '../../../../types/release';
 import './ReleaseDetail.scss';
+import ReleaseWorkFlow from './ReleaseWorkFlow';
 const ReleaseDetail = () => {
     const dispatch = useAppDispatch();
     type ValidReleaseDetailKeys = keyof typeof releaseDetailList.releaseDetail;
     const messageApi: any = useContext(MessageContext);
-    const { releaseDetailList, releaseTypeList, releasesGanttChartList, releaseId } = useAppSelector(
-        (state) => state.release,
-    );
+    const { releaseDetailList, releaseTypeList, releasesGanttChartList, releaseId, workflowActionList } =
+        useAppSelector((state) => state.release);
     const [releaseValues, setReleaseValues] = useState({
         releaseLabel: releaseDetailList?.releaseDetail?.releaseLabel || '',
         releaseTitle: releaseDetailList?.releaseDetail?.releaseTitle || '',
@@ -43,9 +44,11 @@ const ReleaseDetail = () => {
     useEffect(() => {
         const releaseType = dispatch(getReleaseType());
         const businessImportant = dispatch(getBusinessImportance());
+        const releaseWorkflow = dispatch(getRelaseWorkFlow());
         return () => {
             releaseType.abort();
             businessImportant.abort();
+            releaseWorkflow.abort();
         };
     }, [dispatch]);
 
@@ -439,6 +442,8 @@ const ReleaseDetail = () => {
                             </Col>
                         </Row>
                     </Card>
+
+                    <ReleaseWorkFlow workflowActionList={workflowActionList}></ReleaseWorkFlow>
                 </div>
             </div>
         </div>

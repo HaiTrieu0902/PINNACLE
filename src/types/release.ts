@@ -174,3 +174,10 @@ export interface ParamReleaseFolderView {
     entityType: number;
     isSubFolder: boolean;
 }
+
+// get-release-workflow
+export interface workflowAction {
+    text: string;
+    value: number;
+}
+[];
