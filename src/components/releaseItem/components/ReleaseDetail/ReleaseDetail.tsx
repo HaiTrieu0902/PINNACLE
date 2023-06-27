@@ -443,7 +443,7 @@ const ReleaseDetail = () => {
                         </Row>
                     </Card>
 
-                    <ReleaseWorkFlow workflowActionList={workflowActionList}></ReleaseWorkFlow>
+                    <ReleaseWorkFlow workflowActionList={workflowActionList} releaseId={releaseId}></ReleaseWorkFlow>
                 </div>
             </div>
         </div>

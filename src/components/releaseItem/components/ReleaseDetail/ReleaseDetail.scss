@@ -70,3 +70,27 @@
         color: #5daad6;
     }
 }
+
+.release-workflow_modal {
+    z-index: 9999;
+    .ant-modal-body {
+        color: #002060;
+        word-wrap: break-word;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 22px;
+    }
+    .release-modal-title {
+        margin-top: 20px !important;
+        word-wrap: break-word;
+        color: rgba(0, 0, 0, 0.85);
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 22px;
+        margin: 0;
+    }
+    .release-border-footer {
+        padding-bottom: 20px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+}

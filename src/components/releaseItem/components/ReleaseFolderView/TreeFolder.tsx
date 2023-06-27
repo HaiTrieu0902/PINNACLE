@@ -169,7 +169,6 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
         setOpenUpdateFolder(false);
         formUpdate.resetFields();
     };
-
     // handle show/hidden delete folder
     const showModalDeleteFolder = () => {
         setOpenDeleteFolder(true);
