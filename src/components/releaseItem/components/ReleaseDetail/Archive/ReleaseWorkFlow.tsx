@@ -27,7 +27,6 @@ const ReleaseWorkFlow = ({ workflowActionList, releaseId }: ReleaseWorkFlowProps
 
     const handleSelectValue = (value: string | number) => {
         setSelectedValue(value);
-
         if (value === 3) {
             setOpenReleaseRework(true);
         }
@@ -143,7 +142,7 @@ const ReleaseWorkFlow = ({ workflowActionList, releaseId }: ReleaseWorkFlowProps
                                 <span className="label-common">Approved :</span>
                                 <div className="flex gap-2">
                                     <span className="input-inline-custom">
-                                        {releaseDetailList?.releaseDetail?.releaseApprovedBy}
+                                        {releaseDetailList?.releaseDetail?.approvedByName}
                                     </span>
                                     <span className="input-inline-custom">
                                         {releaseDetailList?.releaseDetail?.releaseApprovedOn &&
@@ -180,7 +179,7 @@ const ReleaseWorkFlow = ({ workflowActionList, releaseId }: ReleaseWorkFlowProps
                                 <span className="label-common">Deployed :</span>
                                 <div className="flex gap-2">
                                     <span className="input-inline-custom">
-                                        {releaseDetailList?.releaseDetail?.releaseDeployedBy}
+                                        {releaseDetailList?.releaseDetail?.deployedByName}
                                     </span>
                                     <span className="input-inline-custom">
                                         {releaseDetailList?.releaseDetail?.releaseDeployedOn &&
@@ -287,9 +286,10 @@ const ReleaseWorkFlow = ({ workflowActionList, releaseId }: ReleaseWorkFlowProps
                     <ModalItem
                         isActive={isActive}
                         onCancel={onCancel}
-                        title="Reassign"
+                        title="reassign"
                         subTitle="Please select a User to Reassign the Release to"
                         data={userSelectList.userSelects}
+                        releaseId={releaseId}
                     />
                 )}
 
@@ -298,9 +298,10 @@ const ReleaseWorkFlow = ({ workflowActionList, releaseId }: ReleaseWorkFlowProps
                     <ModalItem
                         isActive={isActive}
                         onCancel={onCancel}
-                        title="Escalate"
+                        title="escalate"
                         subTitle="Please identify and select the individual to Escalate this Release to"
                         data={userSelectList.userSelects}
+                        releaseId={releaseId}
                     />
                 )}
             </div>
