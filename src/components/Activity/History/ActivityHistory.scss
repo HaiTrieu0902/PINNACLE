@@ -1,0 +1,25 @@
+.history {
+    margin-top: 9px !important;
+
+    .history__header {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-bottom: 9px;
+        gap: 10px;
+    }
+}
+
+.history-table {
+    .history-columns {
+        font-size: 13px;
+        background-color: transparent !important;
+        padding: 8px 8px !important;
+    }
+    .ant-table-thead > tr > th {
+        background-color: initial;
+        color: #8c8c8c;
+        font-size: 12px;
+        font-weight: 700;
+    }
+}

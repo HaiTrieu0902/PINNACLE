@@ -1,4 +1,4 @@
-import { Card, Col, DatePicker, DatePickerProps, Input, Row, Select } from 'antd';
+import { Card, Col, DatePicker, DatePickerProps, Input, Row, Select, Tabs, TabsProps } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import dayjs from 'dayjs';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
@@ -14,6 +14,7 @@ import {
 } from '../../../../redux/release.slice';
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import { ParamReleaseUpdate } from '../../../../types/release';
+import { ActivityAttachments, ActivityCoverage, ActivityHistory, ActivityScope } from '../../../Activity';
 import ReleaseDashbroad from './Archive/ReleaseDashbroad';
 import ReleaseWorkFlow from './Archive/ReleaseWorkFlow';
 import './ReleaseDetail.scss';
@@ -23,6 +24,7 @@ const ReleaseDetail = () => {
     const messageApi: any = useContext(MessageContext);
     const { releaseDetailList, releaseTypeList, releasesGanttChartList, releaseId, workflowActionList } =
         useAppSelector((state) => state.release);
+    const [activeTab, setActiveTab] = useState('1');
     const [releaseValues, setReleaseValues] = useState({
         releaseLabel: releaseDetailList?.releaseDetail?.releaseLabel || '',
         releaseTitle: releaseDetailList?.releaseDetail?.releaseTitle || '',
@@ -204,6 +206,34 @@ const ReleaseDetail = () => {
         await handleReleaseUpdate(param);
     };
 
+    // Item tab activities
+    const items: TabsProps['items'] = [
+        {
+            key: '1',
+            label: `History`,
+            children: <ActivityHistory />,
+        },
+        {
+            key: '2',
+            label: `Manage Release Scope`,
+            children: <ActivityScope />,
+        },
+        {
+            key: '3',
+            label: `Manage Defect Coverage`,
+            children: <ActivityCoverage />,
+        },
+        {
+            key: '4',
+            label: `Attachments`,
+            children: <ActivityAttachments />,
+        },
+    ];
+
+    // on Change tab activities
+    const onChangeTab = (key: string) => {
+        setActiveTab(key);
+    };
     return (
         <div className="release-detail-container">
             <Card className="sub-title-common" title="Summary" bordered={true} size="small" style={{ width: '100%' }}>
@@ -444,8 +474,28 @@ const ReleaseDetail = () => {
                         </Row>
                     </Card>
 
+                    {/* Release WorkFlow */}
                     <ReleaseWorkFlow workflowActionList={workflowActionList} releaseId={releaseId} />
+
+                    {/* Release Dashbroad */}
                     <ReleaseDashbroad />
+                    {/* Release Activity */}
+                    <Card
+                        className="sub-title-common mt-2"
+                        title="Activity"
+                        bordered={true}
+                        size="small"
+                        style={{ width: '100%' }}
+                    >
+                        <Tabs
+                            className="release_activity"
+                            activeKey={activeTab}
+                            defaultActiveKey="1"
+                            items={items}
+                            onChange={onChangeTab}
+                            size="large"
+                        ></Tabs>
+                    </Card>
                 </div>
             </div>
         </div>

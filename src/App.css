@@ -31,9 +31,9 @@
 /* Css dom customer antd Design */
 
 /* Undo navigate tab */
-:where(.css-dev-only-do-not-override-12jzuas).ant-tabs .ant-tabs-ink-bar {
+/* :where(.css-dev-only-do-not-override-12jzuas).ant-tabs .ant-tabs-ink-bar {
     background: transparent !important;
-}
+} */
 
 /* card */
 :where(.css-dev-only-do-not-override-12jzuas).ant-card .ant-card-body {

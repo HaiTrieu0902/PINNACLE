@@ -94,3 +94,18 @@
         border-bottom: 1px solid #f0f0f0;
     }
 }
+
+/* Release Activity=============================================== */
+.release_activity {
+    .ant-tabs-tab .ant-tabs-tab-btn {
+        font-size: 14px;
+    }
+    .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+        color: #002060;
+    }
+    .ant-tabs-ink-bar {
+        background: #002060;
+        pointer-events: none;
+        position: absolute;
+    }
+}

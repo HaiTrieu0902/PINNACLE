@@ -1,15 +1,12 @@
 import type { TabsProps } from 'antd';
 import { Tabs } from 'antd';
-import TabPane from 'antd/es/tabs/TabPane';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ContainerLayout } from '../../components/Container/ContainerLayout';
-import DashBroadBatches from '../../components/dasbroadItem/DashBroadBatches';
-import DashBroadDefect from '../../components/dasbroadItem/DashBroadDefect';
-import DashBroadRelease from '../../components/dasbroadItem/DashBroadRelease';
-import DashBroadRequiment from '../../components/dasbroadItem/DashBroadRequiment';
-import DashBroadTestcase from '../../components/dasbroadItem/DashBroadTestcase';
-import './DashBroadPage.scss';
-import { useAppDispatch, useAppSelector } from '../../store';
+import DashBroadBatches from '../../components/DasbroadItem/DashBroadBatches';
+import DashBroadDefect from '../../components/DasbroadItem/DashBroadDefect';
+import DashBroadRelease from '../../components/DasbroadItem/DashBroadRelease';
+import DashBroadRequiment from '../../components/DasbroadItem/DashBroadRequiment';
+import DashBroadTestcase from '../../components/DasbroadItem/DashBroadTestcase';
 import {
     getbatchWorkflowDashboard,
     getdefectWorkflow,
@@ -17,6 +14,8 @@ import {
     getrequirementWorkflow,
     gettestCaseWorkflow,
 } from '../../redux/dashbroad.slice';
+import { useAppDispatch, useAppSelector } from '../../store';
+import './DashBroadPage.scss';
 
 const DashBroadPage = () => {
     const dispatch = useAppDispatch();

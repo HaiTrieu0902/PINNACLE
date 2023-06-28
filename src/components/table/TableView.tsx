@@ -1,10 +1,9 @@
-import { useEffect } from 'react';
 import { Table } from 'antd';
 import type { ColumnsType, TableProps } from 'antd/es/table';
 import React from 'react';
-import './table.scss';
-import { useAppDispatch, useAppSelector } from '../../store';
 import { filterReleasesGridCharTable } from '../../redux/release.slice';
+import { useAppDispatch } from '../../store';
+import './table.scss';
 interface DataType {
     key: React.Key;
     name: string;
@@ -56,7 +55,7 @@ const TableView = () => {
             dispatch(filterReleasesGridCharTable({ order: sorter?.order, field: sorter?.field }));
         }
     };
-    return <Table columns={columns} onChange={onChange} size="small" />;
+    return <Table columns={columns} onChange={onChange} size="small" className="table-view" />;
 };
 
 export default TableView;

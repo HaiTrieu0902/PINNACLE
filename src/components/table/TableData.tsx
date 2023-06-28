@@ -1,9 +1,38 @@
-import { Collapse, Table } from 'antd';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Collapse, Table, Tooltip, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import { getReleaseChart, getReleaseDetail, getreleaseId } from '../../redux/release.slice';
 import { useAppDispatch, useAppSelector } from '../../store';
+
 import './table.scss';
-import { columnsTableData } from '../../utils/releaseTable';
+import { ColumnsType } from 'antd/es/table';
+
+// eslint-disable-next-line react-refresh/only-export-components
+const columnsTableData: ColumnsType<any> = [
+    {
+        title: 'ID',
+        dataIndex: 'id',
+        key: 'id',
+        width: 60,
+        showSorterTooltip: true,
+    },
+    {
+        title: 'Title',
+        dataIndex: 'title',
+        key: 'title',
+        width: 250,
+        ellipsis: true,
+    },
+    { title: 'Type', dataIndex: 'type', key: 'type', width: 100, ellipsis: true },
+    {
+        title: 'Business Importance',
+        dataIndex: 'businessImportance',
+        key: 'businessImportance',
+        width: 100,
+        ellipsis: true,
+    },
+    { title: 'Owner', dataIndex: 'owner', key: 'owner', width: 70, ellipsis: true },
+];
 
 const TableData: React.FC = () => {
     const dispatch = useAppDispatch();
