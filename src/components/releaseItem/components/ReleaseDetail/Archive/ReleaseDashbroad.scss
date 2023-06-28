@@ -1,0 +1,57 @@
+.release-mini-dashboard {
+    .ant-collapse-item {
+        .ant-collapse-header {
+            padding: 0;
+            background-color: #fff;
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.88);
+            font-weight: 600;
+
+            .ant-collapse-header-text {
+                font-weight: 600;
+                left: -25px;
+                position: relative;
+            }
+        }
+
+        .ant-collapse-content {
+            .ant-collapse-content-box {
+                padding: 10px 0;
+                background-color: #fff;
+            }
+        }
+    }
+}
+
+.release-mini-dashboard {
+    .ant-collapse-expand-icon {
+        display: flex;
+        left: 96%;
+        position: relative;
+    }
+}
+
+.release-execution-status__table {
+    .label-common {
+        color: #9a9ea4;
+        font-size: 12px;
+        font-weight: 400;
+    }
+    .release-execution-status__title th {
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 17px;
+        text-align: center;
+    }
+    .label-common-sub {
+        color: #6bb2d6;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 15px;
+    }
+}
+
+.release-execution-status__table td,
+.release-execution-status__table th {
+    text-align: center;
+}

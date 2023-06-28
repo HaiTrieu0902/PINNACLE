@@ -181,3 +181,47 @@ export interface workflowAction {
     value: number;
 }
 [];
+
+// MiniDashboardItemList
+export interface MiniDashboardItemList {
+    nameType: string;
+    miniDashboardItems: MiniDashboardItem[];
+}
+[];
+
+export interface MiniDashboardItem {
+    name: string;
+    backColor: string;
+    panelBackColor: string;
+    forceColor: string;
+    value: number;
+    valueString: string;
+}
+
+// releaseExcutionStatus
+export interface releaseExcutionStatus {
+    testCasesToExecute: number;
+    testCasesInProgress: number;
+    testCasesPassed: number;
+    testCasesBlocked: number;
+    testCasesFailed: number;
+    testCasesTotal: number;
+    testsToExecute: number;
+    testsInProgress: number;
+    testsPassed: number;
+    testsBlocked: number;
+    testsFailed: number;
+    testsTotal: number;
+    conditionsNotRun: number;
+    conditionsInProgress: number;
+    conditionsPassed: number;
+    conditionsBlocked: number;
+    conditionsFailed: number;
+    conditionsTotal: number;
+    testStepsNotRun: number;
+    testStepsInProgress: number;
+    testStepsPassed: number;
+    testStepsBlocked: number;
+    testStepsFailed: number;
+    testStepsTotal: number;
+}

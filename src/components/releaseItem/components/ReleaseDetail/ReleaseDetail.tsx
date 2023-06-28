@@ -14,8 +14,9 @@ import {
 } from '../../../../redux/release.slice';
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import { ParamReleaseUpdate } from '../../../../types/release';
-import './ReleaseDetail.scss';
+import ReleaseDashbroad from './Archive/ReleaseDashbroad';
 import ReleaseWorkFlow from './Archive/ReleaseWorkFlow';
+import './ReleaseDetail.scss';
 const ReleaseDetail = () => {
     const dispatch = useAppDispatch();
     type ValidReleaseDetailKeys = keyof typeof releaseDetailList.releaseDetail;
@@ -443,7 +444,8 @@ const ReleaseDetail = () => {
                         </Row>
                     </Card>
 
-                    <ReleaseWorkFlow workflowActionList={workflowActionList} releaseId={releaseId}></ReleaseWorkFlow>
+                    <ReleaseWorkFlow workflowActionList={workflowActionList} releaseId={releaseId} />
+                    <ReleaseDashbroad />
                 </div>
             </div>
         </div>

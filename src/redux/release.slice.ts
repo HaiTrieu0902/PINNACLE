@@ -3,15 +3,16 @@ import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { API_PATHS } from '../configs/api';
 import { axiosData } from '../configs/axiosApiCusomer';
 import {
+    MiniDashboardItemList,
     releaseDetail,
     releaseDetailList,
+    releaseExcutionStatus,
     releaseTypeList,
     releasesFolderChartList,
     releasesGanttChartList,
     releasesGridChartList,
     workflowAction,
 } from '../types/release';
-import { getreleaseWorkflow } from './dashbroad.slice';
 
 const params = {
     page: 0,
@@ -30,6 +31,8 @@ interface Release {
     releasesGanttChartList: releasesGanttChartList;
     releasesFolderChartList: releasesFolderChartList;
     workflowActionList: workflowAction[];
+    miniDashboardItemList: MiniDashboardItemList[];
+    releaseExcutionStatus: releaseExcutionStatus;
     releaseId: number | null;
     conditionSorter: {
         order: string | undefined;
@@ -62,7 +65,9 @@ const initialState: Release = {
     releaseTypeList: { releaseType: [] },
     releasesGanttChartList: { releasesGanttChart: [] },
     workflowActionList: [],
+    miniDashboardItemList: [],
     releasesFolderChartList: {} as Required<releasesFolderChartList>,
+    releaseExcutionStatus: {} as Required<releaseExcutionStatus>,
     conditionSorter: {
         order: undefined,
         field: undefined,
@@ -130,6 +135,23 @@ export const getRelaseWorkFlow = createAsyncThunk('RelaseWorkFlow/getRelaseWorkF
     return data?.workflowAction || data;
 });
 
+// get-release-mini-dashboard
+export const getRelaseMiniDashbroad = createAsyncThunk(
+    'RelaseMiniDashbroad/getRelaseMiniDashbroad',
+    async (id: number) => {
+        const url = `${API_PATHS.API}/Releases/get-release-mini-dashboard?id=${id}`;
+        const data = await axiosData(url, 'GET');
+        return data?.result || data;
+    },
+);
+
+// get-release-excution-status-v2
+export const getRelaseExcution = createAsyncThunk('RelaseExcution/getRelaseExcution', async (id: number) => {
+    const url = `${API_PATHS.API}/Releases/get-release-excution-status-v2?id=${id}`;
+    const data = await axiosData(url, 'GET');
+    return data?.releaseExcutionStatus || data;
+});
+
 const releaseSlice = createSlice({
     name: 'release',
     initialState,
@@ -191,6 +213,12 @@ const releaseSlice = createSlice({
         getreleaseId: (state, action: PayloadAction<number | null>) => {
             state.releaseId = action.payload;
         },
+        resetValueMiniDashbroad: (state) => {
+            state.miniDashboardItemList = initialState.miniDashboardItemList;
+        },
+        resetValueMiniExcute: (state) => {
+            state.releaseExcutionStatus = initialState.releaseExcutionStatus;
+        },
     },
     extraReducers(builder) {
         builder
@@ -212,11 +240,23 @@ const releaseSlice = createSlice({
             })
             .addCase(getRelaseWorkFlow.fulfilled, (state, action) => {
                 state.workflowActionList = action.payload;
+            })
+            .addCase(getRelaseMiniDashbroad.fulfilled, (state, action) => {
+                state.miniDashboardItemList = action.payload;
+            })
+            .addCase(getRelaseExcution.fulfilled, (state, action) => {
+                state.releaseExcutionStatus = action.payload;
             });
     },
 });
 
-export const { filterReleasesGridCharTable, changeValueKeySearch, arrangeReleasesGridCharTable, getreleaseId } =
-    releaseSlice.actions;
+export const {
+    resetValueMiniDashbroad,
+    filterReleasesGridCharTable,
+    changeValueKeySearch,
+    arrangeReleasesGridCharTable,
+    getreleaseId,
+    resetValueMiniExcute,
+} = releaseSlice.actions;
 
 export default releaseSlice.reducer;
