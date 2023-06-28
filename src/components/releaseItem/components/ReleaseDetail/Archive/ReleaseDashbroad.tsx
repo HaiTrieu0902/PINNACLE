@@ -5,22 +5,42 @@ import { Card, Col, Collapse, Row, Spin } from 'antd';
 import { useEffect, useState } from 'react';
 import {
     getRelaseExcution,
+    getRelaseIssueStatus,
     getRelaseMiniDashbroad,
     resetValueMiniDashbroad,
     resetValueMiniExcute,
+    resetValueMiniIssueStatus,
 } from '../../../../../redux/release.slice';
 import { useAppDispatch, useAppSelector } from '../../../../../store';
 import CircleMini from '../../../../Circle/CircleMini';
 import './ReleaseDashbroad.scss';
-
+import { Pie } from '@ant-design/plots';
+import { releaseIssueStatuss } from '../../../../../types/release';
+import { generatePieChartConfigRelease } from '../../../../../utils/dashbroadColor';
+import noData from '../../../../../assets/noData.svg';
 const ReleaseDashbroad = () => {
     const dispatch = useAppDispatch();
-    const { releaseId, miniDashboardItemList, releaseExcutionStatus } = useAppSelector((state) => state.release);
+    const { releaseId, miniDashboardItemList, releaseExcutionStatus, releaseIssueStatusList } = useAppSelector(
+        (state) => state.release,
+    );
+    const [issueStatusList, SetIssueStatusList] = useState<releaseIssueStatuss[]>([]);
+
     const [isCollapseVisible, setIsCollapseVisible] = useState(false);
     const [isCollapseVisibleExcute, setIsCollapseVisibleExcute] = useState(false);
+    const [isCollapseVisibleIssue, setIsCollapseVisibleIssue] = useState(false);
     const [prevReleaseId, setPrevReleaseId] = useState(releaseId);
 
-    console.log('isCollapseVisibleExcute', isCollapseVisibleExcute);
+    console.log('issueStatusList', issueStatusList);
+
+    // get data releaseIssueStatuss if value issueStatusValue > 0
+    useEffect(() => {
+        if (releaseIssueStatusList?.releaseIssueStatuss) {
+            const filteredStatusList = releaseIssueStatusList?.releaseIssueStatuss.filter(
+                (status) => status.issueStatusValue > 0,
+            );
+            SetIssueStatusList(filteredStatusList);
+        }
+    }, [releaseIssueStatusList?.releaseIssueStatuss]);
 
     // effect call API
     useEffect(() => {
@@ -36,7 +56,14 @@ const ReleaseDashbroad = () => {
                 relaseExcution.abort();
             };
         }
-    }, [dispatch, releaseId, isCollapseVisible, isCollapseVisibleExcute]);
+
+        if (Number(releaseId) > 0 && isCollapseVisibleIssue) {
+            const relaseIssueStatus = dispatch(getRelaseIssueStatus(Number(releaseId)));
+            return () => {
+                relaseIssueStatus.abort();
+            };
+        }
+    }, [dispatch, releaseId, isCollapseVisible, isCollapseVisibleExcute, isCollapseVisibleIssue]);
 
     // effect changed value releaseID
     useEffect(() => {
@@ -52,7 +79,11 @@ const ReleaseDashbroad = () => {
             setIsCollapseVisibleExcute(false);
             dispatch(resetValueMiniExcute());
         }
-    }, [releaseId, prevReleaseId, isCollapseVisible, isCollapseVisibleExcute, dispatch]);
+        if (Number(releaseId) !== Number(prevReleaseId) && isCollapseVisibleIssue) {
+            setIsCollapseVisibleIssue(false);
+            dispatch(resetValueMiniIssueStatus());
+        }
+    }, [releaseId, prevReleaseId, isCollapseVisible, isCollapseVisibleExcute, isCollapseVisibleIssue, dispatch]);
 
     const itemsMiDashbroad: CollapseProps['items'] = [
         {
@@ -154,7 +185,15 @@ const ReleaseDashbroad = () => {
             label: 'Release Issue Status',
             children: (
                 <>
-                    <div style={{ minHeight: '250px' }}></div>
+                    <div style={{ minHeight: '250px' }}>
+                        {issueStatusList.length > 0 ? (
+                            <Pie style={{ height: '250px' }} {...generatePieChartConfigRelease(issueStatusList)} />
+                        ) : (
+                            <div className="flex items-center justify-center mt-10">
+                                <img src={noData} alt="" />
+                            </div>
+                        )}
+                    </div>
                 </>
             ),
         },
@@ -196,6 +235,8 @@ const ReleaseDashbroad = () => {
                             // defaultActiveKey={['1']}
                             expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
                             items={itemsIssueStatus}
+                            activeKey={isCollapseVisibleIssue ? ['1'] : undefined}
+                            onChange={(activeKeys) => setIsCollapseVisibleIssue(activeKeys.includes('1'))}
                         />
                     </Card>
                 </Col>

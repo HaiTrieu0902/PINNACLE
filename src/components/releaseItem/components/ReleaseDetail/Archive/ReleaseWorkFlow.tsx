@@ -64,6 +64,7 @@ const ReleaseWorkFlow = ({ workflowActionList, releaseId }: ReleaseWorkFlowProps
 
             const data = await axiosData(url, 'POST', requestData);
             dispatch(getReleaseDetail(Number(releaseId)));
+            setSelectedValue('');
             messageApi.success(`Workflow ${releaseId} was updated successfully`);
             return data;
         };

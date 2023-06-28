@@ -7,6 +7,7 @@ import {
     releaseDetail,
     releaseDetailList,
     releaseExcutionStatus,
+    releaseIssueStatusList,
     releaseTypeList,
     releasesFolderChartList,
     releasesGanttChartList,
@@ -33,6 +34,7 @@ interface Release {
     workflowActionList: workflowAction[];
     miniDashboardItemList: MiniDashboardItemList[];
     releaseExcutionStatus: releaseExcutionStatus;
+    releaseIssueStatusList: releaseIssueStatusList;
     releaseId: number | null;
     conditionSorter: {
         order: string | undefined;
@@ -68,6 +70,7 @@ const initialState: Release = {
     miniDashboardItemList: [],
     releasesFolderChartList: {} as Required<releasesFolderChartList>,
     releaseExcutionStatus: {} as Required<releaseExcutionStatus>,
+    releaseIssueStatusList: {} as Required<releaseIssueStatusList>,
     conditionSorter: {
         order: undefined,
         field: undefined,
@@ -152,6 +155,13 @@ export const getRelaseExcution = createAsyncThunk('RelaseExcution/getRelaseExcut
     return data?.releaseExcutionStatus || data;
 });
 
+// get-release-issue-status
+export const getRelaseIssueStatus = createAsyncThunk('RelaseIssueStatus/getRelaseIssueStatus', async (id: number) => {
+    const url = `${API_PATHS.API}/Releases/get-release-issue-status?id=${id}`;
+    const data = await axiosData(url, 'GET');
+    return data;
+});
+
 const releaseSlice = createSlice({
     name: 'release',
     initialState,
@@ -219,6 +229,9 @@ const releaseSlice = createSlice({
         resetValueMiniExcute: (state) => {
             state.releaseExcutionStatus = initialState.releaseExcutionStatus;
         },
+        resetValueMiniIssueStatus: (state) => {
+            state.releaseIssueStatusList = initialState.releaseIssueStatusList;
+        },
     },
     extraReducers(builder) {
         builder
@@ -246,17 +259,21 @@ const releaseSlice = createSlice({
             })
             .addCase(getRelaseExcution.fulfilled, (state, action) => {
                 state.releaseExcutionStatus = action.payload;
+            })
+            .addCase(getRelaseIssueStatus.fulfilled, (state, action) => {
+                state.releaseIssueStatusList = action.payload;
             });
     },
 });
 
 export const {
-    resetValueMiniDashbroad,
     filterReleasesGridCharTable,
     changeValueKeySearch,
     arrangeReleasesGridCharTable,
     getreleaseId,
     resetValueMiniExcute,
+    resetValueMiniIssueStatus,
+    resetValueMiniDashbroad,
 } = releaseSlice.actions;
 
 export default releaseSlice.reducer;

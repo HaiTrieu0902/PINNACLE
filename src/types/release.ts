@@ -225,3 +225,12 @@ export interface releaseExcutionStatus {
     testStepsFailed: number;
     testStepsTotal: number;
 }
+
+// -release-issue-status
+export interface releaseIssueStatusList {
+    releaseIssueStatuss: releaseIssueStatuss[];
+}
+export interface releaseIssueStatuss {
+    issueStatusValue: number;
+    issueStatusName: string;
+}
