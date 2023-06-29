@@ -1,10 +1,9 @@
 import { Tooltip, Typography } from 'antd';
 import Table, { ColumnsType } from 'antd/es/table';
+import { useState } from 'react';
+import { Activity } from '../../../types/activity';
 import SearchInput from '../../Search/SearchInput';
 import './ActivityHistory.scss';
-import { Activity } from '../../../types/activity';
-import { useState } from 'react';
-import { debounce } from 'lodash';
 interface ActivityHistoryProps {
     data: Activity[];
 }
