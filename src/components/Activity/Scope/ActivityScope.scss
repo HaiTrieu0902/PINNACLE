@@ -3,4 +3,15 @@
         display: flex;
         gap: 20px;
     }
+
+    .release-scope__tree {
+        margin-top: 20px;
+    }
+
+    .release-scope__footer {
+        margin-top: 10px;
+        display: flex;
+        justify-content: end;
+        gap: 10px;
+    }
 }

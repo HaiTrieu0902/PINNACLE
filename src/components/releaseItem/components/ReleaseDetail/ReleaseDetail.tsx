@@ -237,16 +237,17 @@ const ReleaseDetail = () => {
         setActiveTab(key);
     };
 
-    // useEffect call API activity history release action
+    // useEffect call API activity  release action
     useEffect(() => {
         if (Number(releaseId) > 0) {
             const relaseHistory = dispatch(getRelaseHistory(Number(releaseId)));
+            // const relaseScope = dispatch(getRelaseScope(Number(releaseId)));
             return () => {
                 relaseHistory.abort();
+                // relaseScope.abort();
             };
         }
     }, [dispatch, releaseId]);
-
     return (
         <div className="release-detail-container">
             <Card className="sub-title-common" title="Summary" bordered={true} size="small" style={{ width: '100%' }}>

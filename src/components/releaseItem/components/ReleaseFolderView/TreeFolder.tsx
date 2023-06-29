@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ExclamationCircleFilled } from '@ant-design/icons';
 import { Button, Col, Dropdown, Form, Input, Modal, Row, Space, Tree } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { MessageContext } from '../../../../App';
@@ -10,9 +11,7 @@ import { axiosData } from '../../../../configs/axiosApiCusomer';
 import { getReleaseFolderChart } from '../../../../redux/release.slice';
 import { useAppDispatch } from '../../../../store';
 import { ParamReleaseFolderView, ReleasesFolderChart, releasesFolderChartList } from '../../../../types/release';
-import { ExclamationCircleFilled } from '@ant-design/icons';
 import './ReleaseFolderView.scss';
-const { confirm } = Modal;
 interface TreeFolderProps {
     releasesFolderChartList: releasesFolderChartList;
 }
@@ -148,7 +147,6 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
 
     const onSelect = (selectedKeysValue: React.Key[], info: object | any) => {
         setParentFolderId(info?.node?.id);
-        console.log('onSelect', info?.node?.title?.props?.title);
         settitleFolder(info?.node?.title?.props?.title);
         setSelectedKeys(selectedKeysValue);
     };
