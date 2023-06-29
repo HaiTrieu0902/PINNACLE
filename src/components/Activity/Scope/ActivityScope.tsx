@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Space } from 'antd';
 import Tree from 'antd/es/tree';
+import { debounce } from 'lodash';
 import { Key } from 'rc-tree/lib/interface';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { MessageContext } from '../../../App';
+import IconFile from '../../../assets/file.svg';
+import IconOpen from '../../../assets/fileOpen.svg';
+import IconFolder from '../../../assets/folder.svg';
+import { API_PATHS } from '../../../configs/api';
+import { axiosData } from '../../../configs/axiosApiCusomer';
 import { getRelaseScope } from '../../../redux/activity.slice';
+import { getReleaseDetail } from '../../../redux/release.slice';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import SearchInput from '../../Search/SearchInput';
 import './ActivityScope.scss';
-import IconFolder from '../../../assets/folder.svg';
-import IconFile from '../../../assets/file.svg';
-import IconOpen from '../../../assets/fileOpen.svg';
-import { API_PATHS } from '../../../configs/api';
-import { axiosData } from '../../../configs/axiosApiCusomer';
-import { MessageContext } from '../../../App';
-import { useContext } from 'react';
-import { getReleaseDetail } from '../../../redux/release.slice';
 const ActivityScope = () => {
     const dispatch = useAppDispatch();
     const messageApi: any = useContext(MessageContext);
@@ -24,7 +24,7 @@ const ActivityScope = () => {
     const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
     const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
     const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
-    const [selectedIdDelete, setSelectedIdDelete] = useState<number[]>([]);
+    const [selectedIdDelete, setSelectedIdDelete] = useState<(number | null)[]>([]);
     const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
 
     //Effect call API
@@ -38,8 +38,25 @@ const ActivityScope = () => {
     }, [dispatch, releaseId]);
 
     useEffect(() => {
-        setSelectedIdDelete(checkedKeys.map((key: any) => parseInt(key.split('-')[1])));
+        // setSelectedIdDelete(checkedKeys.map((key: any) => parseInt(key.split('-')[1])));
+        setSelectedIdDelete(
+            checkedKeys
+                .map((key: any) => {
+                    if (key.includes('fd_')) {
+                        return null;
+                    }
+                    const parts = key.split('-');
+                    return parseInt(parts[parts.length - 1]);
+                })
+                .filter((value) => value !== null),
+        );
     }, [checkedKeys]);
+
+    const handleSearchScope = debounce((value: string) => {
+        if (Number(releaseId) > 0) {
+            dispatch(getRelaseScope({ id: Number(releaseId), type: 2, valueSearch: value }));
+        }
+    }, 700);
 
     const onExpand = (expandedKeysValue: React.Key[]) => {
         setExpandedKeys(expandedKeysValue);
@@ -54,14 +71,11 @@ const ActivityScope = () => {
         }
     };
 
-    console.log('selectedKeys', checkedKeys);
-
     const onSelect = (selectedKeysValue: React.Key[], info: object | any) => {
         console.log('onSelect', info);
         setSelectedKeys(selectedKeysValue);
     };
 
-    console.log('selectedIdDelete', selectedIdDelete);
     // generate TreeData chaged title
     const generateTreeData = (data: any[]): any[] => {
         return data.map((node: any) => {
@@ -126,18 +140,11 @@ const ActivityScope = () => {
             return data;
         }
     };
-
     const treeData = generateTreeData(releaseScopeList?.releaseScope || []);
-
     return (
         <div className="release-scope">
             <div className="release-scope__header">
-                <SearchInput
-                    width="80%"
-                    onSearch={() => {
-                        return;
-                    }}
-                />
+                <SearchInput width="80%" onSearch={handleSearchScope} />
                 <Button className="button-items w-48">
                     <span className="text-sm font-medium">Add Requirements</span>
                 </Button>

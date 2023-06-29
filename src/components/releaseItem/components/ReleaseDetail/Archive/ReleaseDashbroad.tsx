@@ -1,8 +1,10 @@
 /* eslint-disable no-extra-boolean-cast */
 import { CaretRightOutlined } from '@ant-design/icons';
+import { Pie } from '@ant-design/plots';
 import type { CollapseProps } from 'antd';
 import { Card, Col, Collapse, Row, Spin } from 'antd';
 import { useEffect, useState } from 'react';
+import noData from '../../../../../assets/noData.svg';
 import {
     getRelaseExcution,
     getRelaseIssueStatus,
@@ -12,12 +14,10 @@ import {
     resetValueMiniIssueStatus,
 } from '../../../../../redux/release.slice';
 import { useAppDispatch, useAppSelector } from '../../../../../store';
-import CircleMini from '../../../../Circle/CircleMini';
-import './ReleaseDashbroad.scss';
-import { Pie } from '@ant-design/plots';
 import { releaseIssueStatuss } from '../../../../../types/release';
 import { generatePieChartConfigRelease } from '../../../../../utils/dashbroadColor';
-import noData from '../../../../../assets/noData.svg';
+import CircleMini from '../../../../Circle/CircleMini';
+import './ReleaseDashbroad.scss';
 const ReleaseDashbroad = () => {
     const dispatch = useAppDispatch();
     const { releaseId, miniDashboardItemList, releaseExcutionStatus, releaseIssueStatusList } = useAppSelector(
@@ -28,7 +28,7 @@ const ReleaseDashbroad = () => {
     const [isCollapseVisible, setIsCollapseVisible] = useState(false);
     const [isCollapseVisibleExcute, setIsCollapseVisibleExcute] = useState(false);
     const [isCollapseVisibleIssue, setIsCollapseVisibleIssue] = useState(false);
-    const [prevReleaseId, setPrevReleaseId] = useState(releaseId);
+    const [prevReleaseId, setPrevReleaseId] = useState<number | null>(0);
 
     // get data releaseIssueStatuss if value issueStatusValue > 0
     useEffect(() => {
@@ -48,20 +48,25 @@ const ReleaseDashbroad = () => {
                 relaseMiniDashbroad.abort();
             };
         }
+    }, [dispatch, releaseId, isCollapseVisible]);
+
+    useEffect(() => {
         if (Number(releaseId) > 0 && isCollapseVisibleExcute) {
             const relaseExcution = dispatch(getRelaseExcution(Number(releaseId)));
             return () => {
                 relaseExcution.abort();
             };
         }
+    }, [dispatch, releaseId, isCollapseVisibleExcute]);
 
+    useEffect(() => {
         if (Number(releaseId) > 0 && isCollapseVisibleIssue) {
             const relaseIssueStatus = dispatch(getRelaseIssueStatus(Number(releaseId)));
             return () => {
                 relaseIssueStatus.abort();
             };
         }
-    }, [dispatch, releaseId, isCollapseVisible, isCollapseVisibleExcute, isCollapseVisibleIssue]);
+    }, [dispatch, releaseId, isCollapseVisibleIssue]);
 
     // effect changed value releaseID
     useEffect(() => {
