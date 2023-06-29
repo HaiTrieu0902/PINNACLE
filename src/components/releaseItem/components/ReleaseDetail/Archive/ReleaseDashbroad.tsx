@@ -42,31 +42,31 @@ const ReleaseDashbroad = () => {
 
     // effect call API
     useEffect(() => {
-        if (Number(releaseId) > 0 && isCollapseVisible) {
+        if (Number(releaseId) > 0 && isCollapseVisible && miniDashboardItemList.length === 0) {
             const relaseMiniDashbroad = dispatch(getRelaseMiniDashbroad(Number(releaseId)));
             return () => {
                 relaseMiniDashbroad.abort();
             };
         }
-    }, [dispatch, releaseId, isCollapseVisible]);
+    }, [dispatch, releaseId, isCollapseVisible, miniDashboardItemList]);
 
     useEffect(() => {
-        if (Number(releaseId) > 0 && isCollapseVisibleExcute) {
+        if (Number(releaseId) > 0 && isCollapseVisibleExcute && Object.keys(releaseExcutionStatus).length === 0) {
             const relaseExcution = dispatch(getRelaseExcution(Number(releaseId)));
             return () => {
                 relaseExcution.abort();
             };
         }
-    }, [dispatch, releaseId, isCollapseVisibleExcute]);
+    }, [dispatch, releaseId, isCollapseVisibleExcute, releaseExcutionStatus]);
 
     useEffect(() => {
-        if (Number(releaseId) > 0 && isCollapseVisibleIssue) {
+        if (Number(releaseId) > 0 && isCollapseVisibleIssue && Object.keys(releaseIssueStatusList).length === 0) {
             const relaseIssueStatus = dispatch(getRelaseIssueStatus(Number(releaseId)));
             return () => {
                 relaseIssueStatus.abort();
             };
         }
-    }, [dispatch, releaseId, isCollapseVisibleIssue]);
+    }, [dispatch, releaseId, isCollapseVisibleIssue, releaseIssueStatusList]);
 
     // effect changed value releaseID
     useEffect(() => {
@@ -74,15 +74,15 @@ const ReleaseDashbroad = () => {
     }, [releaseId]);
 
     useEffect(() => {
-        if (Number(releaseId) !== Number(prevReleaseId) && isCollapseVisible) {
+        if (Number(releaseId) !== Number(prevReleaseId)) {
             setIsCollapseVisible(false);
             dispatch(resetValueMiniDashbroad());
         }
-        if (Number(releaseId) !== Number(prevReleaseId) && isCollapseVisibleExcute) {
+        if (Number(releaseId) !== Number(prevReleaseId)) {
             setIsCollapseVisibleExcute(false);
             dispatch(resetValueMiniExcute());
         }
-        if (Number(releaseId) !== Number(prevReleaseId) && isCollapseVisibleIssue) {
+        if (Number(releaseId) !== Number(prevReleaseId)) {
             setIsCollapseVisibleIssue(false);
             dispatch(resetValueMiniIssueStatus());
         }
@@ -106,7 +106,7 @@ const ReleaseDashbroad = () => {
             label: 'Release Execution Status',
             children: (
                 <>
-                    {!!Object.keys(releaseExcutionStatus).length ? (
+                    {Object.keys(releaseExcutionStatus).length > 0 ? (
                         <div style={{ minHeight: '250px' }}>
                             <table className="release-execution-status__table">
                                 <thead>
