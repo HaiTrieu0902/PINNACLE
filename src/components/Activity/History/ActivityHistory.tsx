@@ -1,145 +1,105 @@
-import React from 'react';
+import { Tooltip, Typography } from 'antd';
+import Table, { ColumnsType } from 'antd/es/table';
 import SearchInput from '../../Search/SearchInput';
 import './ActivityHistory.scss';
-import Table, { ColumnsType, TableProps } from 'antd/es/table';
-import { Tooltip, Typography } from 'antd';
-interface DataType {
-    key: React.Key;
-    name: string;
-    chinese: number;
-    math: number;
-    english: number;
+import { Activity } from '../../../types/activity';
+import { useState } from 'react';
+import { debounce } from 'lodash';
+interface ActivityHistoryProps {
+    data: Activity[];
 }
 
-const columns: ColumnsType<DataType> = [
+const renderTextWithTooltip = (text: string) => (
+    <Tooltip title={text}>
+        <Typography.Text ellipsis>{text}</Typography.Text>
+    </Tooltip>
+);
+const columns: ColumnsType<any> = [
     {
-        title: 'Name',
-        dataIndex: 'name',
+        title: 'Field',
+        dataIndex: 'field',
+        key: 'field',
         sorter: {
-            compare: (a, b) => a.name.localeCompare(b.name),
+            compare: (a, b) => a.field.localeCompare(b.field),
             multiple: 3,
         },
-        render: (text) => (
-            <Tooltip title={text}>
-                <Typography.Text ellipsis>{text}</Typography.Text>
-            </Tooltip>
-        ),
-
+        width: 100,
+        render: renderTextWithTooltip,
+        ellipsis: true,
         className: 'history-columns',
     },
     {
-        title: 'Chinese Score',
-        dataIndex: 'chinese',
+        title: 'Timestamp',
+        dataIndex: 'timeStampString',
+        key: 'timeStampString',
         sorter: {
-            compare: (a, b) => a.chinese - b.chinese,
+            compare: (a, b) => a.timeStampString.localeCompare(b.timeStampString),
             multiple: 3,
         },
-        render: (text) => (
-            <Tooltip title={text}>
-                <Typography.Text ellipsis>{text}</Typography.Text>
-            </Tooltip>
-        ),
+        render: renderTextWithTooltip,
+        width: 90,
+        ellipsis: true,
         className: 'history-columns',
     },
     {
-        title: 'Math Score',
-        dataIndex: 'math',
+        title: 'Modified By',
+        dataIndex: 'modifiedBy',
+        key: 'modifiedBy',
         sorter: {
-            compare: (a, b) => a.math - b.math,
-            multiple: 2,
+            compare: (a, b) => a.modifiedBy.localeCompare(b.modifiedBy),
+            multiple: 3,
         },
-        render: (text) => (
-            <Tooltip title={text}>
-                <Typography.Text ellipsis>{text}</Typography.Text>
-            </Tooltip>
-        ),
+        render: renderTextWithTooltip,
+        width: 100,
+        ellipsis: true,
         className: 'history-columns',
     },
     {
-        title: 'English Score',
-        dataIndex: 'english',
+        title: 'Old Value',
+        dataIndex: 'oldValue',
+        key: 'oldValue',
         sorter: {
-            compare: (a, b) => a.english - b.english,
-            multiple: 1,
+            compare: (a, b) => a.newValue.localeCompare(b.newValue),
+            multiple: 3,
         },
-        render: (text) => (
-            <Tooltip title={text}>
-                <Typography.Text ellipsis>{text}</Typography.Text>
-            </Tooltip>
-        ),
+        render: renderTextWithTooltip,
+        width: 130,
+        ellipsis: true,
+        className: 'history-columns',
+    },
+    {
+        title: 'New Value',
+        dataIndex: 'newValue',
+        key: 'newValue',
+        sorter: {
+            compare: (a, b) => a.newValue.localeCompare(b.newValue),
+            multiple: 3,
+        },
+        width: 130,
+        render: renderTextWithTooltip,
+        ellipsis: true,
         className: 'history-columns',
     },
 ];
-const ActivityHistory = () => {
-    // const columns: ColumnsType<DataType> = [
-    //     {
-    //         title: 'ID',
-    //         dataIndex: 'id',
-    //         sorter: {},
-    //         width: 60,
-    //     },
-    //     {
-    //         title: 'Title',
-    //         dataIndex: 'title',
-    //         sorter: {},
-    //         width: 250,
-    //     },
-    //     {
-    //         title: 'Type',
-    //         dataIndex: 'type',
-    //         sorter: {},
-    //         width: 100,
-    //     },
-    //     {
-    //         title: 'Business Importance',
-    //         dataIndex: 'businessImportance',
-    //         sorter: {},
-    //         width: 100,
-    //         ellipsis: true,
-    //     },
-    //     {
-    //         title: 'Owner',
-    //         dataIndex: 'owner',
-    //         sorter: {},
-    //         width: 70,
-    //     },
-    // ];
 
-    const data: DataType[] = [
-        {
-            key: '1',
-            name: 'John Brown',
-            chinese: 98,
-            math: 60,
-            english: 70,
-        },
-        {
-            key: '2',
-            name: 'Jim Green',
-            chinese: 98,
-            math: 66,
-            english: 89,
-        },
-        {
-            key: '3',
-            name: 'Joe Black',
-            chinese: 98,
-            math: 90,
-            english: 70,
-        },
-        {
-            key: '4',
-            name: 'Jim Red',
-            chinese: 88,
-            math: 99,
-            english: 89,
-        },
-    ];
+const ActivityHistory = ({ data }: ActivityHistoryProps) => {
+    const [valueSearch, setValueSearch] = useState<string>('');
 
-    const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter, extra) => {
-        console.log('params', pagination, filters, sorter, extra);
+    const handleSearchActivityHistory = (value: string) => {
+        setValueSearch(value);
     };
 
+    const filteredData = valueSearch
+        ? data.filter((item) => {
+              return (
+                  item?.field?.toLowerCase()?.includes(valueSearch.toLowerCase()) ||
+                  item?.oldValue?.toLowerCase()?.includes(valueSearch.toLowerCase()) ||
+                  item?.newValue?.toLowerCase()?.includes(valueSearch.toLowerCase()) ||
+                  item?.modifiedBy?.toLowerCase()?.includes(valueSearch.toLowerCase()) ||
+                  item?.timeStampString?.toLowerCase()?.includes(valueSearch.toLowerCase())
+              );
+          })
+        : data;
     return (
         <div className="history">
             <div className="history__header">
@@ -148,21 +108,15 @@ const ActivityHistory = () => {
                     src="http://pinnacle-portal.server2div3.pgtest.co/icons/reload.svg"
                     alt=""
                 />
-                <SearchInput
-                    onSearch={() => {
-                        return;
-                    }}
-                    width="220px"
-                />
+                <SearchInput onSearch={handleSearchActivityHistory} width="220px" />
             </div>
-            <div>
+            <div className="history-table-wrapper">
                 <Table
                     className="history-table"
                     pagination={false}
                     columns={columns}
-                    dataSource={data}
+                    dataSource={filteredData}
                     showSorterTooltip={true}
-                    onChange={onChange}
                 />
             </div>
         </div>

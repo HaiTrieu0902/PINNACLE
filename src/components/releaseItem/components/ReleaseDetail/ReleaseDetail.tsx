@@ -5,6 +5,7 @@ import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { MessageContext } from '../../../../App';
 import { API_PATHS } from '../../../../configs/api';
 import { axiosData } from '../../../../configs/axiosApiCusomer';
+import { getRelaseHistory } from '../../../../redux/activity.slice';
 import {
     getBusinessImportance,
     getRelaseWorkFlow,
@@ -22,6 +23,7 @@ const ReleaseDetail = () => {
     const dispatch = useAppDispatch();
     type ValidReleaseDetailKeys = keyof typeof releaseDetailList.releaseDetail;
     const messageApi: any = useContext(MessageContext);
+    const { activityHistoryList } = useAppSelector((state) => state.activity);
     const { releaseDetailList, releaseTypeList, releasesGanttChartList, releaseId, workflowActionList } =
         useAppSelector((state) => state.release);
     const [activeTab, setActiveTab] = useState('1');
@@ -211,7 +213,7 @@ const ReleaseDetail = () => {
         {
             key: '1',
             label: `History`,
-            children: <ActivityHistory />,
+            children: <ActivityHistory data={activityHistoryList?.releaseHistory} />,
         },
         {
             key: '2',
@@ -234,6 +236,17 @@ const ReleaseDetail = () => {
     const onChangeTab = (key: string) => {
         setActiveTab(key);
     };
+
+    // useEffect call API activity history release action
+    useEffect(() => {
+        if (Number(releaseId) > 0) {
+            const relaseHistory = dispatch(getRelaseHistory(Number(releaseId)));
+            return () => {
+                relaseHistory.abort();
+            };
+        }
+    }, [dispatch, releaseId]);
+
     return (
         <div className="release-detail-container">
             <Card className="sub-title-common" title="Summary" bordered={true} size="small" style={{ width: '100%' }}>

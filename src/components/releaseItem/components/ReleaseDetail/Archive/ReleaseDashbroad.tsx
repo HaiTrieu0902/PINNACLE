@@ -30,8 +30,6 @@ const ReleaseDashbroad = () => {
     const [isCollapseVisibleIssue, setIsCollapseVisibleIssue] = useState(false);
     const [prevReleaseId, setPrevReleaseId] = useState(releaseId);
 
-    console.log('issueStatusList', issueStatusList);
-
     // get data releaseIssueStatuss if value issueStatusValue > 0
     useEffect(() => {
         if (releaseIssueStatusList?.releaseIssueStatuss) {
