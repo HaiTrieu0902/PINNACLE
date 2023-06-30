@@ -13,15 +13,20 @@ export interface ActivityHistoryList {
 }
 
 // Activity Release Scope
-export interface releaseScopeList {
-    releaseScope: releaseScope[];
-}
 
 export interface releaseScope {
     key: string;
     title: string;
     isChild: boolean;
     children: releaseScope[];
+}
+
+export interface releaseScopeList {
+    releaseScope: releaseScope[];
+}
+
+export interface ReleaseScopeListAdd {
+    releaseScope: releaseScope[];
 }
 
 // ==================================================

@@ -1,16 +1,18 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { API_PATHS } from '../configs/api';
 import { axiosData } from '../configs/axiosApiCusomer';
-import { ActivityHistoryList, releaseScopeList } from '../types/activity';
+import { ActivityHistoryList, ReleaseScopeListAdd, releaseScopeList } from '../types/activity';
 
 interface Activity {
     activityHistoryList: ActivityHistoryList;
     releaseScopeList: releaseScopeList;
+    releaseScopeListAdd: ReleaseScopeListAdd;
 }
 
 const initialState: Activity = {
     activityHistoryList: {} as ActivityHistoryList,
     releaseScopeList: {} as releaseScopeList,
+    releaseScopeListAdd: {} as ReleaseScopeListAdd,
 };
 
 // Start Activity Release ==============================================================
@@ -43,7 +45,13 @@ const activitySlice = createSlice({
                 state.activityHistoryList = action.payload;
             })
             .addCase(getRelaseScope.fulfilled, (state, action) => {
-                state.releaseScopeList = action.payload;
+                const { type } = action.meta.arg;
+                if (type === 2) {
+                    state.releaseScopeList = action.payload;
+                }
+                if (type === 3) {
+                    state.releaseScopeListAdd = action.payload;
+                }
             });
     },
 });
