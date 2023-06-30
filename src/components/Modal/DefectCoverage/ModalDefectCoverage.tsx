@@ -31,24 +31,16 @@ const ModalDefectCoverage = ({ isActive, title, onCancel }: ModalDefectCoverageP
 
     const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
     const [selectedIdAdd, setSelectedIdAdd] = useState<(number | null)[]>([]);
-    const [openModal, setOpenModal] = useState<boolean>(false);
 
     /*Effect call API */
     useEffect(() => {
-        if (Number(releaseId) > 0 && openModal) {
+        if (Number(releaseId) > 0 && isActive) {
             const relaseScope = dispatch(getRelaseDefects({ id: Number(releaseId), type: 3, valueSearch: '' }));
             return () => {
                 relaseScope.abort();
             };
         }
-    }, [dispatch, releaseId, openModal]);
-
-    /* Set state to open modal */
-    useEffect(() => {
-        if (isActive !== undefined) {
-            setOpenModal(isActive);
-        }
-    }, [isActive]);
+    }, [dispatch, releaseId, isActive]);
 
     /* Effect filter selectedIdAdd */
     useEffect(() => {
@@ -73,7 +65,6 @@ const ModalDefectCoverage = ({ isActive, title, onCancel }: ModalDefectCoverageP
 
     /* handle close modal */
     const handleCancelModal = () => {
-        setOpenModal(false);
         setCheckedKeys([]);
         onCancel(false);
     };
@@ -98,7 +89,7 @@ const ModalDefectCoverage = ({ isActive, title, onCancel }: ModalDefectCoverageP
             const data = await axiosData(url, 'POST', param);
             messageApi.success('Add Defect successfully');
             setCheckedKeys([]);
-            setOpenModal(false);
+            onCancel(false);
             dispatch(getRelaseDefects({ id: Number(releaseId), type: 2, valueSearch: '' }));
             dispatch(getReleaseDetail(Number(releaseId)));
             return data;
@@ -169,7 +160,7 @@ const ModalDefectCoverage = ({ isActive, title, onCancel }: ModalDefectCoverageP
     const treeData = generateTreeData(releaseDefectCoverageListAdd?.releaseDefectCoverage || []);
 
     return (
-        <Modal width={'1000px'} open={openModal} onCancel={handleCancelModal} footer={null}>
+        <Modal width={'1000px'} open={isActive} onCancel={handleCancelModal} footer={null}>
             <div className="flex flex-col">
                 <div className="">
                     <h3 className="release-modal__header mb-4 capitalize">{title}</h3>
