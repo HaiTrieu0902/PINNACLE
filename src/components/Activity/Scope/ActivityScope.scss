@@ -6,6 +6,10 @@
 
     .release-scope__tree {
         margin-top: 20px;
+        .release-scope__tree-content {
+            max-height: 300px;
+            overflow-y: auto;
+        }
     }
 
     .release-scope__footer {

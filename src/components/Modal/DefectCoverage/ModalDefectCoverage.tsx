@@ -1,5 +1,6 @@
-import { Button, Space, Tree } from 'antd';
-import React, { Key, useContext, useEffect, useState } from 'react';
+import { Button, Divider, Modal, Row, Space, Tree } from 'antd';
+import { Key } from 'antd/es/table/interface';
+import React, { useContext, useEffect, useState } from 'react';
 import { MessageContext } from '../../../App';
 import IconCritial from '../../../assets/defect/critial.svg';
 import IconHight from '../../../assets/defect/hight.svg';
@@ -7,37 +8,53 @@ import IconLow from '../../../assets/defect/low.svg';
 import IconMedium from '../../../assets/defect/medium.svg';
 import IconOther from '../../../assets/defect/other.svg';
 import IconVirus from '../../../assets/defect/virus.svg';
-import { API_PATHS } from '../../../configs/api';
-import { axiosData } from '../../../configs/axiosApiCusomer';
 import { getRelaseDefects } from '../../../redux/activity.slice';
-import { getReleaseDetail } from '../../../redux/release.slice';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import SearchInput from '../../Search/SearchInput';
-import './ActivityCoverage.scss';
+import './ModalDefectCoverage.scss';
 import { debounce } from 'lodash';
-import ModalDefectCoverage from '../../Modal/DefectCoverage/ModalDefectCoverage';
-const ActivityCoverage = () => {
+import { API_PATHS } from '../../../configs/api';
+import { axiosData } from '../../../configs/axiosApiCusomer';
+import { getReleaseDetail } from '../../../redux/release.slice';
+interface ModalDefectCoverageProps {
+    isActive?: boolean;
+    title?: string;
+    host?: string;
+    onCancel: (value: boolean) => void;
+}
+
+const ModalDefectCoverage = ({ isActive, title, onCancel }: ModalDefectCoverageProps) => {
     const dispatch = useAppDispatch();
     const messageApi: any = useContext(MessageContext);
-    const { releaseDefectCoverageList } = useAppSelector((state) => state.activity);
+    const { releaseDefectCoverageListAdd } = useAppSelector((state) => state.activity);
     const { releaseId } = useAppSelector((state) => state.release);
 
     const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
-    const [selectedIdDelete, setSelectedIdDelete] = useState<(number | null)[]>([]);
-    const [isActiveModal, setIsActiveModal] = useState<boolean>(false);
-    //Effect call API
+    const [selectedIdAdd, setSelectedIdAdd] = useState<(number | null)[]>([]);
+    const [openModal, setOpenModal] = useState<boolean>(false);
+
+    console.log('openModal', openModal);
+
+    /*Effect call API */
     useEffect(() => {
-        if (Number(releaseId) > 0) {
-            const relaseScope = dispatch(getRelaseDefects({ id: Number(releaseId), type: 2, valueSearch: '' }));
+        if (Number(releaseId) > 0 && openModal) {
+            const relaseScope = dispatch(getRelaseDefects({ id: Number(releaseId), type: 3, valueSearch: '' }));
             return () => {
                 relaseScope.abort();
             };
         }
-    }, [dispatch, releaseId]);
+    }, [dispatch, releaseId, openModal]);
 
-    // Effect convert key
+    /* Set state to open modal */
     useEffect(() => {
-        setSelectedIdDelete(
+        if (isActive !== undefined) {
+            setOpenModal(isActive);
+        }
+    }, [isActive]);
+
+    /* Effect filter selectedIdAdd */
+    useEffect(() => {
+        setSelectedIdAdd(
             checkedKeys
                 .map((key: any) => {
                     if (key.includes('fd_')) {
@@ -52,11 +69,18 @@ const ActivityCoverage = () => {
 
     const handleSearchDefect = debounce((value: string) => {
         if (Number(releaseId) > 0) {
-            dispatch(getRelaseDefects({ id: Number(releaseId), type: 2, valueSearch: value }));
+            dispatch(getRelaseDefects({ id: Number(releaseId), type: 3, valueSearch: value }));
         }
     }, 700);
 
-    /* check Id selected tree  */
+    /* handle close modal */
+    const handleCancelModal = () => {
+        setOpenModal(false);
+        setCheckedKeys([]);
+        onCancel(false);
+    };
+
+    /* onCheck value tree */
     const onCheck = (checked: Key[] | { checked: Key[]; halfChecked: Key[] }) => {
         if (Array.isArray(checked)) {
             setCheckedKeys(checked);
@@ -65,35 +89,25 @@ const ActivityCoverage = () => {
         }
     };
 
-    const onActiveModal = () => {
-        setIsActiveModal(true);
-    };
-
-    const onCancelModal = (value: boolean) => {
-        setIsActiveModal(value);
-    };
-
-    // handle changed Remove or Cancel buttons
-    const handleRemoveOrCancelDefect = async (type: string) => {
-        if (type === 'cancel') {
-            setCheckedKeys([]);
-        }
-        if (type === 'remove') {
+    /* handle Add or Cancel Add Requirements */
+    const handleAddDefect = async () => {
+        if (selectedIdAdd.length > 0) {
             const param = {
                 releaseId: Number(releaseId),
-                defectIds: selectedIdDelete,
+                defectIds: selectedIdAdd,
             };
-            const url = `${API_PATHS.API}/ReleaseDefectCoverage/delete-release-defect`;
+            const url = `${API_PATHS.API}/ReleaseDefectCoverage/assign-release-defect`;
             const data = await axiosData(url, 'POST', param);
-            messageApi.success('Remove defect successfully');
+            messageApi.success('Add Defect successfully');
             setCheckedKeys([]);
+            setOpenModal(false);
             dispatch(getRelaseDefects({ id: Number(releaseId), type: 2, valueSearch: '' }));
             dispatch(getReleaseDetail(Number(releaseId)));
             return data;
         }
     };
 
-    // generate data tree
+    /* generate config title for tree data */
     const generateTreeData = (data: any[]): any[] => {
         return data.map((node: any) => {
             const handleChangeIcon = () => {
@@ -114,6 +128,7 @@ const ActivityCoverage = () => {
                 }
                 return IconCritial;
             };
+
             if (node.children) {
                 return {
                     ...node,
@@ -153,45 +168,37 @@ const ActivityCoverage = () => {
         });
     };
 
-    // generate covert to tree
-    const treeData = generateTreeData(releaseDefectCoverageList?.releaseDefectCoverage || []);
-    return (
-        <div className="release-defect">
-            <div className="release-defect__header">
-                <SearchInput width="80%" onSearch={handleSearchDefect} />
-                <Button onClick={onActiveModal} className="button-items w-28">
-                    <span className="text-sm font-medium">Add Defects</span>
-                </Button>
-            </div>
-            <div className="release-defect__tree">
-                <Tree checkable onCheck={onCheck} checkedKeys={checkedKeys} treeData={treeData} />
-                {treeData.length === 0 && (
-                    <div className="flex items-center justify-center text-sm">
-                        <p>There no data</p>
-                    </div>
-                )}
-                {checkedKeys.length > 0 && (
-                    <div className="release-defect__footer">
-                        <Button onClick={() => handleRemoveOrCancelDefect('cancel')} className="text-xs !py-2">
-                            Cancel
-                        </Button>
-                        <Button onClick={() => handleRemoveOrCancelDefect('remove')} className="text-xs !py-2" danger>
-                            Remove
-                        </Button>
-                    </div>
-                )}
-            </div>
+    const treeData = generateTreeData(releaseDefectCoverageListAdd?.releaseDefectCoverage || []);
 
-            <div className="modal_add_defect">
-                <ModalDefectCoverage
-                    isActive={isActiveModal}
-                    onCancel={onCancelModal}
-                    title="Add Requirements"
-                    host="release"
-                />
+    return (
+        <Modal width={'1000px'} open={openModal} onCancel={handleCancelModal} footer={null}>
+            <div className="flex flex-col">
+                <div className="">
+                    <h3 className="release-modal__header mb-4 capitalize">{title}</h3>
+                    <Divider type="horizontal" className="-mt-2" />
+                    <SearchInput width="100%" onSearch={handleSearchDefect} />
+                </div>
+
+                <Row className="modal-defects_content">
+                    <Tree checkable onCheck={onCheck} checkedKeys={checkedKeys} treeData={treeData} />
+                </Row>
+
+                <Row justify={'end'} className="w-full -mt-4">
+                    <Divider type="horizontal" className="" />
+                    <Button onClick={handleCancelModal} className="h-10 w-20 mr-3">
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={handleAddDefect}
+                        disabled={checkedKeys.length === 0 ? true : false}
+                        className={`button-items ${checkedKeys.length === 0 && 'button-prevent'} h-10 w-16`}
+                    >
+                        <span className="text-sm font-medium">Add</span>
+                    </Button>
+                </Row>
             </div>
-        </div>
+        </Modal>
     );
 };
 
-export default ActivityCoverage;
+export default ModalDefectCoverage;

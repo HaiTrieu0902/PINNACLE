@@ -137,8 +137,8 @@ const ModalRequirement = ({ isActive, title, onCancel }: ModalRequirementProps) 
                 requiredmentIds: selectedIdAdd,
             };
             const url = `${API_PATHS.API}/ReleaseRequiredmentScope/assign-release-requirement`;
-            messageApi.success('Add requirement successfully');
             const data = await axiosData(url, 'POST', param);
+            messageApi.success('Add requirement successfully');
             setCheckedKeys([]);
             setOpenModal(false);
             dispatch(getRelaseScope({ id: Number(releaseId), type: 2, valueSearch: '' }));

@@ -30,3 +30,11 @@ export interface ReleaseScopeListAdd {
 }
 
 // ==================================================
+// Activity Release Scope
+export interface ReleaseDefectCoverageList {
+    releaseDefectCoverage: releaseScope[];
+}
+
+export interface ReleaseDefectCoverageListAdd {
+    releaseDefectCoverage: releaseScope[];
+}

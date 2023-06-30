@@ -1,0 +1,17 @@
+.release-defect {
+    .release-defect__header {
+        display: flex;
+        gap: 20px;
+    }
+
+    .release-defect__tree {
+        margin-top: 20px;
+    }
+
+    .release-defect__footer {
+        margin-top: 10px;
+        display: flex;
+        justify-content: end;
+        gap: 10px;
+    }
+}

@@ -56,6 +56,7 @@ const ActivityScope = () => {
         }
     }, 700);
 
+    /* check Id selected tree  */
     const onCheck = (checked: Key[] | { checked: Key[]; halfChecked: Key[] }) => {
         if (Array.isArray(checked)) {
             setCheckedKeys(checked);
@@ -148,7 +149,13 @@ const ActivityScope = () => {
                 </Button>
             </div>
             <div className="release-scope__tree">
-                <Tree checkable onCheck={onCheck} checkedKeys={checkedKeys} treeData={treeData} />
+                <Tree
+                    className="release-scope__tree-content"
+                    checkable
+                    onCheck={onCheck}
+                    checkedKeys={checkedKeys}
+                    treeData={treeData}
+                />
                 {treeData.length === 0 && (
                     <div className="flex items-center justify-center text-sm">
                         <p>There no data</p>
