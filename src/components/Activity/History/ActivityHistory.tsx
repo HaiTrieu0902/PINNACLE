@@ -114,7 +114,7 @@ const ActivityHistory = ({ data }: ActivityHistoryProps) => {
                     className="history-table"
                     pagination={false}
                     columns={columns}
-                    dataSource={filteredData}
+                    dataSource={filteredData ? filteredData.map((item, index) => ({ ...item, key: index })) : []}
                     showSorterTooltip={true}
                 />
             </div>

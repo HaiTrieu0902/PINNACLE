@@ -192,7 +192,7 @@ const ReleaseDashbroad = () => {
                         {issueStatusList.length > 0 ? (
                             <Pie style={{ height: '250px' }} {...generatePieChartConfigRelease(issueStatusList)} />
                         ) : (
-                            <div className="flex items-center justify-center mt-10">
+                            <div className="flex items-center justify-center pt-10">
                                 <img src={noData} alt="" />
                             </div>
                         )}

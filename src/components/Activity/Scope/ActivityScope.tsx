@@ -132,9 +132,9 @@ const ActivityScope = () => {
                 requiredmentIds: selectedIdDelete,
             };
             const url = `${API_PATHS.API}/ReleaseRequiredmentScope/delete-release-requirement`;
-
             messageApi.success('Remove requirement successfully');
             const data = await axiosData(url, 'POST', param);
+            setCheckedKeys([]);
             dispatch(getRelaseScope({ id: Number(releaseId), type: 2, valueSearch: '' }));
             dispatch(getReleaseDetail(Number(releaseId)));
             return data;
