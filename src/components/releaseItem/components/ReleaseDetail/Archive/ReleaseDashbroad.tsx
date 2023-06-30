@@ -24,13 +24,12 @@ const ReleaseDashbroad = () => {
         (state) => state.release,
     );
     const [issueStatusList, SetIssueStatusList] = useState<releaseIssueStatuss[]>([]);
-
     const [isCollapseVisible, setIsCollapseVisible] = useState(false);
     const [isCollapseVisibleExcute, setIsCollapseVisibleExcute] = useState(false);
     const [isCollapseVisibleIssue, setIsCollapseVisibleIssue] = useState(false);
     const [prevReleaseId, setPrevReleaseId] = useState<number | null>(0);
 
-    // get data releaseIssueStatuss if value issueStatusValue > 0
+    /* filter data in Issues dashbroad */
     useEffect(() => {
         if (releaseIssueStatusList?.releaseIssueStatuss) {
             const filteredStatusList = releaseIssueStatusList?.releaseIssueStatuss.filter(
@@ -40,7 +39,7 @@ const ReleaseDashbroad = () => {
         }
     }, [releaseIssueStatusList?.releaseIssueStatuss]);
 
-    // effect call API
+    /* Effect call MiniDashbroad */
     useEffect(() => {
         if (Number(releaseId) > 0 && isCollapseVisible && miniDashboardItemList.length === 0) {
             const relaseMiniDashbroad = dispatch(getRelaseMiniDashbroad(Number(releaseId)));
@@ -50,6 +49,7 @@ const ReleaseDashbroad = () => {
         }
     }, [dispatch, releaseId, isCollapseVisible, miniDashboardItemList]);
 
+    /* Effect call ExcutionStatus */
     useEffect(() => {
         if (Number(releaseId) > 0 && isCollapseVisibleExcute && Object.keys(releaseExcutionStatus).length === 0) {
             const relaseExcution = dispatch(getRelaseExcution(Number(releaseId)));
@@ -59,6 +59,7 @@ const ReleaseDashbroad = () => {
         }
     }, [dispatch, releaseId, isCollapseVisibleExcute, releaseExcutionStatus]);
 
+    /* Effect call IssueStatusList */
     useEffect(() => {
         if (Number(releaseId) > 0 && isCollapseVisibleIssue && Object.keys(releaseIssueStatusList).length === 0) {
             const relaseIssueStatus = dispatch(getRelaseIssueStatus(Number(releaseId)));
@@ -68,11 +69,12 @@ const ReleaseDashbroad = () => {
         }
     }, [dispatch, releaseId, isCollapseVisibleIssue, releaseIssueStatusList]);
 
-    // effect changed value releaseID
+    /* effect changed value releaseID */
     useEffect(() => {
         setPrevReleaseId(releaseId);
     }, [releaseId]);
 
+    /* Effect clear data when release ID change */
     useEffect(() => {
         if (Number(releaseId) !== Number(prevReleaseId)) {
             setIsCollapseVisible(false);
@@ -208,7 +210,6 @@ const ReleaseDashbroad = () => {
                 <Collapse
                     className="release-mini-dashboard"
                     bordered={false}
-                    // defaultActiveKey={['1']}
                     expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
                     items={itemsMiDashbroad}
                     activeKey={isCollapseVisible ? ['1'] : undefined}
@@ -222,7 +223,6 @@ const ReleaseDashbroad = () => {
                         <Collapse
                             className="release-mini-dashboard"
                             bordered={false}
-                            // defaultActiveKey={['1']}
                             expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
                             items={itemsExcution}
                             activeKey={isCollapseVisibleExcute ? ['1'] : undefined}
@@ -235,7 +235,6 @@ const ReleaseDashbroad = () => {
                         <Collapse
                             className="release-mini-dashboard"
                             bordered={false}
-                            // defaultActiveKey={['1']}
                             expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
                             items={itemsIssueStatus}
                             activeKey={isCollapseVisibleIssue ? ['1'] : undefined}

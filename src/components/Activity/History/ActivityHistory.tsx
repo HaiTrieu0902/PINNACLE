@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Tooltip, Typography } from 'antd';
 import Table, { ColumnsType } from 'antd/es/table';
 import { useState } from 'react';
@@ -8,6 +9,7 @@ interface ActivityHistoryProps {
     data: Activity[];
 }
 
+/* handle render Text tooltip in table */
 const renderTextWithTooltip = (text: string) => (
     <Tooltip title={text}>
         <Typography.Text ellipsis>{text}</Typography.Text>
@@ -84,10 +86,12 @@ const columns: ColumnsType<any> = [
 const ActivityHistory = ({ data }: ActivityHistoryProps) => {
     const [valueSearch, setValueSearch] = useState<string>('');
 
+    /* handle search Actiity History */
     const handleSearchActivityHistory = (value: string) => {
         setValueSearch(value);
     };
 
+    /* handle filter history */
     const filteredData = valueSearch
         ? data.filter((item) => {
               return (

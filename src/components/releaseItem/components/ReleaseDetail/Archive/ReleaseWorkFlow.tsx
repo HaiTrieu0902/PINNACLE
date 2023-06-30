@@ -25,6 +25,7 @@ const ReleaseWorkFlow = ({ workflowActionList, releaseId }: ReleaseWorkFlowProps
     const [openReleaseRework, setOpenReleaseRework] = useState(false);
     const [isActive, setIsActive] = useState<boolean>(false);
 
+    /* hanlde selected value worklist */
     const handleSelectValue = (value: string | number) => {
         setSelectedValue(value);
         if (value === 3) {
@@ -38,7 +39,7 @@ const ReleaseWorkFlow = ({ workflowActionList, releaseId }: ReleaseWorkFlowProps
         setIsActive(value);
     };
 
-    // Update WorkFlow
+    /* Update WorkFlow */
     useEffect(() => {
         const fetchData = async () => {
             let url = '';
@@ -61,7 +62,6 @@ const ReleaseWorkFlow = ({ workflowActionList, releaseId }: ReleaseWorkFlowProps
             } else {
                 return;
             }
-
             const data = await axiosData(url, 'POST', requestData);
             dispatch(getReleaseDetail(Number(releaseId)));
             setSelectedValue('');
@@ -72,6 +72,7 @@ const ReleaseWorkFlow = ({ workflowActionList, releaseId }: ReleaseWorkFlowProps
         fetchData();
     }, [selectedValue, releaseId, messageApi, user.userId, dispatch]);
 
+    /* handle submit Update WorkFlow reason */
     const handleSubmitUpdateRework = async (values: { reworkReason: string }) => {
         const param = {
             releaseId: releaseId,
@@ -86,7 +87,7 @@ const ReleaseWorkFlow = ({ workflowActionList, releaseId }: ReleaseWorkFlowProps
         return data;
     };
 
-    // call aPI userSelects
+    /* call API userList */
     useEffect(() => {
         const userSelects = dispatch(getUserSelects());
         return () => {

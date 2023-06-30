@@ -1,6 +1,6 @@
-import { Button } from 'antd';
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
-import { useState, useEffect } from 'react';
+import { Button } from 'antd';
+import { useEffect, useState } from 'react';
 import { arrangeReleasesGridCharTable, changeValueKeySearch } from '../../../../redux/release.slice';
 import { useAppDispatch } from '../../../../store';
 import SearchInput from '../../../Search/SearchInput';
@@ -12,10 +12,13 @@ const ReleaseGridView = () => {
     const [valueActivePath, setValueActivePath] = useState(false);
     const [searchValue, setSearchValue] = useState('');
 
+    /* handle arrange list table grid view*/
     const handleClickPath = () => {
         setValueActivePath((prev) => !prev);
         dispatch(arrangeReleasesGridCharTable(valueActivePath));
     };
+
+    /* handle search*/
     const handleOnSearchGridView = (value: string) => {
         setSearchValue(value);
     };

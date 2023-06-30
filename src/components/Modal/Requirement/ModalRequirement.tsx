@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Divider, Modal, Row, Space, Tree } from 'antd';
+import { debounce } from 'lodash';
 import { Key, useContext, useEffect, useState } from 'react';
+import { MessageContext } from '../../../App';
 import IconFile from '../../../assets/file.svg';
 import IconOpen from '../../../assets/fileOpen.svg';
 import IconFolder from '../../../assets/folder.svg';
+import { API_PATHS } from '../../../configs/api';
+import { axiosData } from '../../../configs/axiosApiCusomer';
 import { getRelaseScope } from '../../../redux/activity.slice';
+import { getReleaseDetail } from '../../../redux/release.slice';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import SearchInput from '../../Search/SearchInput';
 import './ModalRequirement.scss';
-import { debounce } from 'lodash';
-import { MessageContext } from '../../../App';
-import { API_PATHS } from '../../../configs/api';
-import { axiosData } from '../../../configs/axiosApiCusomer';
-import { getReleaseDetail } from '../../../redux/release.slice';
 
 interface ModalRequirementProps {
     isActive?: boolean;
@@ -28,26 +28,18 @@ const ModalRequirement = ({ isActive, title, onCancel }: ModalRequirementProps) 
     const { releaseId } = useAppSelector((state) => state.release);
     const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
     const [selectedIdAdd, setSelectedIdAdd] = useState<(number | null)[]>([]);
-    const [openModal, setOpenModal] = useState<boolean>(false);
 
-    /*Effect call API */
+    /*Effect call API Activity scrope*/
     useEffect(() => {
-        if (Number(releaseId) > 0 && openModal) {
+        if (Number(releaseId) > 0 && isActive) {
             const relaseScope = dispatch(getRelaseScope({ id: Number(releaseId), type: 3, valueSearch: '' }));
             return () => {
                 relaseScope.abort();
             };
         }
-    }, [dispatch, releaseId, openModal]);
+    }, [dispatch, releaseId, isActive]);
 
-    /* Set state to open modal */
-    useEffect(() => {
-        if (isActive !== undefined) {
-            setOpenModal(isActive);
-        }
-    }, [isActive]);
-
-    /* Effect filter selectedIdAdd */
+    /* Effect filter list ID add */
     useEffect(() => {
         setSelectedIdAdd(
             checkedKeys
@@ -64,7 +56,6 @@ const ModalRequirement = ({ isActive, title, onCancel }: ModalRequirementProps) 
 
     /* handle close modal */
     const handleCancelModal = () => {
-        setOpenModal(false);
         setCheckedKeys([]);
         onCancel(false);
     };
@@ -75,12 +66,33 @@ const ModalRequirement = ({ isActive, title, onCancel }: ModalRequirementProps) 
             dispatch(getRelaseScope({ id: Number(releaseId), type: 3, valueSearch: value }));
         }
     }, 700);
+
     /* onCheck value tree */
     const onCheck = (checked: Key[] | { checked: Key[]; halfChecked: Key[] }) => {
         if (Array.isArray(checked)) {
             setCheckedKeys(checked);
         } else {
             setCheckedKeys(checked.checked);
+        }
+    };
+
+    /* handle Add or Cancel Add Requirements */
+    const handleAddRequirements = async () => {
+        if (selectedIdAdd.length > 0) {
+            const param = {
+                releaseId: Number(releaseId),
+                requiredmentIds: selectedIdAdd,
+            };
+            const url = `${API_PATHS.API}/ReleaseRequiredmentScope/assign-release-requirement`;
+            const data = await axiosData(url, 'POST', param);
+            if (data) {
+                messageApi.success('Add requirement successfully');
+                setCheckedKeys([]);
+                onCancel(false);
+                dispatch(getRelaseScope({ id: Number(releaseId), type: 2, valueSearch: '' }));
+                dispatch(getReleaseDetail(Number(releaseId)));
+            }
+            return data;
         }
     };
 
@@ -130,27 +142,10 @@ const ModalRequirement = ({ isActive, title, onCancel }: ModalRequirementProps) 
     };
 
     /* handle Add or Cancel Add Requirements */
-    const handleAddRequirements = async () => {
-        if (selectedIdAdd.length > 0) {
-            const param = {
-                releaseId: Number(releaseId),
-                requiredmentIds: selectedIdAdd,
-            };
-            const url = `${API_PATHS.API}/ReleaseRequiredmentScope/assign-release-requirement`;
-            const data = await axiosData(url, 'POST', param);
-            messageApi.success('Add requirement successfully');
-            setCheckedKeys([]);
-            setOpenModal(false);
-            dispatch(getRelaseScope({ id: Number(releaseId), type: 2, valueSearch: '' }));
-            dispatch(getReleaseDetail(Number(releaseId)));
-            return data;
-        }
-    };
-
     const treeData = generateTreeData(releaseScopeListAdd?.releaseScope || []);
 
     return (
-        <Modal width={'1000px'} open={openModal} onCancel={handleCancelModal} footer={null}>
+        <Modal width={'1000px'} open={isActive} onCancel={handleCancelModal} footer={null}>
             <div className="flex flex-col">
                 <div className="">
                     <h3 className="release-modal__header mb-4 capitalize">{title}</h3>

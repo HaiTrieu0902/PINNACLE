@@ -9,10 +9,10 @@ import deleteIcon from '../../assets/icon/deleteIcon.svg';
 import deleteActive from '../../assets/icon/deleteIconActive.svg';
 import { API_PATHS } from '../../configs/api';
 import { axiosData } from '../../configs/axiosApiCusomer';
+import { getReleaseChart } from '../../redux/release.slice';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { ParamReleaseAdd, ParamReleaseDelete } from '../../types/release';
 import './ReleaseItem.scss';
-import { getReleaseChart } from '../../redux/release.slice';
 
 type IconType = typeof addIcon | typeof deleteIcon;
 const CreateOrDeleteRelease = () => {
@@ -29,7 +29,7 @@ const CreateOrDeleteRelease = () => {
     const [openAdd, setOpenAdd] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
-    // handle add release
+    /* handle add release */
     const handleFormAddSubmit = async (values: ParamReleaseAdd) => {
         const param: ParamReleaseAdd = {
             releaseId: Number(newReleaseId),
@@ -60,7 +60,7 @@ const CreateOrDeleteRelease = () => {
         return data;
     };
 
-    // handle delete release
+    /* handle delete release*/
     const handleFormDeleteSubmit = async (values: ParamReleaseDelete) => {
         const param = {
             releaseId: releaseId,
@@ -75,26 +75,28 @@ const CreateOrDeleteRelease = () => {
         return data;
     };
 
-    // handle show modal add
+    /* handle show modal add*/
     const showModalAdd = async () => {
         setOpenAdd(true);
         const url = `${API_PATHS.API}/Releases/get-new-release-id`;
         const data = await axiosData(url, 'GET');
         setNewReleaseId(Number(data.releaseId));
     };
+    /* handle cancel modal add*/
     const handleCancelModalAdd = () => {
         setOpenAdd(false);
     };
 
-    // handle show modal delete
+    /* handle show modal delete*/
     const showModalDelete = async () => {
         setOpenDelete(true);
     };
+    /* handle cacel modal delete*/
     const handleCancelModalDelete = () => {
         setOpenDelete(false);
     };
 
-    // handle hover icons
+    /* handle hover icon*/
     const handleIconHover = (icon: IconType) => {
         setHoveredIcon(icon);
     };
@@ -102,7 +104,7 @@ const CreateOrDeleteRelease = () => {
         setHoveredIcon(null);
     };
 
-    // handle change date
+    /* handle change date*/
     const handleDateChange: DatePickerProps['onChange'] = (date, name) => {
         if (name === 'targetReleaseStartDate') {
             setStartDate(date);

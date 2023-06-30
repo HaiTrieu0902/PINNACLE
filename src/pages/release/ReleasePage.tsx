@@ -1,4 +1,4 @@
-import ReleaseItem from '../../components/releaseItem/ReleaseItem';
+import ReleaseItem from '../../components/ReleaseItem/ReleaseItem';
 
 const ReleasePage = () => {
     return (

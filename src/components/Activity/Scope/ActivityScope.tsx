@@ -26,7 +26,7 @@ const ActivityScope = () => {
     const [selectedIdDelete, setSelectedIdDelete] = useState<(number | null)[]>([]);
     const [isActiveModal, setIsActiveModal] = useState<boolean>(false);
 
-    //Effect call API
+    /* Effect call API */
     useEffect(() => {
         if (Number(releaseId) > 0) {
             const relaseScope = dispatch(getRelaseScope({ id: Number(releaseId), type: 2, valueSearch: '' }));
@@ -36,6 +36,7 @@ const ActivityScope = () => {
         }
     }, [dispatch, releaseId]);
 
+    /* Effect Filter List Id delete */
     useEffect(() => {
         setSelectedIdDelete(
             checkedKeys
@@ -50,6 +51,7 @@ const ActivityScope = () => {
         );
     }, [checkedKeys]);
 
+    /* handle search scrope */
     const handleSearchScope = debounce((value: string) => {
         if (Number(releaseId) > 0) {
             dispatch(getRelaseScope({ id: Number(releaseId), type: 2, valueSearch: value }));
@@ -65,15 +67,17 @@ const ActivityScope = () => {
         }
     };
 
+    /* handle active modal */
     const onActiveModal = () => {
         setIsActiveModal(true);
     };
 
+    /* handle cancel modal */
     const onCancelModal = (value: boolean) => {
         setIsActiveModal(value);
     };
 
-    // generate TreeData chaged title
+    /*generate TreeData config title */
     const generateTreeData = (data: any[]): any[] => {
         return data.map((node: any) => {
             if (node.children) {
@@ -118,7 +122,7 @@ const ActivityScope = () => {
         });
     };
 
-    // handle changed Remove or Cancel buttons
+    /* handle changed Remove or Cancel scope */
     const handleRemoveOrCancelScope = async (type: string) => {
         if (type === 'cancel') {
             setCheckedKeys([]);
@@ -138,7 +142,7 @@ const ActivityScope = () => {
         }
     };
 
-    // generate covert to tree
+    /* Intermediate variable TREE */
     const treeData = generateTreeData(releaseScopeList?.releaseScope || []);
     return (
         <div className="release-scope">

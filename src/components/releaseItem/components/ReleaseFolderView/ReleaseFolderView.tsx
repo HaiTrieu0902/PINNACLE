@@ -17,11 +17,12 @@ const ReleaseFolderView = () => {
     const [searchValue, setSearchValue] = useState('');
     const [openCreateFolder, setOpenCreateFolder] = useState(false);
 
+    /* handle search folder view*/
     const handleOnSearchFolderView = (value: string) => {
         setSearchValue(value);
     };
 
-    // get API
+    /* Effect call api Folder Chart*/
     useEffect(() => {
         const releaseFolderChart = dispatch(getReleaseFolderChart(searchValue));
         return () => {
@@ -29,7 +30,7 @@ const ReleaseFolderView = () => {
         };
     }, [dispatch, searchValue]);
 
-    // handle show/hidden modal create folder
+    /* handle show/hidden modal create folder*/
     const showModalCreateFolder = async () => {
         setOpenCreateFolder(true);
     };
@@ -37,7 +38,7 @@ const ReleaseFolderView = () => {
         setOpenCreateFolder(false);
     };
 
-    // handle submit create folder
+    /* handle submit create folder */
     const handleSubmitCreateFolder = async (values: ParamReleaseFolderView) => {
         const param: ParamReleaseFolderView = {
             parentFolderId: 0,

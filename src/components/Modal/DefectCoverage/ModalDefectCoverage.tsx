@@ -1,5 +1,6 @@
 import { Button, Divider, Modal, Row, Space, Tree } from 'antd';
 import { Key } from 'antd/es/table/interface';
+import { debounce } from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
 import { MessageContext } from '../../../App';
 import IconCritial from '../../../assets/defect/critial.svg';
@@ -8,14 +9,13 @@ import IconLow from '../../../assets/defect/low.svg';
 import IconMedium from '../../../assets/defect/medium.svg';
 import IconOther from '../../../assets/defect/other.svg';
 import IconVirus from '../../../assets/defect/virus.svg';
+import { API_PATHS } from '../../../configs/api';
+import { axiosData } from '../../../configs/axiosApiCusomer';
 import { getRelaseDefects } from '../../../redux/activity.slice';
+import { getReleaseDetail } from '../../../redux/release.slice';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import SearchInput from '../../Search/SearchInput';
 import './ModalDefectCoverage.scss';
-import { debounce } from 'lodash';
-import { API_PATHS } from '../../../configs/api';
-import { axiosData } from '../../../configs/axiosApiCusomer';
-import { getReleaseDetail } from '../../../redux/release.slice';
 interface ModalDefectCoverageProps {
     isActive?: boolean;
     title?: string;
@@ -32,8 +32,6 @@ const ModalDefectCoverage = ({ isActive, title, onCancel }: ModalDefectCoverageP
     const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
     const [selectedIdAdd, setSelectedIdAdd] = useState<(number | null)[]>([]);
     const [openModal, setOpenModal] = useState<boolean>(false);
-
-    console.log('openModal', openModal);
 
     /*Effect call API */
     useEffect(() => {

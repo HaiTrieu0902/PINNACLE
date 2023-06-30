@@ -1,16 +1,14 @@
 import { Card, Select } from 'antd';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useAppDispatch } from '../../store';
 import ContainerItem from '../Container/ContainerItem';
 import CreateOrDeleteRelease from '../ReleaseItem/CreateOrDeleteRelease';
 import ReleaseDetail from '../ReleaseItem/components/ReleaseDetail/ReleaseDetail';
 import ReleaseFolderView from '../ReleaseItem/components/ReleaseFolderView/ReleaseFolderView';
 import ReleaseGridView from '../ReleaseItem/components/ReleaseGridView/ReleaseGridView';
 import './ReleaseItem.scss';
-import { useAppDispatch, useAppSelector } from '../../store';
-import { getBusinessImportance } from '../../redux/release.slice';
 const ReleaseItem = () => {
     const [formItem, setFormItem] = useState('grid');
-    const dispatch = useAppDispatch();
     const handleChangeSelect = (value: string) => {
         setFormItem(value);
     };

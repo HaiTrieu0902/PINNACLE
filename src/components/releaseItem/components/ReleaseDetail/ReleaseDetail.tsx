@@ -19,6 +19,7 @@ import { ActivityAttachments, ActivityCoverage, ActivityHistory, ActivityScope }
 import ReleaseDashbroad from './Archive/ReleaseDashbroad';
 import ReleaseWorkFlow from './Archive/ReleaseWorkFlow';
 import './ReleaseDetail.scss';
+
 const ReleaseDetail = () => {
     const dispatch = useAppDispatch();
     type ValidReleaseDetailKeys = keyof typeof releaseDetailList.releaseDetail;
@@ -106,7 +107,7 @@ const ReleaseDetail = () => {
         ),
     };
 
-    // Call API Update components
+    /* handle call api update components */
     const handleReleaseUpdate = async (param: ParamReleaseUpdate) => {
         const url = `${API_PATHS.API}/Releases/update-release`;
         const data = await axiosData(url, 'POST', param);
@@ -116,7 +117,7 @@ const ReleaseDetail = () => {
         return data;
     };
 
-    // handle changed value
+    /* handle changed value Input */
     const handleInputValueChange = (event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = event.target;
         setReleaseValues((prevValues) => ({
@@ -125,7 +126,7 @@ const ReleaseDetail = () => {
         }));
     };
 
-    // handle blur value change(API change)
+    /* handle changed blur value Input and Update release */
     const handleInputValueBlur = async (event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = event.target;
         setReleaseValues((prevValues) => ({
@@ -158,7 +159,7 @@ const ReleaseDetail = () => {
         }
     };
 
-    // handle changes select option Update
+    /* handle changes select option Update and Update release */
     const handleSelectChange = async (name: string, selectedValue: number) => {
         setSelectedValues((prevValues) => ({
             ...prevValues,
@@ -182,7 +183,7 @@ const ReleaseDetail = () => {
         await handleReleaseUpdate(param);
     };
 
-    // handle change date Update
+    /* handle handle change date and Update release */
     const handleDateChange: DatePickerProps['onChange'] = async (date: any, name) => {
         setReleaseValueDates((prevDates) => ({
             ...prevDates,
@@ -232,19 +233,17 @@ const ReleaseDetail = () => {
         },
     ];
 
-    // on Change tab activities
+    /* on Change tab activities */
     const onChangeTab = (key: string) => {
         setActiveTab(key);
     };
 
-    // useEffect call API activity  release action
+    /* useEffect call API activity  release action */
     useEffect(() => {
         if (Number(releaseId) > 0) {
             const relaseHistory = dispatch(getRelaseHistory(Number(releaseId)));
-            // const relaseScope = dispatch(getRelaseScope(Number(releaseId)));
             return () => {
                 relaseHistory.abort();
-                // relaseScope.abort();
             };
         }
     }, [dispatch, releaseId]);

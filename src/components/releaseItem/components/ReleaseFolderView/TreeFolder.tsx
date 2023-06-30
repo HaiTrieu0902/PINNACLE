@@ -17,6 +17,20 @@ interface TreeFolderProps {
 }
 
 const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
+    const dispatch = useAppDispatch();
+    const messageApi: any = useContext(MessageContext);
+    const [form] = Form.useForm();
+    const [formUpdate] = Form.useForm();
+    const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
+    const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
+    const [parentFolderId, setParentFolderId] = useState<number>(0);
+    const [titleFolder, settitleFolder] = useState<string>('');
+    const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
+    const [openCreateFolder, setOpenCreateFolder] = useState(false);
+    const [openUpdateFolder, setOpenUpdateFolder] = useState(false);
+    const [openDeleteFolder, setOpenDeleteFolder] = useState(false);
+
+    /* config Dropdown title in TREE*/
     const DropdownTitle = ({ title, valueKey, children, parentId }: any) => {
         const handleChangedIcon = () => {
             if (valueKey?.substring(0, 2) === 'fd') {
@@ -95,6 +109,7 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
         );
     };
 
+    /* config title TREE*/
     const generateTreeData = (data: ReleasesFolderChart[]): ReleasesFolderChart[] => {
         return data.map((node: any) => {
             if (node.children) {
@@ -126,32 +141,21 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
         });
     };
 
-    const dispatch = useAppDispatch();
-    const messageApi: any = useContext(MessageContext);
-    const [form] = Form.useForm();
-    const [formUpdate] = Form.useForm();
-    const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
-    const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
-    const [parentFolderId, setParentFolderId] = useState<number>(0);
-    const [titleFolder, settitleFolder] = useState<string>('');
-    const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
-    const [openCreateFolder, setOpenCreateFolder] = useState(false);
-    const [openUpdateFolder, setOpenUpdateFolder] = useState(false);
-    const [openDeleteFolder, setOpenDeleteFolder] = useState(false);
-
+    /* handle expan Tree*/
     const onExpand = (expandedKeysValue: React.Key[]) => {
         console.log('onExpand', expandedKeysValue);
         setExpandedKeys(expandedKeysValue);
         setAutoExpandParent(false);
     };
 
+    /* handle select Tree */
     const onSelect = (selectedKeysValue: React.Key[], info: object | any) => {
         setParentFolderId(info?.node?.id);
         settitleFolder(info?.node?.title?.props?.title);
         setSelectedKeys(selectedKeysValue);
     };
 
-    // handle show/hidden modal create folder
+    /*  handle show/hidden modal create folder */
     const showModalCreateFolder = () => {
         setOpenCreateFolder(true);
     };
@@ -159,7 +163,8 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
         setOpenCreateFolder(false);
         form.resetFields();
     };
-    // handle show/hidden modal update folder
+
+    /*  handle show/hidden modal update folder */
     const showModalUpdateFolder = () => {
         setOpenUpdateFolder(true);
     };
@@ -167,7 +172,8 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
         setOpenUpdateFolder(false);
         formUpdate.resetFields();
     };
-    // handle show/hidden delete folder
+
+    /*  handle show/hidden delete folder */
     const showModalDeleteFolder = () => {
         setOpenDeleteFolder(true);
     };
@@ -175,9 +181,10 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
         setOpenDeleteFolder(false);
     };
 
+    /*  Biến trung gian tạo data */
     const treeData = generateTreeData(releasesFolderChartList?.releasesFolderChart || []);
 
-    // handle create folder
+    /* handle create folder */
     const handleSubmitCreateFolder = async (values: ParamReleaseFolderView) => {
         const param: ParamReleaseFolderView = {
             parentFolderId: parentFolderId,
@@ -194,7 +201,7 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
         return data;
     };
 
-    // handle update folder
+    /* handle update folder */
     const handleSubmitUpdateFolder = async (values: { folderName: string }) => {
         const param = {
             folderId: parentFolderId,
@@ -209,7 +216,7 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
         return data;
     };
 
-    // handle delete folder
+    /* handle delete folder */
     const handleSubmitDeleteFolder = async () => {
         const url = `${API_PATHS.API}/Common/delete-folder?id=${parentFolderId}`;
         const data = await axiosData(url, 'DELETE');
@@ -220,7 +227,7 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
         return data;
     };
 
-    // useEffect value
+    /* Effect reset value */
     useEffect(() => {
         formUpdate.setFieldsValue({
             folderName: titleFolder,
