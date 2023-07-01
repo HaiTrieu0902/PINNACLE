@@ -38,3 +38,19 @@ export interface ReleaseDefectCoverageList {
 export interface ReleaseDefectCoverageListAdd {
     releaseDefectCoverage: releaseScope[];
 }
+
+// ==================================================
+// Activity Attachments
+export interface Attachment {
+    attachmentId: number;
+    attachmentDescription: string;
+    fileName: string;
+    attachedByName: string;
+    attachedOn: Date;
+    attachedBy: number;
+}
+
+export interface AttachmentsList {
+    count: number;
+    attachments: Attachment[];
+}

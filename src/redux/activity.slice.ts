@@ -3,6 +3,7 @@ import { API_PATHS } from '../configs/api';
 import { axiosData } from '../configs/axiosApiCusomer';
 import {
     ActivityHistoryList,
+    AttachmentsList,
     ReleaseDefectCoverageList,
     ReleaseDefectCoverageListAdd,
     ReleaseScopeListAdd,
@@ -15,6 +16,7 @@ interface Activity {
     releaseScopeListAdd: ReleaseScopeListAdd;
     releaseDefectCoverageList: ReleaseDefectCoverageList;
     releaseDefectCoverageListAdd: ReleaseDefectCoverageListAdd;
+    releaseAttachmentsList: AttachmentsList;
 }
 
 const initialState: Activity = {
@@ -23,6 +25,7 @@ const initialState: Activity = {
     releaseScopeListAdd: {} as ReleaseScopeListAdd,
     releaseDefectCoverageList: {} as ReleaseDefectCoverageList,
     releaseDefectCoverageListAdd: {} as ReleaseDefectCoverageListAdd,
+    releaseAttachmentsList: {} as AttachmentsList,
 };
 
 // Start Activity Release ==============================================================
@@ -48,6 +51,16 @@ export const getRelaseDefects = createAsyncThunk(
     'RelaseDefects/getRelaseDefects',
     async ({ id, type, valueSearch }: { id: number; type: number; valueSearch: string }) => {
         const url = `${API_PATHS.API}/ReleaseDefectCoverage/get-release-defect?releaseId=${id}&selectionType=${type}&searchString=${valueSearch}`;
+        const data = await axiosData(url, 'GET');
+        return data;
+    },
+);
+
+//get-release-attachment
+export const getRelaseAttachments = createAsyncThunk(
+    'RelaseAttachments/getRelaseAttachments',
+    async ({ entityId, entityTypes }: { entityId: number; entityTypes: number }) => {
+        const url = `${API_PATHS.API}/Attachment/get-release-attachment?entityId=${entityId}&entityTypes=${entityTypes}`;
         const data = await axiosData(url, 'GET');
         return data;
     },
@@ -79,6 +92,12 @@ const activitySlice = createSlice({
                 }
                 if (type === 3) {
                     state.releaseDefectCoverageListAdd = action.payload;
+                }
+            })
+            .addCase(getRelaseAttachments.fulfilled, (state, action) => {
+                const { entityTypes } = action.meta.arg;
+                if (entityTypes === 2) {
+                    state.releaseAttachmentsList = action.payload;
                 }
             });
     },

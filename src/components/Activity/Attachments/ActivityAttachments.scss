@@ -1,0 +1,33 @@
+.attachment {
+    margin-top: 9px !important;
+    .attachment__header {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-bottom: 9px;
+        gap: 10px;
+    }
+
+    .attachment-table-wrapper {
+        max-height: 400px;
+        overflow: auto;
+    }
+}
+
+.attachment-table {
+    .attachment-columns {
+        font-size: 13px;
+        background-color: transparent !important;
+        padding: 8px 8px !important;
+        cursor: pointer;
+    }
+    .ant-table-thead > tr > th {
+        background-color: initial;
+        color: #8c8c8c;
+        font-size: 12px;
+        font-weight: 700;
+    }
+    .ant-table-cell .ant-typography {
+        font-size: 13px !important;
+    }
+}
