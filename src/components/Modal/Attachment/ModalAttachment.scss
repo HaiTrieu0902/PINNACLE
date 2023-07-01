@@ -1,0 +1,76 @@
+.modal-attachment_content {
+    overflow: auto;
+    white-space: pre-wrap;
+    width: 100%;
+
+    .attachment_preview_filename {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        width: 100%;
+        .attachment-modal__link-image {
+            background-color: initial;
+            color: #1890ff;
+            cursor: pointer;
+            outline: none;
+            text-decoration: none;
+            transition: color 0.3s;
+            width: 100%;
+
+            .attachment-modal__file-info {
+                align-items: center;
+                background-color: #ededed;
+                border: 1px solid #5daad6;
+                border-radius: 9px;
+                cursor: pointer;
+                display: flex;
+                height: 40px;
+                justify-content: space-between;
+
+                .attachment-modal__filename {
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    color: #5daad6;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+            }
+        }
+    }
+
+    .form__upload_attachment {
+        .ant-upload-list-item-container {
+            display: none;
+        }
+    }
+
+    .form__description {
+        margin-top: 20px;
+    }
+
+    .ant-upload-wrapper {
+        width: 100%;
+        .ant-upload {
+            width: 100%;
+        }
+    }
+    .button-upload {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #002060;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        box-shadow: 0 2px 4px rgb(0 0 0/7%);
+        height: 42px;
+        width: 100%;
+        &:hover {
+            background-color: #002060;
+        }
+
+        .ant-btn-icon {
+            padding-top: -10px;
+        }
+    }
+}

@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '../../../store';
 import { MessageContext } from '../../../App';
 import { useContext, useEffect, useState } from 'react';
 import { getRelaseAttachments } from '../../../redux/activity.slice';
+import ModalAttachment from '../../Modal/Attachment/ModalAttachment';
 
 /* interface DataType */
 interface DataType {
@@ -131,6 +132,9 @@ const ActivityAttachments = () => {
                     dataSource={dataAttachment || []}
                     showSorterTooltip={true}
                 />
+            </div>
+            <div className="attachment-modal__create__update">
+                <ModalAttachment />
             </div>
         </div>
     );
