@@ -54,3 +54,18 @@ export interface AttachmentsList {
     count: number;
     attachments: Attachment[];
 }
+
+// Attachment detail
+export interface AttachmentDetail {
+    attachment: AttachmentItem;
+}
+
+export interface AttachmentItem {
+    attachmentId: number;
+    entityId: number;
+    entityType: number;
+    attachmentDescription: string;
+    fileName: string;
+    fileObject: string;
+    fileObjectUrl: string;
+}

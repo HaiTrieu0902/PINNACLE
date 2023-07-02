@@ -25,6 +25,7 @@ const ActivityCoverage = () => {
     const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
     const [selectedIdDelete, setSelectedIdDelete] = useState<(number | null)[]>([]);
     const [isActiveModal, setIsActiveModal] = useState<boolean>(false);
+
     //Effect call API
     useEffect(() => {
         if (Number(releaseId) > 0) {
@@ -50,6 +51,7 @@ const ActivityCoverage = () => {
         );
     }, [checkedKeys]);
 
+    /* handle search defect  */
     const handleSearchDefect = debounce((value: string) => {
         if (Number(releaseId) > 0) {
             dispatch(getRelaseDefects({ id: Number(releaseId), type: 2, valueSearch: value }));
@@ -65,6 +67,7 @@ const ActivityCoverage = () => {
         }
     };
 
+    /* handle active or cancel modal  */
     const onActiveModal = () => {
         setIsActiveModal(true);
     };

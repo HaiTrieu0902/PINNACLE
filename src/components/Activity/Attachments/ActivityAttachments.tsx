@@ -81,6 +81,8 @@ const ActivityAttachments = () => {
     const { releaseAttachmentsList } = useAppSelector((state) => state.activity);
     const { releaseId } = useAppSelector((state) => state.release);
     const [dataAttachment, setDataAttachment] = useState<DataType[]>([]);
+    const [isActiveModal, setIsActiveModal] = useState<boolean>(false);
+    const [idAttachment, setIdAttachment] = useState<number | undefined>();
 
     /* Effect call API */
     useEffect(() => {
@@ -101,7 +103,7 @@ const ActivityAttachments = () => {
                 attachedByName: item?.attachedByName,
                 attachedOn: item?.attachedOn,
                 view: (
-                    <Space key={item?.attachmentId} onClick={() => alert(item.attachmentId)}>
+                    <Space key={item?.attachmentId} onClick={() => onActiveModal(item?.attachmentId)}>
                         <img className="w-4" src={IconEyes} alt="" />
                     </Space>
                 ),
@@ -117,10 +119,22 @@ const ActivityAttachments = () => {
         }
     }, [releaseAttachmentsList?.attachments]);
 
+    /* handle active Modal Attachemnt */
+    const onActiveModal = (idAttachment?: number) => {
+        setIsActiveModal(true);
+        setIdAttachment(idAttachment);
+    };
+
+    /* handle cancel Modal Attachment*/
+    const onCancelModal = () => {
+        setIsActiveModal(false);
+        setIdAttachment(undefined);
+    };
+
     return (
         <div className="attachment">
             <div className="attachment__header">
-                <Button className="button-items w-24">
+                <Button onClick={() => onActiveModal()} className="button-items w-24">
                     <span className="text-sm font-medium">Add New</span>
                 </Button>
             </div>
@@ -134,7 +148,15 @@ const ActivityAttachments = () => {
                 />
             </div>
             <div className="attachment-modal__create__update">
-                <ModalAttachment />
+                {/* Modal Add Or Update attachment */}
+                <ModalAttachment
+                    isActive={isActiveModal}
+                    onCancel={onCancelModal}
+                    title={idAttachment ? 'Update Attachment' : 'Add Attachment'}
+                    type={idAttachment ? 'update' : 'add'}
+                    host="release"
+                    idAttachment={idAttachment}
+                />
             </div>
         </div>
     );

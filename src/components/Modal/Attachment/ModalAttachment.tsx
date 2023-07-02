@@ -1,14 +1,59 @@
-import { UploadOutlined } from '@ant-design/icons';
-import { Button, Divider, Form, Image, Input, Modal, Row, Upload, UploadFile, UploadProps } from 'antd';
-import { useState, useEffect } from 'react';
+import { UploadOutlined, DownloadOutlined } from '@ant-design/icons';
+import { Button, Divider, Form, Image, Input, Modal, Row, Tooltip, Upload, UploadFile, UploadProps } from 'antd';
+import { useEffect, useState } from 'react';
+import { getAttachmentDetail, resetValueAttachmentDetail } from '../../../redux/activity.slice';
+import { useAppDispatch, useAppSelector } from '../../../store';
 import './ModalAttachment.scss';
 
-const ModalAttachment = () => {
+interface ModalAttachmentProps {
+    isActive?: boolean;
+    title?: string;
+    host?: string;
+    type?: string;
+    idAttachment?: number | string;
+    onCancel: (value: boolean) => void;
+}
+
+const ModalAttachment = ({ isActive, title, type, idAttachment, onCancel }: ModalAttachmentProps) => {
+    const dispatch = useAppDispatch();
+    const { attachmentDetail } = useAppSelector((state) => state.activity);
     const [fileList, setFileList] = useState<UploadFile>();
     const [previewImage, setPreviewImage] = useState('');
     const [valueDescription, setValueDescription] = useState('');
-    const [uploading, setUploading] = useState(false);
+    const [fileName, setFileName] = useState('');
+    const [attachmentData, setAttachmentData] = useState({ fileName: '', valueDescription: '' });
 
+    /*Use Effect call API attachment detail */
+    useEffect(() => {
+        if (idAttachment) {
+            const attachmentDetail = dispatch(getAttachmentDetail({ attachmentId: Number(idAttachment) }));
+            return () => {
+                attachmentDetail.abort();
+            };
+        }
+    }, [dispatch, idAttachment]);
+
+    /*Use Effect change fileName */
+    useEffect(() => {
+        if (attachmentDetail?.attachment && !fileList?.name) {
+            setFileName(String(attachmentDetail?.attachment?.fileName));
+        }
+        if (fileList?.name) {
+            setFileName(String(fileList?.name));
+        }
+    }, [fileList?.name, attachmentDetail?.attachment]);
+
+    /*Use Effect change value Description */
+    useEffect(() => {
+        if (attachmentDetail?.attachment && !fileList?.name) {
+            setValueDescription(String(attachmentDetail?.attachment?.attachmentDescription));
+        }
+        if (fileList?.name) {
+            setValueDescription(String(fileList?.name));
+        }
+    }, [fileList?.name, attachmentDetail?.attachment]);
+
+    /* Props for Upload */
     const props: UploadProps = {
         beforeUpload: (file) => {
             setFileList(file);
@@ -17,22 +62,27 @@ const ModalAttachment = () => {
         },
     };
 
-    /*Use Effect change value Description */
-    useEffect(() => {
-        if (fileList?.name) {
-            setValueDescription(String(fileList?.name));
-        }
-    }, [fileList?.name]);
+    /* handle close modal */
+    const handleCancelModal = () => {
+        onCancel(false);
+        setFileList(undefined);
+        setValueDescription('');
+        setPreviewImage('');
+        setFileName('');
+        dispatch(resetValueAttachmentDetail());
+    };
 
     const handleSubmitAttachment = () => {
         console.log('📢 [ModalAttachment.tsx:30]', valueDescription);
+        onCancel(false);
     };
 
+    console.log('attachmentDetail?.attachment', attachmentDetail?.attachment?.fileObjectUrl);
     return (
-        <Modal width={'520px'} open={true} footer={null}>
+        <Modal width={'520px'} open={isActive} onCancel={handleCancelModal} footer={null}>
             <div className="flex flex-col">
-                <div className="">
-                    <h3 className="release-modal__header mb-4 capitalize">{'title'}</h3>
+                <div className="modal__attachment_header">
+                    <h3 className="release-modal__header mb-4 capitalize">{title}</h3>
                     <Divider type="horizontal" className="-mt-2" />
                 </div>
 
@@ -50,13 +100,34 @@ const ModalAttachment = () => {
                             </Row>
                         )}
 
-                        {fileList?.name && (
+                        {fileName && (
                             <Row className="attachment_preview_filename">
-                                <a href="" onClick={(e) => e.preventDefault()} className="attachment-modal__link-image">
-                                    <div className="attachment-modal__file-info">
-                                        <span className="attachment-modal__filename">{fileList?.name}</span>
-                                    </div>
-                                </a>
+                                {attachmentDetail?.attachment && attachmentDetail?.attachment?.fileObjectUrl ? (
+                                    <Tooltip title="View attachment">
+                                        <a
+                                            target="_blank"
+                                            href={attachmentDetail?.attachment?.fileObjectUrl}
+                                            className="attachment-modal__link-image"
+                                        >
+                                            <div className="attachment-modal__file-info relative">
+                                                <span className="attachment-modal__filename">{fileName}</span>
+                                                <span className="relative right-2 flex items-center">
+                                                    <DownloadOutlined />
+                                                </span>
+                                            </div>
+                                        </a>
+                                    </Tooltip>
+                                ) : (
+                                    <a
+                                        href=""
+                                        onClick={(e) => e.preventDefault()}
+                                        className="attachment-modal__link-image"
+                                    >
+                                        <div className="attachment-modal__file-info">
+                                            <span className="attachment-modal__filename">{fileName}</span>
+                                        </div>
+                                    </a>
+                                )}
                             </Row>
                         )}
 
@@ -86,9 +157,14 @@ const ModalAttachment = () => {
                         <Row justify={'end'} className="w-full mt-6 footer__form-attachment">
                             <Divider type="horizontal" className="" />
                             <div className="flex gap-1 -mt-3">
-                                <Button className="h-10 w-20 mr-3">Cancel</Button>
-                                <Button htmlType="submit" className={`button-items h-10 w-16`}>
-                                    <span className="text-sm font-medium">Add</span>
+                                <Button onClick={handleCancelModal} className="h-10 w-20 mr-3">
+                                    Cancel
+                                </Button>
+                                <Button
+                                    htmlType="submit"
+                                    className={`button-items h-10  ${type == 'update' ? 'w-20' : 'w-16'} `}
+                                >
+                                    <span className="text-sm font-medium">{type == 'update' ? 'Update' : 'Add'}</span>
                                 </Button>
                             </div>
                         </Row>
