@@ -23,13 +23,14 @@ interface ModalAttachmentProps {
 const ModalAttachment = ({ isActive, title, type, idAttachment, onCancel }: ModalAttachmentProps) => {
     const dispatch = useAppDispatch();
     const messageApi: any = useContext(MessageContext);
+    const { releaseId } = useAppSelector((state) => state.release);
     const { attachmentDetail } = useAppSelector((state) => state.activity);
     const [fileList, setFileList] = useState<UploadFile<Blob> | any>();
     const [previewImage, setPreviewImage] = useState('');
     const [explainError, setExplainError] = useState(false);
     const [attachmentData, setAttachmentData] = useState({ fileName: '', valueDescription: '' });
 
-    console.log('fileList: ', fileList?.originFileObj);
+    console.log('fileList: ', fileList);
 
     /*Use Effect call API attachment detail */
     useEffect(() => {
@@ -77,34 +78,36 @@ const ModalAttachment = ({ isActive, title, type, idAttachment, onCancel }: Moda
         dispatch(resetValueAttachmentDetail());
     };
 
+    /* handle Update and Add Attachment */
     const handleSubmitAttachment = async () => {
-        if (idAttachment) {
-            const formData = new FormData();
-            formData.append('AttachmentId', String(attachmentDetail?.attachment?.attachmentId));
-            formData.append('EntityId', String(attachmentDetail?.attachment?.entityId));
-            formData.append('Description', String(attachmentData?.valueDescription));
-            formData.append('EntityType', String(attachmentDetail?.attachment?.entityType));
-            formData.append('FileType', String(attachmentData?.fileName?.split('.').pop()));
-            if (fileList) {
-                formData.append('FileObject', fileList);
-            }
-            const url = `${API_PATHS.API}/Attachment/create-update-attachment`;
-            const data = await axiosData(url, 'POST', formData);
-            if (data) {
-                dispatch(
-                    getRelaseAttachments({ entityId: Number(attachmentDetail?.attachment?.entityId), entityTypes: 2 }),
-                );
-                messageApi.success(`Update attachment successfully`);
-                handleCancelModal();
-            }
-            return data;
-        } else {
-            if (attachmentData.fileName === '') {
-                setExplainError(true);
-            }
+        if (!idAttachment && !fileList) {
+            setExplainError(true);
+            return;
+        }
+        const formData = new FormData();
+        formData.append('AttachmentId', idAttachment ? String(attachmentDetail?.attachment?.attachmentId) : '0');
+        formData.append('EntityId', idAttachment ? String(attachmentDetail?.attachment?.entityId) : String(releaseId));
+        formData.append('Description', attachmentData?.valueDescription);
+        formData.append('EntityType', idAttachment ? String(attachmentDetail?.attachment?.entityType) : '2');
+        formData.append('FileType', String(attachmentData?.fileName?.split('.').pop()));
+        if (fileList) {
+            formData.append('FileObject', fileList);
+        }
+        const url = `${API_PATHS.API}/Attachment/create-update-attachment`;
+        const data = await axiosData(url, 'POST', formData);
+        if (data) {
+            dispatch(
+                getRelaseAttachments({
+                    entityId: Number(idAttachment ? attachmentDetail?.attachment?.entityId : releaseId),
+                    entityTypes: 2,
+                }),
+            );
+            const message = idAttachment ? 'Update attachment successfully' : 'Add attachment successfully';
+            messageApi.success(message);
+            handleCancelModal();
         }
 
-        // onCancel(false);
+        return data;
     };
 
     return (

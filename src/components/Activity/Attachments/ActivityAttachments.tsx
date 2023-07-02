@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Space, Tooltip, Typography } from 'antd';
+import { Button, Popover, Row, Space, Tooltip, Typography } from 'antd';
 import Table, { ColumnsType } from 'antd/es/table';
 import './ActivityAttachments.scss';
 import IconEyes from '../../../assets/eyes.svg';
@@ -9,7 +9,7 @@ import { MessageContext } from '../../../App';
 import { useContext, useEffect, useState } from 'react';
 import { getRelaseAttachments } from '../../../redux/activity.slice';
 import ModalAttachment from '../../Modal/Attachment/ModalAttachment';
-
+import { ExclamationCircleFilled } from '@ant-design/icons';
 /* interface DataType */
 interface DataType {
     key: number | string;
@@ -83,6 +83,7 @@ const ActivityAttachments = () => {
     const [dataAttachment, setDataAttachment] = useState<DataType[]>([]);
     const [isActiveModal, setIsActiveModal] = useState<boolean>(false);
     const [idAttachment, setIdAttachment] = useState<number | undefined>();
+    const [showPopover, setShowPopover] = useState<Array<boolean>>([]);
 
     /* Effect call API */
     useEffect(() => {
@@ -94,10 +95,28 @@ const ActivityAttachments = () => {
         }
     }, [dispatch, releaseId]);
 
-    /* Effect config TABLE (View , Remove) */
-    useEffect(() => {
+    // /* handle hide Popover */
+    const hidePopover = (index: number) => {
+        setShowPopover((prevState) => {
+            const newState = [...prevState];
+            newState[index] = false;
+            return newState;
+        });
+    };
+
+    /* handle show Popover */
+    const handleOpenChangePopover = (newOpen: boolean, index: number) => {
+        setShowPopover((prevState) => {
+            const newState = [...prevState];
+            newState[index] = newOpen;
+            return newState;
+        });
+    };
+
+    /* handle config TABLE (View , Remove) */
+    const handleConvertDataAttachment = (): DataType[] | any => {
         if (releaseAttachmentsList?.attachments?.length > 0) {
-            const tempData = releaseAttachmentsList?.attachments.map((item) => ({
+            return releaseAttachmentsList?.attachments?.map((item, index) => ({
                 key: item?.attachmentId,
                 attachmentDescription: item?.attachmentDescription,
                 attachedByName: item?.attachedByName,
@@ -108,16 +127,42 @@ const ActivityAttachments = () => {
                     </Space>
                 ),
                 remove: (
-                    <Space key={item?.attachmentId} onClick={() => alert(item.attachmentId)}>
-                        <img className="w-4" src={IconTrash} alt="" />
-                    </Space>
+                    <>
+                        <Popover
+                            open={showPopover[index]}
+                            onOpenChange={(newOpen) => handleOpenChangePopover(newOpen, index)}
+                            placement="topRight"
+                            title={
+                                <Row className="mt-2">
+                                    <ExclamationCircleFilled style={{ fontSize: '16px', color: '#faad14' }} />
+                                    <span className="!text-[#000000d9] !text-sm">
+                                        Are you sure to delete this attachment ?
+                                    </span>
+                                </Row>
+                            }
+                            content={
+                                <Row justify={'end'} className="w-full mt-6 footer__form-attachment">
+                                    <div className="flex gap-1 -mt-3">
+                                        <Button onClick={() => hidePopover(index)} className="h-10 w-14 mr-2">
+                                            No
+                                        </Button>
+                                        <Button className={`button-items h-10 w-14`}>
+                                            <span className="text-sm font-medium">Yes</span>
+                                        </Button>
+                                    </div>
+                                </Row>
+                            }
+                            trigger="click"
+                        >
+                            <Button key={item?.attachmentId} className="button__popover">
+                                <img className="w-4" src={IconTrash} alt="" />
+                            </Button>
+                        </Popover>
+                    </>
                 ),
             }));
-            setDataAttachment(tempData);
-        } else {
-            setDataAttachment([]);
         }
-    }, [releaseAttachmentsList?.attachments]);
+    };
 
     /* handle active Modal Attachemnt */
     const onActiveModal = (idAttachment?: number) => {
@@ -143,7 +188,7 @@ const ActivityAttachments = () => {
                     className="attachment-table"
                     pagination={false}
                     columns={columns}
-                    dataSource={dataAttachment || []}
+                    dataSource={handleConvertDataAttachment() || []}
                     showSorterTooltip={true}
                 />
             </div>
@@ -157,6 +202,29 @@ const ActivityAttachments = () => {
                     host="release"
                     idAttachment={idAttachment}
                 />
+            </div>
+
+            <div>
+                <Popover
+                    placement="topRight"
+                    title={
+                        <Row className="mt-2">
+                            <ExclamationCircleFilled style={{ fontSize: '16px', color: '#faad14' }} />
+                            <span className="!text-[#000000d9] !text-sm">Are you sure to delete this attachment ?</span>
+                        </Row>
+                    }
+                    content={
+                        <Row justify={'end'} className="w-full mt-6 footer__form-attachment">
+                            <div className="flex gap-1 -mt-3">
+                                <Button className="h-10 w-14 mr-2">No</Button>
+                                <Button className={`button-items h-10 w-14`}>
+                                    <span className="text-sm font-medium">Yes</span>
+                                </Button>
+                            </div>
+                        </Row>
+                    }
+                    trigger="click"
+                ></Popover>
             </div>
         </div>
     );
