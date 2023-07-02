@@ -1,9 +1,15 @@
-import { UploadOutlined, DownloadOutlined } from '@ant-design/icons';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { DownloadOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Divider, Form, Image, Input, Modal, Row, Tooltip, Upload, UploadFile, UploadProps } from 'antd';
+import { Blob } from 'buffer';
 import { useEffect, useState } from 'react';
-import { getAttachmentDetail, resetValueAttachmentDetail } from '../../../redux/activity.slice';
+import { API_PATHS } from '../../../configs/api';
+import { axiosData } from '../../../configs/axiosApiCusomer';
+import { getAttachmentDetail, getRelaseAttachments, resetValueAttachmentDetail } from '../../../redux/activity.slice';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import './ModalAttachment.scss';
+import { useContext } from 'react';
+import { MessageContext } from '../../../App';
 
 interface ModalAttachmentProps {
     isActive?: boolean;
@@ -16,12 +22,14 @@ interface ModalAttachmentProps {
 
 const ModalAttachment = ({ isActive, title, type, idAttachment, onCancel }: ModalAttachmentProps) => {
     const dispatch = useAppDispatch();
+    const messageApi: any = useContext(MessageContext);
     const { attachmentDetail } = useAppSelector((state) => state.activity);
-    const [fileList, setFileList] = useState<UploadFile>();
+    const [fileList, setFileList] = useState<UploadFile<Blob> | any>();
     const [previewImage, setPreviewImage] = useState('');
-    const [valueDescription, setValueDescription] = useState('');
-    const [fileName, setFileName] = useState('');
+    const [explainError, setExplainError] = useState(false);
     const [attachmentData, setAttachmentData] = useState({ fileName: '', valueDescription: '' });
+
+    console.log('fileList: ', fileList?.originFileObj);
 
     /*Use Effect call API attachment detail */
     useEffect(() => {
@@ -33,23 +41,21 @@ const ModalAttachment = ({ isActive, title, type, idAttachment, onCancel }: Moda
         }
     }, [dispatch, idAttachment]);
 
-    /*Use Effect change fileName */
+    /*Use Effect change fileName and change value Description*/
     useEffect(() => {
         if (attachmentDetail?.attachment && !fileList?.name) {
-            setFileName(String(attachmentDetail?.attachment?.fileName));
+            setAttachmentData({
+                fileName: String(attachmentDetail?.attachment?.fileName),
+                valueDescription: String(attachmentDetail?.attachment?.attachmentDescription),
+            });
+            setExplainError(false);
         }
         if (fileList?.name) {
-            setFileName(String(fileList?.name));
-        }
-    }, [fileList?.name, attachmentDetail?.attachment]);
-
-    /*Use Effect change value Description */
-    useEffect(() => {
-        if (attachmentDetail?.attachment && !fileList?.name) {
-            setValueDescription(String(attachmentDetail?.attachment?.attachmentDescription));
-        }
-        if (fileList?.name) {
-            setValueDescription(String(fileList?.name));
+            setAttachmentData({
+                fileName: String(fileList?.name),
+                valueDescription: String(fileList?.name),
+            });
+            setExplainError(false);
         }
     }, [fileList?.name, attachmentDetail?.attachment]);
 
@@ -66,18 +72,41 @@ const ModalAttachment = ({ isActive, title, type, idAttachment, onCancel }: Moda
     const handleCancelModal = () => {
         onCancel(false);
         setFileList(undefined);
-        setValueDescription('');
+        setAttachmentData({ fileName: '', valueDescription: '' });
         setPreviewImage('');
-        setFileName('');
         dispatch(resetValueAttachmentDetail());
     };
 
-    const handleSubmitAttachment = () => {
-        console.log('📢 [ModalAttachment.tsx:30]', valueDescription);
-        onCancel(false);
+    const handleSubmitAttachment = async () => {
+        if (idAttachment) {
+            const formData = new FormData();
+            formData.append('AttachmentId', String(attachmentDetail?.attachment?.attachmentId));
+            formData.append('EntityId', String(attachmentDetail?.attachment?.entityId));
+            formData.append('Description', String(attachmentData?.valueDescription));
+            formData.append('EntityType', String(attachmentDetail?.attachment?.entityType));
+            formData.append('FileType', String(attachmentData?.fileName?.split('.').pop()));
+            if (fileList) {
+                formData.append('FileObject', fileList);
+            }
+            const url = `${API_PATHS.API}/Attachment/create-update-attachment`;
+            const data = await axiosData(url, 'POST', formData);
+            if (data) {
+                dispatch(
+                    getRelaseAttachments({ entityId: Number(attachmentDetail?.attachment?.entityId), entityTypes: 2 }),
+                );
+                messageApi.success(`Update attachment successfully`);
+                handleCancelModal();
+            }
+            return data;
+        } else {
+            if (attachmentData.fileName === '') {
+                setExplainError(true);
+            }
+        }
+
+        // onCancel(false);
     };
 
-    console.log('attachmentDetail?.attachment', attachmentDetail?.attachment?.fileObjectUrl);
     return (
         <Modal width={'520px'} open={isActive} onCancel={handleCancelModal} footer={null}>
             <div className="flex flex-col">
@@ -91,7 +120,6 @@ const ModalAttachment = ({ isActive, title, type, idAttachment, onCancel }: Moda
                         onFinish={handleSubmitAttachment}
                         className="w-full"
                         layout="inline"
-                        initialValues={{ description: fileList?.name }}
                         id="ant-form_verify_create_update_attachment"
                     >
                         {fileList?.type?.startsWith('image/') && (
@@ -100,7 +128,7 @@ const ModalAttachment = ({ isActive, title, type, idAttachment, onCancel }: Moda
                             </Row>
                         )}
 
-                        {fileName && (
+                        {attachmentData.fileName && (
                             <Row className="attachment_preview_filename">
                                 {attachmentDetail?.attachment && attachmentDetail?.attachment?.fileObjectUrl ? (
                                     <Tooltip title="View attachment">
@@ -110,7 +138,9 @@ const ModalAttachment = ({ isActive, title, type, idAttachment, onCancel }: Moda
                                             className="attachment-modal__link-image"
                                         >
                                             <div className="attachment-modal__file-info relative">
-                                                <span className="attachment-modal__filename">{fileName}</span>
+                                                <span className="attachment-modal__filename">
+                                                    {attachmentData.fileName}
+                                                </span>
                                                 <span className="relative right-2 flex items-center">
                                                     <DownloadOutlined />
                                                 </span>
@@ -124,14 +154,16 @@ const ModalAttachment = ({ isActive, title, type, idAttachment, onCancel }: Moda
                                         className="attachment-modal__link-image"
                                     >
                                         <div className="attachment-modal__file-info">
-                                            <span className="attachment-modal__filename">{fileName}</span>
+                                            <span className="attachment-modal__filename">
+                                                {attachmentData.fileName}
+                                            </span>
                                         </div>
                                     </a>
                                 )}
                             </Row>
                         )}
 
-                        <Row className="w-full form__upload_attachment">
+                        <Row className="w-full form__upload_attachment relative">
                             <Upload {...props}>
                                 <Button
                                     type="primary"
@@ -142,13 +174,20 @@ const ModalAttachment = ({ isActive, title, type, idAttachment, onCancel }: Moda
                                     Upload
                                 </Button>
                             </Upload>
+                            {explainError && (
+                                <span className="absolute top-full form__upload_title">No File chosen.</span>
+                            )}
                         </Row>
 
                         <Row className="w-full mt-2 form__description">
                             <Input
                                 name="description"
-                                value={valueDescription?.split('.')[0] || valueDescription}
-                                onChange={(e) => setValueDescription(e.target.value)}
+                                value={
+                                    attachmentData.valueDescription?.split('.')[0] || attachmentData.valueDescription
+                                }
+                                onChange={(e) =>
+                                    setAttachmentData({ ...attachmentData, valueDescription: e.target.value })
+                                }
                                 placeholder="Description..."
                                 className="h-10 w-full"
                             />

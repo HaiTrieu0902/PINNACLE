@@ -14,7 +14,7 @@
 
     .attachment_preview_filename {
         margin-top: 20px;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
         width: 100%;
         .attachment-modal__link-image {
             background-color: initial;
@@ -51,10 +51,14 @@
         .ant-upload-list-item-container {
             display: none;
         }
+        .form__upload_title {
+            color: #ff4d4f;
+            font-size: 13px;
+        }
     }
 
     .form__description {
-        margin-top: 20px;
+        margin-top: 25px;
     }
 
     .ant-upload-wrapper {
