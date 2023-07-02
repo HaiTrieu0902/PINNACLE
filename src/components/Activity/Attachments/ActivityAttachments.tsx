@@ -10,6 +10,8 @@ import { useContext, useEffect, useState } from 'react';
 import { getRelaseAttachments } from '../../../redux/activity.slice';
 import ModalAttachment from '../../Modal/Attachment/ModalAttachment';
 import { ExclamationCircleFilled } from '@ant-design/icons';
+import { API_PATHS } from '../../../configs/api';
+import { axiosData } from '../../../configs/axiosApiCusomer';
 /* interface DataType */
 interface DataType {
     key: number | string;
@@ -80,7 +82,6 @@ const ActivityAttachments = () => {
     const messageApi: any = useContext(MessageContext);
     const { releaseAttachmentsList } = useAppSelector((state) => state.activity);
     const { releaseId } = useAppSelector((state) => state.release);
-    const [dataAttachment, setDataAttachment] = useState<DataType[]>([]);
     const [isActiveModal, setIsActiveModal] = useState<boolean>(false);
     const [idAttachment, setIdAttachment] = useState<number | undefined>();
     const [showPopover, setShowPopover] = useState<Array<boolean>>([]);
@@ -95,7 +96,7 @@ const ActivityAttachments = () => {
         }
     }, [dispatch, releaseId]);
 
-    // /* handle hide Popover */
+    /* handle hide Popover */
     const hidePopover = (index: number) => {
         setShowPopover((prevState) => {
             const newState = [...prevState];
@@ -146,7 +147,10 @@ const ActivityAttachments = () => {
                                         <Button onClick={() => hidePopover(index)} className="h-10 w-14 mr-2">
                                             No
                                         </Button>
-                                        <Button className={`button-items h-10 w-14`}>
+                                        <Button
+                                            onClick={() => handleDeleteAttachment(item?.attachmentId)}
+                                            className={`button-items h-10 w-14`}
+                                        >
                                             <span className="text-sm font-medium">Yes</span>
                                         </Button>
                                     </div>
@@ -161,6 +165,18 @@ const ActivityAttachments = () => {
                     </>
                 ),
             }));
+        }
+    };
+
+    /* handle active Modal Attachemnt */
+    const handleDeleteAttachment = async (idAttachment?: number) => {
+        if (idAttachment) {
+            const url = `${API_PATHS.API}/Releases/delete-release`;
+            const data = await axiosData(url, 'DELETE', { idAttachment });
+            if (data) {
+                messageApi.success(`ID ${idAttachment} attachment was delete successfully`);
+                dispatch(getRelaseAttachments({ entityId: Number(releaseId), entityTypes: 2 }));
+            }
         }
     };
 
@@ -202,29 +218,6 @@ const ActivityAttachments = () => {
                     host="release"
                     idAttachment={idAttachment}
                 />
-            </div>
-
-            <div>
-                <Popover
-                    placement="topRight"
-                    title={
-                        <Row className="mt-2">
-                            <ExclamationCircleFilled style={{ fontSize: '16px', color: '#faad14' }} />
-                            <span className="!text-[#000000d9] !text-sm">Are you sure to delete this attachment ?</span>
-                        </Row>
-                    }
-                    content={
-                        <Row justify={'end'} className="w-full mt-6 footer__form-attachment">
-                            <div className="flex gap-1 -mt-3">
-                                <Button className="h-10 w-14 mr-2">No</Button>
-                                <Button className={`button-items h-10 w-14`}>
-                                    <span className="text-sm font-medium">Yes</span>
-                                </Button>
-                            </div>
-                        </Row>
-                    }
-                    trigger="click"
-                ></Popover>
             </div>
         </div>
     );

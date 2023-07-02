@@ -30,8 +30,6 @@ const ModalAttachment = ({ isActive, title, type, idAttachment, onCancel }: Moda
     const [explainError, setExplainError] = useState(false);
     const [attachmentData, setAttachmentData] = useState({ fileName: '', valueDescription: '' });
 
-    console.log('fileList: ', fileList);
-
     /*Use Effect call API attachment detail */
     useEffect(() => {
         if (idAttachment) {

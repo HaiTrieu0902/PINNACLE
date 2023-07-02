@@ -8,10 +8,11 @@ import folder from '../../../../assets/folder.svg';
 import plant from '../../../../assets/plant.svg';
 import { API_PATHS } from '../../../../configs/api';
 import { axiosData } from '../../../../configs/axiosApiCusomer';
-import { getReleaseFolderChart } from '../../../../redux/release.slice';
+import { getReleaseDetail, getReleaseFolderChart } from '../../../../redux/release.slice';
 import { useAppDispatch } from '../../../../store';
 import { ParamReleaseFolderView, ReleasesFolderChart, releasesFolderChartList } from '../../../../types/release';
 import './ReleaseFolderView.scss';
+
 interface TreeFolderProps {
     releasesFolderChartList: releasesFolderChartList;
 }
@@ -29,6 +30,16 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
     const [openCreateFolder, setOpenCreateFolder] = useState(false);
     const [openUpdateFolder, setOpenUpdateFolder] = useState(false);
     const [openDeleteFolder, setOpenDeleteFolder] = useState(false);
+
+    /* Effect Cal Detail API*/
+    useEffect(() => {
+        if (typeof selectedKeys[0] === 'string' && selectedKeys[0].substring(0, 2) !== 'fd') {
+            const getDetailRelease = dispatch(getReleaseDetail(Number(parentFolderId)));
+            return () => {
+                getDetailRelease.abort();
+            };
+        }
+    }, [dispatch, parentFolderId, selectedKeys]);
 
     /* config Dropdown title in TREE*/
     const DropdownTitle = ({ title, valueKey, children, parentId }: any) => {
