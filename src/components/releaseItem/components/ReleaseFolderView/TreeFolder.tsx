@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ExclamationCircleFilled } from '@ant-design/icons';
-import { Button, Col, Dropdown, Form, Input, Modal, Row, Space, Tree } from 'antd';
+import { Button, Col, Dropdown, Modal, Row, Space, Tree } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { MessageContext } from '../../../../App';
 import box from '../../../../assets/box.svg';
@@ -10,7 +10,8 @@ import { API_PATHS } from '../../../../configs/api';
 import { axiosData } from '../../../../configs/axiosApiCusomer';
 import { getReleaseDetail, getReleaseFolderChart } from '../../../../redux/release.slice';
 import { useAppDispatch } from '../../../../store';
-import { ParamReleaseFolderView, ReleasesFolderChart, releasesFolderChartList } from '../../../../types/release';
+import { ReleasesFolderChart, releasesFolderChartList } from '../../../../types/release';
+import ModalTree from '../../../Modal/Tree/ModalTree';
 import './ReleaseFolderView.scss';
 
 interface TreeFolderProps {
@@ -20,8 +21,6 @@ interface TreeFolderProps {
 const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
     const dispatch = useAppDispatch();
     const messageApi: any = useContext(MessageContext);
-    const [form] = Form.useForm();
-    const [formUpdate] = Form.useForm();
     const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
     const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
     const [parentFolderId, setParentFolderId] = useState<number>(0);
@@ -265,18 +264,16 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
     const showModalCreateFolder = () => {
         setOpenCreateFolder(true);
     };
-    const handleCancelModalCreateFolder = () => {
-        setOpenCreateFolder(false);
-        form.resetFields();
+    const handleCancelModalCreateFolder = (value: boolean) => {
+        setOpenCreateFolder(value);
     };
 
     /*  handle show/hidden modal update folder */
     const showModalUpdateFolder = () => {
         setOpenUpdateFolder(true);
     };
-    const handleCancelModalUpdateFolder = () => {
-        setOpenUpdateFolder(false);
-        formUpdate.resetFields();
+    const handleCancelModalUpdateFolder = (value: boolean) => {
+        setOpenUpdateFolder(value);
     };
 
     /*  handle show/hidden delete folder */
@@ -290,43 +287,10 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
     /*  Biến trung gian tạo data */
     const treeData = generateTreeData(releasesFolderChartList?.releasesFolderChart || []);
 
-    /* handle create folder */
-    const handleSubmitCreateFolder = async (values: ParamReleaseFolderView) => {
-        const param: ParamReleaseFolderView = {
-            parentFolderId: parentFolderId,
-            folderName: values.folderName,
-            entityType: 2,
-            isSubFolder: true,
-        };
-        const url = `${API_PATHS.API}/Common/create-folder`;
-        const data = await axiosData(url, 'POST', param);
-        form.resetFields();
-        setOpenCreateFolder(false);
-        dispatch(getReleaseFolderChart({ searchString: '', isAssignToMe: true }));
-        messageApi.success('Create Folder SuccessFully');
-        return data;
-    };
-
-    /* handle update folder */
-    const handleSubmitUpdateFolder = async (values: { folderName: string }) => {
-        const param = {
-            folderId: parentFolderId,
-            folderName: values?.folderName,
-        };
-        const url = `${API_PATHS.API}/Common/rename-folder`;
-        const data = await axiosData(url, 'POST', param);
-        formUpdate.resetFields();
-        setOpenUpdateFolder(false);
-        dispatch(getReleaseFolderChart({ searchString: '', isAssignToMe: true }));
-        messageApi.success('Rename Folder SuccessFully');
-        return data;
-    };
-
     /* handle delete folder */
     const handleSubmitDeleteFolder = async () => {
         const url = `${API_PATHS.API}/Common/delete-folder?id=${parentFolderId}`;
         const data = await axiosData(url, 'DELETE');
-        formUpdate.resetFields();
         setOpenDeleteFolder(false);
         dispatch(getReleaseFolderChart({ searchString: '', isAssignToMe: true }));
         messageApi.success('Delete Folder SuccessFully');
@@ -347,11 +311,6 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
     };
 
     /* Effect reset value */
-    useEffect(() => {
-        formUpdate.setFieldsValue({
-            folderName: titleFolder,
-        });
-    }, [titleFolder, formUpdate]);
 
     return (
         <div>
@@ -365,117 +324,25 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
             <div className="release-folder_modal_tion">
                 <div className="release-folder_modal_container">
                     {/* Modal Add */}
-                    <Modal
-                        width={'520px'}
-                        open={openCreateFolder}
+                    <ModalTree
+                        isActive={openCreateFolder}
                         onCancel={handleCancelModalCreateFolder}
-                        footer={null}
-                        className="release-folder-view_modal"
-                    >
-                        <div className="flex items-center flex-col">
-                            <h3 className="release-modal__header">New Release Folder</h3>
-                            <p className="release-modal-title">Please Enter the name of the new folder</p>
-                            <Form
-                                form={form}
-                                onFinish={handleSubmitCreateFolder}
-                                layout="inline"
-                                className="w-full"
-                                id="ant-form_verify_create_folder"
-                            >
-                                <div className="w-full mt-2 release-border-footer">
-                                    <Form.Item
-                                        name="folderName"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Folder name has not been entered.',
-                                            },
-                                            {
-                                                max: 300,
-                                                message: 'Folder name cannot be longer than 300 characters',
-                                            },
-                                        ]}
-                                    >
-                                        <Input placeholder="Please root folder" className="h-10 ml-1 w-full" />
-                                    </Form.Item>
-                                </div>
-                                <Row justify={'end'} className="w-full">
-                                    <Col>
-                                        <div className="flex gap-2 mt-2 mr-1 delete-footer">
-                                            <Button onClick={handleCancelModalCreateFolder} className="h-10 w-20">
-                                                Cancel
-                                            </Button>
-                                            <Button
-                                                htmlType="submit"
-                                                className="button-items h-10 w-20 items-center justify-center"
-                                            >
-                                                <span>OK</span>
-                                            </Button>
-                                        </div>
-                                    </Col>
-                                </Row>
-                            </Form>
-                        </div>
-                    </Modal>
+                        title="New Release Folder"
+                        host="Please Enter the name of the new folder"
+                        parentFolderId={parentFolderId}
+                        type="create"
+                    />
 
                     {/* Modal Edit */}
-                    <Modal
-                        forceRender
-                        width={'520px'}
-                        open={openUpdateFolder}
+                    <ModalTree
+                        isActive={openUpdateFolder}
                         onCancel={handleCancelModalUpdateFolder}
-                        footer={null}
-                        className="release-folder-view_modal"
-                    >
-                        <div className="flex items-center flex-col">
-                            <h3 className="release-modal__header">Rename Release Folder</h3>
-                            <p className="release-modal-title">Please Enter the new name of the folder</p>
-                            <Form
-                                form={formUpdate}
-                                onFinish={handleSubmitUpdateFolder}
-                                layout="inline"
-                                className="w-full"
-                                id="ant-form_verify_update_folder"
-                            >
-                                <div className="w-full mt-2 release-border-footer">
-                                    <Form.Item
-                                        name="folderName"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Folder name has not been entered.',
-                                            },
-                                            {
-                                                max: 300,
-                                                message: 'Folder name cannot be longer than 300 characters',
-                                            },
-                                        ]}
-                                    >
-                                        <Input
-                                            value={titleFolder}
-                                            placeholder="Please root folder"
-                                            className="h-10 ml-1 w-full"
-                                        />
-                                    </Form.Item>
-                                </div>
-                                <Row justify={'end'} className="w-full">
-                                    <Col>
-                                        <div className="flex gap-2 mt-2 mr-1 delete-footer">
-                                            <Button onClick={handleCancelModalUpdateFolder} className="h-10 w-20">
-                                                Cancel
-                                            </Button>
-                                            <Button
-                                                htmlType="submit"
-                                                className="button-items h-10 w-20 items-center justify-center"
-                                            >
-                                                <span>OK</span>
-                                            </Button>
-                                        </div>
-                                    </Col>
-                                </Row>
-                            </Form>
-                        </div>
-                    </Modal>
+                        title="Rename Release Folder"
+                        host="Please Enter the new name of the folder"
+                        parentFolderId={parentFolderId}
+                        titleFolder={titleFolder}
+                        type="update"
+                    />
 
                     {/* Modal delete */}
                     <Modal
