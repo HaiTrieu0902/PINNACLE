@@ -24,7 +24,7 @@ const ReleaseFolderView = () => {
 
     /* Effect call api Folder Chart*/
     useEffect(() => {
-        const releaseFolderChart = dispatch(getReleaseFolderChart(searchValue));
+        const releaseFolderChart = dispatch(getReleaseFolderChart({ searchString: searchValue, isAssignToMe: true }));
         return () => {
             releaseFolderChart.abort();
         };
@@ -50,7 +50,7 @@ const ReleaseFolderView = () => {
         const data = await axiosData(url, 'POST', param);
         form.resetFields();
         setOpenCreateFolder(false);
-        dispatch(getReleaseFolderChart(searchValue));
+        dispatch(getReleaseFolderChart({ searchString: '', isAssignToMe: true }));
         messageApi.success('Create Folder SuccessFully');
         return data;
     };

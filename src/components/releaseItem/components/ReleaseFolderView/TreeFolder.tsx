@@ -25,11 +25,17 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
     const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
     const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
     const [parentFolderId, setParentFolderId] = useState<number>(0);
+    const [entityId, setEntityId] = useState<number | string | any>();
+    const [idDetach, setIdDetach] = useState<number | string | any>();
     const [titleFolder, settitleFolder] = useState<string>('');
+    const [titleDepatch, settitleDepatch] = useState<string>('');
+    const [typeCutFoler, setTypeCutFoler] = useState<string>('');
+    const [valueKeyTree, setValueKeyTree] = useState<string>('');
     const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
     const [openCreateFolder, setOpenCreateFolder] = useState(false);
     const [openUpdateFolder, setOpenUpdateFolder] = useState(false);
     const [openDeleteFolder, setOpenDeleteFolder] = useState(false);
+    const [openDetachFolder, setOpenDetachFolder] = useState(false);
 
     /* Effect Cal Detail API*/
     useEffect(() => {
@@ -42,7 +48,7 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
     }, [dispatch, parentFolderId, selectedKeys]);
 
     /* config Dropdown title in TREE*/
-    const DropdownTitle = ({ title, valueKey, children, parentId }: any) => {
+    const DropdownTitle = ({ title, valueKey, children, parentId, id }: any) => {
         const handleChangedIcon = () => {
             if (valueKey?.substring(0, 2) === 'fd') {
                 return folder;
@@ -54,7 +60,6 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
                 }
             }
         };
-
         const items = [
             {
                 key: '1',
@@ -81,14 +86,16 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
             },
             {
                 key: '4',
-                label: 'Cut',
+                label: `${entityId === id ? 'Cancel Cut' : 'Cut'}`,
                 className: 'dropdown-title_active',
+                onClick: () => handleCutFolder({ valueKey, idTree: id }),
             },
             {
                 key: '5',
                 label: 'Paste',
-                className: 'dropdown-title',
-                disabled: true,
+                className: `dropdown-title ${entityId && entityId !== id && 'dropdown-title_active'}`,
+                disabled: entityId === id,
+                onClick: () => handlePastedFolder({ valueKey, parentId: id }),
             },
             {
                 key: '6',
@@ -105,11 +112,17 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
                     children?.length > 0 ||
                     parentId?.substring(0, 2) === 'fd' ||
                     !parentId,
+
+                onClick: () => handleActiveDetachModal({ title, idDetach: id }),
             },
         ];
 
         return (
-            <Dropdown menu={{ items }} trigger={['contextMenu']}>
+            <Dropdown
+                menu={{ items }}
+                trigger={['contextMenu']}
+                className={` ${entityId === id && 'release-folder-view__tree-title--cutting'} `}
+            >
                 <Space>
                     <div className="flex items-start mt-[2px]">
                         <img className="mr-2" src={handleChangedIcon()} alt="" />
@@ -133,6 +146,7 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
                             valueKey={node?.key}
                             children={node?.children}
                             parentId={node?.parentId}
+                            id={node?.id}
                         />
                     ),
                     children: generateTreeData(node.children),
@@ -142,10 +156,12 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
                 ...node,
                 title: (
                     <DropdownTitle
+                        node={node}
                         title={node?.title}
                         valueKey={node?.key}
                         children={node?.children}
                         parentId={node?.parentId}
+                        id={node?.id}
                     />
                 ),
             };
@@ -164,6 +180,85 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
         setParentFolderId(info?.node?.id);
         settitleFolder(info?.node?.title?.props?.title);
         setSelectedKeys(selectedKeysValue);
+
+        console.log('selectedKeysValue', selectedKeysValue);
+    };
+
+    /* handle Active Modal Dispatch*/
+    const handleActiveDetachModal = ({ title, idDetach }: any) => {
+        settitleDepatch(title);
+        setIdDetach(idDetach);
+        setOpenDetachFolder(true);
+    };
+    const handleCancelDetachModal = () => {
+        setOpenDetachFolder(false);
+    };
+
+    /* handle CUT folder*/
+    const handleCutFolder = ({ valueKey, idTree }: any) => {
+        setEntityId(idTree);
+        setValueKeyTree(valueKey);
+        const label = entityId === idTree ? 'Cancel Cut' : 'Cut';
+        if (label === 'Cancel Cut') {
+            setEntityId(0);
+        } else {
+            setEntityId(idTree);
+        }
+        if (valueKey?.substring(0, 2) === 'fd') {
+            setTypeCutFoler('update');
+        } else {
+            setTypeCutFoler('assign');
+        }
+    };
+
+    /* handle CUT folder*/
+    const handlePastedFolder = async ({ valueKey, parentId }: any) => {
+        if (typeCutFoler === 'update') {
+            if (parentId && entityId && parentId !== entityId) {
+                const url = `${API_PATHS.API}/Common/update-folder-parent`;
+                const data = await axiosData(url, 'POST', {
+                    entityId: Number(entityId),
+                    parentEntityId: Number(parentId),
+                });
+                if (data) {
+                    messageApi.success('Update Folder SuccessFully');
+                    dispatch(getReleaseFolderChart({ searchString: '', isAssignToMe: true }));
+                    setEntityId(0);
+                    setTypeCutFoler('');
+                }
+            }
+        } else {
+            console.log('GIA TRI TRUE FALSE', valueKeyTree.substring(0, 1) === valueKey.substring(0, 1));
+            if (valueKeyTree.substring(0, 1) === valueKey.substring(0, 1)) {
+                if (parentId && entityId && parentId !== entityId) {
+                    const url = `${API_PATHS.API}/ReleaseRegisters/reparent-release`;
+                    const data = await axiosData(url, 'POST', {
+                        entityId: Number(entityId),
+                        parentEntityId: Number(parentId),
+                    });
+                    if (data) {
+                        messageApi.success('Update Folder SuccessFully');
+                        dispatch(getReleaseFolderChart({ searchString: '', isAssignToMe: true }));
+                        setEntityId(0);
+                        setTypeCutFoler('');
+                    }
+                }
+            } else {
+                if (parentId && entityId && parentId !== entityId) {
+                    const url = `${API_PATHS.API}/ReleaseRegisters/assign-release-to-folder`;
+                    const data = await axiosData(url, 'POST', {
+                        entityId: Number(entityId),
+                        folderId: Number(parentId),
+                    });
+                    if (data) {
+                        messageApi.success('Update Folder SuccessFully');
+                        dispatch(getReleaseFolderChart({ searchString: '', isAssignToMe: true }));
+                        setEntityId(0);
+                        setTypeCutFoler('');
+                    }
+                }
+            }
+        }
     };
 
     /*  handle show/hidden modal create folder */
@@ -207,7 +302,7 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
         const data = await axiosData(url, 'POST', param);
         form.resetFields();
         setOpenCreateFolder(false);
-        dispatch(getReleaseFolderChart(''));
+        dispatch(getReleaseFolderChart({ searchString: '', isAssignToMe: true }));
         messageApi.success('Create Folder SuccessFully');
         return data;
     };
@@ -222,7 +317,7 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
         const data = await axiosData(url, 'POST', param);
         formUpdate.resetFields();
         setOpenUpdateFolder(false);
-        dispatch(getReleaseFolderChart(''));
+        dispatch(getReleaseFolderChart({ searchString: '', isAssignToMe: true }));
         messageApi.success('Rename Folder SuccessFully');
         return data;
     };
@@ -233,8 +328,21 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
         const data = await axiosData(url, 'DELETE');
         formUpdate.resetFields();
         setOpenDeleteFolder(false);
-        dispatch(getReleaseFolderChart(''));
+        dispatch(getReleaseFolderChart({ searchString: '', isAssignToMe: true }));
         messageApi.success('Delete Folder SuccessFully');
+        return data;
+    };
+
+    /* handle detach children */
+    const handleSubmitDetachFolder = async () => {
+        const url = `${API_PATHS.API}/ReleaseRegisters/reparent-release`;
+        const data = await axiosData(url, 'POSt', {
+            entityId: Number(idDetach),
+            parentEntityId: 0,
+        });
+        setOpenDetachFolder(false);
+        dispatch(getReleaseFolderChart({ searchString: '', isAssignToMe: true }));
+        messageApi.success('Detach Folder SuccessFully');
         return data;
     };
 
@@ -394,6 +502,41 @@ const TreeFolder = ({ releasesFolderChartList }: TreeFolderProps) => {
                                         </Button>
                                         <Button
                                             onClick={handleSubmitDeleteFolder}
+                                            className="button-items h-10 w-20 items-center justify-center"
+                                        >
+                                            <span>OK</span>
+                                        </Button>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </div>
+                    </Modal>
+
+                    {/* Modal Dispatch */}
+                    <Modal
+                        width={'520px'}
+                        open={openDetachFolder}
+                        onCancel={handleCancelDetachModal}
+                        footer={null}
+                        className="release-folder-view_modal"
+                    >
+                        <div className="flex flex-col">
+                            <span className="p-2">
+                                <ExclamationCircleFilled style={{ fontSize: '18px', color: '#faad14' }} />
+                                <span className="ml-2 font-medium text-base text-[#000000d9]">
+                                    Are you sure you want to detach the parent from this Release ?
+                                </span>
+                                <p className="text-[#002060] font-medium text-base ml-6">"{titleDepatch}"</p>
+                            </span>
+
+                            <Row justify={'end'} className="w-full">
+                                <Col>
+                                    <div className="flex gap-2 mt-2 mr-1 delete-footer">
+                                        <Button onClick={handleCancelDetachModal} className="h-10 w-20">
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            onClick={handleSubmitDetachFolder}
                                             className="button-items h-10 w-20 items-center justify-center"
                                         >
                                             <span>OK</span>

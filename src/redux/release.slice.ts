@@ -124,9 +124,9 @@ export const getBusinessImportance = createAsyncThunk('BusinessImportance/getBus
 //  get-release-folder-chart
 export const getReleaseFolderChart = createAsyncThunk(
     'ReleaseFolderChart/getReleaseFolderChart',
-    async (searchString: string) => {
-        const url = `${API_PATHS.API}/ReleaseRegisters/get-release-folder-chart?searchString=${searchString}`;
-        const data = await axiosData(url, 'POST', searchString);
+    async ({ searchString, isAssignToMe }: { searchString: string; isAssignToMe: boolean }) => {
+        const url = `${API_PATHS.API}/ReleaseRegisters/get-release-folder-chart?searchString=${searchString}&isAssignToMe=${isAssignToMe}`;
+        const data = await axiosData(url, 'POST', { searchString, isAssignToMe });
         return data;
     },
 );
