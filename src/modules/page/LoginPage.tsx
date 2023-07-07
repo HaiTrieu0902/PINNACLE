@@ -1,4 +1,3 @@
-import { message } from 'antd';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useContext } from 'react';
@@ -24,6 +23,7 @@ const LoginPage = () => {
 
             if (res.status === 200) {
                 Cookies.set(ACCESS_TOKEN_KEY, res.data.token);
+                localStorage.setItem('accessToken', res.data.token);
                 dispatch(getAccessToken(res.data.token));
                 dispatch(getUserAuth(res.data.user));
                 navigate(ROUTES.home);

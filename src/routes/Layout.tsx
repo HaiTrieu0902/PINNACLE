@@ -6,9 +6,7 @@ import { RoutesConfig } from './Routes';
 import { useAppSelector } from '../store';
 const Layout = () => {
     const { token } = useAppSelector((state) => state.auth);
-    const valueToken = Cookies.get(ACCESS_TOKEN_KEY);
-    console.log('value token: ', valueToken);
-    console.log('token: ', token);
+    const valueToken = localStorage.getItem('accessToken');
     return (
         <section className="">
             {valueToken && (

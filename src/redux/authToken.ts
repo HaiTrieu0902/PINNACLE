@@ -1,9 +1,9 @@
 import { AsyncThunk, PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
-import { ACCESS_TOKEN_KEY } from '../utils/constant';
-import { User, UserSelectList } from '../types/auth';
 import { API_PATHS } from '../configs/api';
 import { axiosData } from '../configs/axiosApiCusomer';
+import { User, UserSelectList } from '../types/auth';
+import { ACCESS_TOKEN_KEY } from '../utils/constant';
 
 type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
 type PendingAction = ReturnType<GenericAsyncThunk['pending']>;
@@ -40,6 +40,7 @@ const authSlice = createSlice({
             state.user = action.payload;
         },
         logout: (state) => {
+            localStorage.setItem('accessToken', '');
             Cookies.remove(ACCESS_TOKEN_KEY);
             state.token = null;
         },
