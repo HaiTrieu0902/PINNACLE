@@ -18,6 +18,7 @@ interface ModalTreeProps {
     type?: 'update' | 'create';
 }
 
+console.log('hih');
 const ModalTree = ({ isActive, title, titleFolder, onCancel, host, parentFolderId, type }: ModalTreeProps) => {
     console.log('titleFolder', titleFolder);
     const dispatch = useAppDispatch();
